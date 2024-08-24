@@ -5,20 +5,18 @@ import java.util.Random;
 public class company {
     private String name;
     private double cash;
-    private good primary;
-    private good secondary;
+    private recipe recipe;
     private int order;
     private static long seed;
     //Higher number is more aggressive
     private int personality;
-    public company(String name, good primary, good secondary) {
+    public company(String name, recipe recipe) {
         this.name = name;
-        this.primary = primary;
-        this.secondary = secondary;
+        this.recipe = new recipe(recipe.getInput(), recipe.getOutput(), recipe.getExpenses(), recipe.getIncome());
         cash = 100;
-        if (primary == null) {
+        if (recipe.getInput() == null) {
             this.order = 1;
-        } else if (secondary == null) {
+        } else if (recipe.getOutput() == null) {
             this.order = 3;
         } else {
             this.order = 2;
@@ -38,8 +36,8 @@ public class company {
         return change > 0.03;
     }
 
-    public void buyGood(int amount, double price) {
-        primary.changeAmount(amount);
+    public void buyGood(int amount, String good) {
+        recipe.changeInput(good, amount);
     }
 
     public void sellGood(int amount, double price) {

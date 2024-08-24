@@ -4,43 +4,49 @@ import java.util.*;
 
 public class good {
     private String name;
-    private int basePrice;
     private int amount;
-    private static ArrayList<good> goodList = new ArrayList<>();
-    private static TreeSet<good> primarySet;
-    private static HashMap<good[], good> recipes = new HashMap<good[], good>();
+    private int basePrice;
+    private static ArrayList<recipe> recipeList = new ArrayList<>();
+    private static HashMap<String, good> goodMap;
     private static long seed;
     public static void createGoodList() {
-        goodList.add(new good("Bismuth", 5, 0));
-        goodList.add(new good("Osmium", 5, 0));
-        goodList.add(new good("Copper", 5, 0));
-        goodList.add(new good("Gold", 5, 0));
-        goodList.add(new good("Zinc", 5, 0));
-        goodList.add(new good("Manganese", 5, 0));
-        goodList.add(new good("Argon", 5, 0));
-        goodList.add(new good("Oxygen", 5, 0));
-        goodList.add(new good("Hydrogen", 5, 0));
-        goodList.add(new good("Xenon", 5, 0));
-        goodList.add(new good("Carbon", 5, 0));
-        goodList.add(new good("Water", 5, 0));
-        primarySet = new TreeSet<>(goodList);
-        goodList.add(new good("Argonium", 5, 0));
-        goodList.add(new good("Wires", 5, 0));
-        goodList.add(new good("Bismanol", 5, 0));
-        goodList.add(new good("Brass", 5, 0));
-        goodList.add(new good("Batteries", 5, 0));
-        goodList.add(new good("CopperHydride", 5, 0));
-        goodList.add(new good("XenonTetroxide", 5, 0));
-        goodList.add(new good("Butane", 5, 0));
-        goodList.add(new good("IonFuel", 5, 0));
-        goodList.add(new good("Weapons", 5, 0));
-        goodList.add(new good("PerxenicAcid", 5, 0));
+        goodMap = new HashMap<>();
+        goodMap.put("Bismuth", new good("Bismuth", 5, 0));
+        goodMap.put("Osmium", new good("Osmium", 5, 0));
+        goodMap.put("Copper", new good("Copper", 5, 0));
+        goodMap.put("Gold", new good("Gold", 5, 0));
+        goodMap.put("Zinc", new good("Zinc", 5, 0));
+        goodMap.put("Manganese", new good("Manganese", 5, 0));
+        goodMap.put("Argon", new good("Argon", 5, 0));
+        goodMap.put("Oxygen", new good("Oxygen", 5, 0));
+        goodMap.put("Hydrogen", new good("Hydrogen", 5, 0));
+        goodMap.put("Xenon", new good("Xenon", 5, 0));
+        goodMap.put("Carbon", new good("Carbon", 5, 0));
+        goodMap.put("Water", new good("Water", 5, 0));
+        goodMap.put("Argonium", new good("Argonium", 5, 0));
+        goodMap.put("Wires", new good("Wires", 5, 0));
+        goodMap.put("Bismanol", new good("Bismanol", 5, 0));
+        goodMap.put("Brass", new good("Brass", 5, 0));
+        goodMap.put("Batteries", new good("Batteries", 5, 0));
+        goodMap.put("CopperHydride", new good("CopperHydride", 5, 0));
+        goodMap.put("XenonTetroxide", new good("XenonTetroxide", 5, 0));
+        goodMap.put("Butane", new good("Butane", 5, 0));
+        goodMap.put("IonFuel", new good("IonFuel", 5, 0));
+        goodMap.put("Weapons", new good("Weapons", 5, 0));
+        goodMap.put("PerxenicAcid", new good("PerxenicAcid", 5, 0));
+
+    }
+    public static void createRecipes() {
+        recipeList.add(new recipe(null, goodMap.get("Bismuth"), 5, 0));
     }
 
-    public good(String newName, int newPrice, int amount) {
+    public good(String newName, int basePrice, int amount) {
         name = newName;
-        basePrice = newPrice;
         this.amount = amount;
+        this.basePrice = basePrice;
+    }
+    public String getName() {
+        return name;
     }
     public static good randGood() {
         Random rand = new Random(seed);
