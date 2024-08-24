@@ -14,16 +14,17 @@ public class planet {
         Random rand = new Random(seed);
         size = rand.nextInt(30, 60);
         for (int i = 0; i < size * 2 / 3; i++) {
-            good primary = good.randGood();
-            company newCompany = new company("Filler" , primary, null);
+            recipe temp = good.randPrimaryRecipe();
+            company newCompany = new company("Filler" , temp);
+            companies.add(newCompany);
         }
         for (int i = 0; i < size / 3; i++) {
-            good primary = good.randGood();
-            good secondary = good.randGood(primary);
-            company newCompany = new company();
+            recipe temp = good.randSecondaryRecipe();
+            company newCompany = new company("Filler", temp);
+            companies.add(newCompany);
         }
     }
-    public void setSeed(long newSeed) {
+    public static void setSeed(long newSeed) {
         seed = newSeed;
     }
 

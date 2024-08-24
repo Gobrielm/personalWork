@@ -1,5 +1,7 @@
 package core;
 
+import java.util.Arrays;
+import java.util.Objects;
 import java.util.Random;
 
 public class company {
@@ -12,11 +14,11 @@ public class company {
     private int personality;
     public company(String name, recipe recipe) {
         this.name = name;
-        this.recipe = new recipe(recipe.getInput(), recipe.getOutput(), recipe.getExpenses(), recipe.getIncome());
+        this.recipe = new recipe(recipe.getInput(), recipe.getOutput(), recipe.getInputAmount(), recipe.getOutputAmount(), recipe.getExpenses(), recipe.getIncome());
         cash = 100;
-        if (recipe.getInput() == null) {
+        if (recipe.getInput() == null || Arrays.equals(recipe.getInput(), new String[]{})) {
             this.order = 1;
-        } else if (recipe.getOutput() == null) {
+        } else if (recipe.getOutput() == null || Arrays.equals(recipe.getOutput(), new String[]{})) {
             this.order = 3;
         } else {
             this.order = 2;
@@ -24,7 +26,7 @@ public class company {
         Random rand = new Random(seed);
         this.personality = rand.nextInt(1, 4);
     }
-    public void setSeed(long newSeed) {
+    public static void setSeed(long newSeed) {
         seed = newSeed;
     }
 

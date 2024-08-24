@@ -5,59 +5,63 @@ import java.util.*;
 public class good {
     private String name;
     private int amount;
-    private int basePrice;
-    private static ArrayList<recipe> recipeList = new ArrayList<>();
-    private static HashMap<String, good> goodMap;
+    private static ArrayList<recipe> primaryRecipes = new ArrayList<>();
+    private static ArrayList<recipe> secondaryRecipes = new ArrayList<>();
+    private static HashMap<String, Integer> basePrices;
     private static long seed;
     public static void createGoodList() {
-        goodMap = new HashMap<>();
-        goodMap.put("Bismuth", new good("Bismuth", 5, 0));
-        goodMap.put("Osmium", new good("Osmium", 5, 0));
-        goodMap.put("Copper", new good("Copper", 5, 0));
-        goodMap.put("Gold", new good("Gold", 5, 0));
-        goodMap.put("Zinc", new good("Zinc", 5, 0));
-        goodMap.put("Manganese", new good("Manganese", 5, 0));
-        goodMap.put("Argon", new good("Argon", 5, 0));
-        goodMap.put("Oxygen", new good("Oxygen", 5, 0));
-        goodMap.put("Hydrogen", new good("Hydrogen", 5, 0));
-        goodMap.put("Xenon", new good("Xenon", 5, 0));
-        goodMap.put("Carbon", new good("Carbon", 5, 0));
-        goodMap.put("Water", new good("Water", 5, 0));
-        goodMap.put("Argonium", new good("Argonium", 5, 0));
-        goodMap.put("Wires", new good("Wires", 5, 0));
-        goodMap.put("Bismanol", new good("Bismanol", 5, 0));
-        goodMap.put("Brass", new good("Brass", 5, 0));
-        goodMap.put("Batteries", new good("Batteries", 5, 0));
-        goodMap.put("CopperHydride", new good("CopperHydride", 5, 0));
-        goodMap.put("XenonTetroxide", new good("XenonTetroxide", 5, 0));
-        goodMap.put("Butane", new good("Butane", 5, 0));
-        goodMap.put("IonFuel", new good("IonFuel", 5, 0));
-        goodMap.put("Weapons", new good("Weapons", 5, 0));
-        goodMap.put("PerxenicAcid", new good("PerxenicAcid", 5, 0));
-
+        basePrices = new HashMap<>();
+        basePrices.put("Bismuth", 5);
+        basePrices.put("Osmium", 5);
+        basePrices.put("Copper", 5);
+        basePrices.put("Gold", 5);
+        basePrices.put("Zinc", 5);
+        basePrices.put("Manganese", 5);
+        basePrices.put("Argon", 5);
+        basePrices.put("Oxygen", 5);
+        basePrices.put("Hydrogen", 5);
+        basePrices.put("Xenon", 5);
+        basePrices.put("Carbon", 5);
+        basePrices.put("Water", 5);
+        basePrices.put("Argonium", 5);
+        basePrices.put("Wires", 5);
+        basePrices.put("Bismanol", 5);
+        basePrices.put("Brass", 5);
+        basePrices.put("Batteries", 5);
+        basePrices.put("CopperHydride", 5);
+        basePrices.put("XenonTetroxide", 5);
+        basePrices.put("Butane", 5);
+        basePrices.put("IonFuel", 5);
+        basePrices.put("Weapons", 5);
+        basePrices.put("PerxenicAcid", 5);
     }
     public static void createRecipes() {
-        recipeList.add(new recipe(null, goodMap.get("Bismuth"), 5, 0));
+        primaryRecipes.add(new recipe(new good[]{}, new good[]{new good("Copper", 1)}, 2, 0));
+        primaryRecipes.add(new recipe(new good[]{}, new good[]{new good("Zinc", 1)}, 2, 0));
+        primaryRecipes.add(new recipe(new good[]{}, new good[]{new good("Gold", 1)}, 2, 0));
+        primaryRecipes.add(new recipe(new good[]{}, new good[]{new good("Bismuth", 1)}, 0, 0));
+        secondaryRecipes.add(new recipe(new good[]{new good("Zinc", 1), new good("Copper", 2)}, new good[]{new good("Brass", 1)}, 3, 0));
+        secondaryRecipes.add(new recipe(new good[]{new good("Bismuth", 1)}, new good[]{}, 0, 10));
+        secondaryRecipes.add(new recipe(new good[]{new good("Brass", 1)}, new good[]{}, 0, 35));
     }
 
-    public good(String newName, int basePrice, int amount) {
+    public good(String newName, int amount) {
         name = newName;
         this.amount = amount;
-        this.basePrice = basePrice;
     }
     public String getName() {
         return name;
     }
-    public static good randGood() {
+    public static recipe randPrimaryRecipe() {
         Random rand = new Random(seed);
-        return primaryList.get(rand.nextInt(0, primaryList.size()));
+        return primaryRecipes.get(rand.nextInt(0, primaryRecipes.size()));
     }
-    public static good randGood(good primary) {
+    public static recipe randSecondaryRecipe() {
         Random rand = new Random(seed);
-        return primaryList.get(rand.nextInt(0, primaryList.size()));
+        return secondaryRecipes.get(rand.nextInt(0, secondaryRecipes.size()));
     }
 
-    public void setSeed(long newSeed) {
+    public static void setSeed(long newSeed) {
         seed = newSeed;
     }
     public int getAmount() {

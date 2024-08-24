@@ -2,16 +2,18 @@ package core;
 
 public class order {
     private good good;
-    private double price;
+    private double expectedPrice;
+    private double limitPrice;
     private company owner;
-    public order(company owner, good good, int amount, double price) {
+    public order(company owner, good good, int amount, double expectedPrice, double limitPrice) {
         this.good = good;
         good.changeAmount(amount);
-        this.price = price;
+        this.expectedPrice = expectedPrice;
+        this.limitPrice = limitPrice;
         this.owner = owner;
     }
     public boolean checkGoods(order other) {
-        return this.good == other.good;
+        return this.good.equals(other.good);
     }
     public int getAmount() {
         return good.getAmount();
@@ -21,11 +23,11 @@ public class order {
         company company1 = order1.owner;
         company company2 = order2.owner;
         if (company2.checkDeal(order2, order1) && company1.checkDeal(order1, order2)) {
-            double price1 = order1.price;
-            double price2 = order2.price;
+            double price1 = order1.expectedPrice;
+            double price2 = order2.expectedPrice;
             double price = (price1 + price2) / 2;
             int amount = Math.min(order1.getAmount(), order2.getAmount());
-            company1.buyGood(amount, price);
+            company1.buyGood(amount, order1.good.getName());
             company2.sellGood(amount, price);
             order1.good.changeAmount(-amount);
             order2.good.changeAmount(-amount);
@@ -34,6 +36,9 @@ public class order {
     }
 
     public double getPrice() {
-        return this.price;
+        return expectedPrice;
+    }
+    public double getLimitPrice() {
+        return limitPrice;
     }
 }
