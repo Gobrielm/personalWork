@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class economy {
     private static ArrayList<planet> galacticMarket;
 
-    public economy(long seed) {
+    public economy(long seed, int playerCount) {
         good.createGoodList();
         good.createRecipes();
         planet.setSeed(seed);

@@ -31,4 +31,5 @@ public class planet {
     public void addCompany(company toAdd) {
         companies.add(toAdd);
     }
+
 }
