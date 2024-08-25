@@ -1,10 +1,12 @@
 package core;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class economy {
     private static ArrayList<planet> galacticMarket;
-
+    private static HashMap<String, ArrayList<order>> buyOrders;
+    private static HashMap<String, ArrayList<order>> sellOrders;
     public economy(long seed, int playerCount) {
         good.createGoodList();
         good.createRecipes();
