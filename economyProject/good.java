@@ -7,33 +7,33 @@ public class good {
     private int amount;
     private static ArrayList<recipe> primaryRecipes = new ArrayList<>();
     private static ArrayList<recipe> secondaryRecipes = new ArrayList<>();
-    private static HashMap<String, Integer> basePrices;
+    private static HashMap<String, Double> basePrices;
     private static long seed;
     public static void createGoodList() {
         basePrices = new HashMap<>();
-        basePrices.put("Bismuth", 5);
-        basePrices.put("Osmium", 5);
-        basePrices.put("Copper", 5);
-        basePrices.put("Gold", 5);
-        basePrices.put("Zinc", 5);
-        basePrices.put("Manganese", 5);
-        basePrices.put("Argon", 5);
-        basePrices.put("Oxygen", 5);
-        basePrices.put("Hydrogen", 5);
-        basePrices.put("Xenon", 5);
-        basePrices.put("Carbon", 5);
-        basePrices.put("Water", 5);
-        basePrices.put("Argonium", 5);
-        basePrices.put("Wires", 5);
-        basePrices.put("Bismanol", 5);
-        basePrices.put("Brass", 5);
-        basePrices.put("Batteries", 5);
-        basePrices.put("CopperHydride", 5);
-        basePrices.put("XenonTetroxide", 5);
-        basePrices.put("Butane", 5);
-        basePrices.put("IonFuel", 5);
-        basePrices.put("Weapons", 5);
-        basePrices.put("PerxenicAcid", 5);
+        basePrices.put("Bismuth", 5.0);
+        basePrices.put("Osmium", 5.0);
+        basePrices.put("Copper", 5.0);
+        basePrices.put("Gold", 5.0);
+        basePrices.put("Zinc", 5.0);
+        basePrices.put("Manganese", 5.0);
+        basePrices.put("Argon", 5.0);
+        basePrices.put("Oxygen", 5.0);
+        basePrices.put("Hydrogen", 5.0);
+        basePrices.put("Xenon", 5.0);
+        basePrices.put("Carbon", 5.0);
+        basePrices.put("Water", 5.0);
+        basePrices.put("Argonium", 5.0);
+        basePrices.put("Wires", 5.0);
+        basePrices.put("Bismanol", 5.0);
+        basePrices.put("Brass", 5.0);
+        basePrices.put("Batteries", 5.0);
+        basePrices.put("CopperHydride", 5.0);
+        basePrices.put("XenonTetroxide", 5.0);
+        basePrices.put("Butane", 5.0);
+        basePrices.put("IonFuel", 5.0);
+        basePrices.put("Weapons", 5.0);
+        basePrices.put("PerxenicAcid", 5.0);
     }
     public static void createRecipes() {
         primaryRecipes.add(new recipe(new good[]{}, new good[]{new good("Copper", 1)}, 2, 0));
@@ -51,6 +51,12 @@ public class good {
     }
     public String getName() {
         return name;
+    }
+    public static String[] getGoodList() {
+        return basePrices.keySet().toArray(new String[0]);
+    }
+    public static Double[] getPriceList() {
+        return basePrices.values().toArray(new Double[0]);
     }
     public static recipe randPrimaryRecipe() {
         Random rand = new Random(seed);

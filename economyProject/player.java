@@ -13,4 +13,14 @@ public class player {
         cash = 500;
         planet = 0;
     }
+
+    public int getPlanet() {
+        return planet;
+    }
+    public String getName() {
+        return name;
+    }
+    public double getCash() {
+        return cash;
+    }
 }

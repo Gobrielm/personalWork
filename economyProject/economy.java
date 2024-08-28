@@ -26,7 +26,12 @@ public class economy {
     }
 
     public void tick() {
-        int currentPlayer = 0;
+        int currID = 0;
+        player currPlayer = playerList.get(currID);
+        graphicalInterface.drawPlanetMenu(currPlayer);
+    }
 
+    public static planet getPlanetFromID(int ID) {
+        return galacticMarket.get(ID);
     }
 }
