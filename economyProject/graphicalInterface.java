@@ -8,7 +8,7 @@ public class graphicalInterface {
     static final int WIDTH = 60;
     static final int HEIGHT = 30;
     static final int CANVASSIZE = 30;
-    public static void drawMenu(economy galaxy) {
+    public static void drawPlanetMenu(economy galaxy) {
         Font small = new Font("Monaco", Font.BOLD, 15);
         StdDraw.setFont(small);
         StdDraw.setCanvasSize(WIDTH * CANVASSIZE, HEIGHT * CANVASSIZE);
