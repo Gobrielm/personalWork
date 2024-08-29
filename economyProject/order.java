@@ -6,6 +6,7 @@ public class order {
     private double limitPrice;
     private company owner;
     public order(company owner, good good, double expectedPrice, double limitPrice) {
+        
         this.good = new good(good.getName(), good.getAmount());
         this.expectedPrice = expectedPrice;
         this.limitPrice = limitPrice;

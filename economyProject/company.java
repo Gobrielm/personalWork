@@ -56,18 +56,38 @@ public class company {
         good[] input = recipe.getInputGood();
         for (int i = 0; i < input.length; i++) {
             good temp = input[i];
-            planet.addBuyOrder(new order(this, temp, 10, 10));
+            if (recipe.getInput(i) >= temp.getAmount()) {
+                planet.addBuyOrder(new order(this, temp, good.getBasePrice(temp.getName()), 1.05 * good.getBasePrice(temp.getName())));
+            }
         }
     }
-
+    private void createSellOrders() {
+        good[] output = recipe.getOutputGood();
+        for (int i = 0; i < output.length; i++) {
+            good temp = output[i];
+            if (recipe.getOutput(i) >= temp.getAmount()) {
+                planet.addSellOrder(new order(this, temp, good.getBasePrice(temp.getName()), 0.95 * good.getBasePrice(temp.getName())));
+                temp.changeAmount(-temp.getAmount());
+            }
+        }
+    }
+    private void createGoods() {
+        good[] input = recipe.getInputGood();
+        for (int i = 0; i < input.length; i++) {
+            good temp = input[i];
+            recipe.changeInput(i, temp.getAmount());
+        }
+    }
     public void tick() {
         payExpenses();
         if (order == 1) {
-
+            createGoods();
+            createSellOrders();
         } else if (order == 2) {
-
+            createBuyOrders();
+            createSellOrders();
         } else {
-
+            createBuyOrders();
         }
     }
 }

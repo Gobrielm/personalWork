@@ -46,10 +46,15 @@ public class planet {
     public void addBuyOrder(order order) {
         buyOrders.get(order.getGood()).add(order);
     }
+    public order[] getBuyOrders(String name) {
+        return buyOrders.get(name).toArray(new order[0]);
+    }
     public void addSellOrder(order order) {
         sellOrders.get(order.getGood()).add(order);
     }
-
+    public order[] getSellOrders(String name) {
+        return sellOrders.get(name).toArray(new order[0]);
+    }
     public void addCompany(company toAdd) {
         companies.add(toAdd);
     }

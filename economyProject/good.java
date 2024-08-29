@@ -58,6 +58,9 @@ public class good {
     public static Double[] getPriceList() {
         return basePrices.values().toArray(new Double[0]);
     }
+    public static double getBasePrice(String name) {
+        return basePrices.get(name);
+    }
     public static recipe randPrimaryRecipe() {
         Random rand = new Random(seed);
         return primaryRecipes.get(rand.nextInt(0, primaryRecipes.size()));

@@ -90,6 +90,12 @@ public class recipe {
             i++;
         }
     }
+    public void changeInput(int index, int amount) {
+        inputStorage[index] += amount;
+    }
+    public int getInput(int index) {
+        return inputStorage[index];
+    }
     public void changeOutput(String name, int amount) {
         int i = 0;
         for (good good: output) {
@@ -100,7 +106,12 @@ public class recipe {
             i++;
         }
     }
-
+    public void changeOutput(int index, int amount) {
+        outputStorage[index] += amount;
+    }
+    public int getOutput(int index) {
+        return outputStorage[index];
+    }
     public void createRecipe() {
         for (int i = 0; i < input.length; i++) {
             good temp = input[i];
