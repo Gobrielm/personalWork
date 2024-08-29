@@ -31,6 +31,9 @@ public class company {
     public static void setSeed(long newSeed) {
         seed = newSeed;
     }
+    public String getName() {
+        return name;
+    }
 
     //order1 is the same as the company
     public boolean checkDeal(order order1, order order2) {
@@ -56,8 +59,9 @@ public class company {
         good[] input = recipe.getInputGood();
         for (int i = 0; i < input.length; i++) {
             good temp = input[i];
-            if (recipe.getInput(i) >= temp.getAmount()) {
-                planet.addBuyOrder(new order(this, temp, good.getBasePrice(temp.getName()), 1.05 * good.getBasePrice(temp.getName())));
+            double limit = good.getBasePrice(temp.getName());
+            if (recipe.getInput(i) * limit <= cash) {
+                planet.addBuyOrder(new order(this, temp, good.getBasePrice(temp.getName()), 1.05 * limit));
             }
         }
     }
@@ -72,10 +76,10 @@ public class company {
         }
     }
     private void createGoods() {
-        good[] input = recipe.getInputGood();
-        for (int i = 0; i < input.length; i++) {
-            good temp = input[i];
-            recipe.changeInput(i, temp.getAmount());
+        good[] output = recipe.getOutputGood();
+        for (int i = 0; i < output.length; i++) {
+            good temp = output[i];
+            recipe.changeOutput(i, temp.getAmount());
         }
     }
     public void tick() {

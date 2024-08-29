@@ -24,6 +24,7 @@ public class graphicalInterface {
 
 
     public static void drawPlanetMenu(player player) {
+        StdDraw.clear(Color.BLACK);
         int planetID = player.getPlanet();
         StdDraw.line(WIDTH * 0.333, 0, WIDTH * 0.333, HEIGHT);
         StdDraw.line(WIDTH * 0.666, 0, WIDTH * 0.666, HEIGHT);
@@ -50,13 +51,21 @@ public class graphicalInterface {
         StdDraw.show();
     }
 
-    public static void drawGoods(String name) {
-
-
-        for (int i = 0; i < goodNames.length; i++) {
-            StdDraw.text(WIDTH * 0.42,  HEIGHT / (goodNames.length + 1) * (i + 1), goodNames[i]);
-            StdDraw.text(WIDTH * .50,  HEIGHT / (goodNames.length + 1) * (i + 1), Integer.toString((int) Math.round(goodPrices[i])));
-            StdDraw.line(WIDTH * 0.333,  HEIGHT / (goodNames.length + 1) * (i + 1.5),  WIDTH * 0.51,  HEIGHT / (goodNames.length + 1) * (i + 1.5));
+    public static void drawGoods(player player, String name) {
+        StdDraw.clear(Color.BLACK);
+        drawPlanetMenu(player);
+        planet planet = economy.getPlanetFromID(player.getPlanet());
+        order[] buyOrders = planet.getBuyOrders(name);
+        order[] sellOrders = planet.getSellOrders(name);
+        int total = buyOrders.length + sellOrders.length;
+        int curr = 0;
+        for (int i = 0; i < buyOrders.length; i++) {
+            StdDraw.text(WIDTH * 0.75,  HEIGHT / (total + 1) * (i + 1), "Buy Order: " + buyOrders[i].toString());
+            curr++;
         }
+        for (int i = curr; i < total; i++) {
+            StdDraw.text(WIDTH * 0.75,  HEIGHT / (total + 1) * (i + 1), "Sell Order: " + sellOrders[i - curr].toString());
+        }
+        StdDraw.show();
     }
 }

@@ -9,6 +9,7 @@ public class good {
     private static ArrayList<recipe> secondaryRecipes = new ArrayList<>();
     private static HashMap<String, Double> basePrices;
     private static long seed;
+    private static Random rand;
     public static void createGoodList() {
         basePrices = new HashMap<>();
         basePrices.put("Bismuth", 5.0);
@@ -62,16 +63,15 @@ public class good {
         return basePrices.get(name);
     }
     public static recipe randPrimaryRecipe() {
-        Random rand = new Random(seed);
         return primaryRecipes.get(rand.nextInt(0, primaryRecipes.size()));
     }
     public static recipe randSecondaryRecipe() {
-        Random rand = new Random(seed);
         return secondaryRecipes.get(rand.nextInt(0, secondaryRecipes.size()));
     }
 
     public static void setSeed(long newSeed) {
         seed = newSeed;
+        rand = new Random(seed);
     }
     public int getAmount() {
         return this.amount;

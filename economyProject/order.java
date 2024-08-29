@@ -22,6 +22,9 @@ public class order {
     public static void makeDeal(order order1, order order2) {
         company company1 = order1.owner;
         company company2 = order2.owner;
+        if (order1.getAmount() == 0 || order2.getAmount() == 0) {
+            return;
+        }
         if (order1.limitPrice > order2.limitPrice) {
             if (company2.checkDeal(order2, order1) && company1.checkDeal(order1, order2)) {
                 double price1 = order1.expectedPrice;
@@ -36,6 +39,11 @@ public class order {
         }
 
         //No deal
+    }
+
+    @Override
+    public String toString() {
+        return owner.getName() + ": " + good.getAmount() + "----" + Math.round(expectedPrice);
     }
 
     public double getPrice() {

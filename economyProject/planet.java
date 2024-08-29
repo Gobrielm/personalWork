@@ -8,6 +8,7 @@ public class planet {
     private int id;
     private int size;
     private static long seed;
+    private static Random rand;
     private ArrayList<company> companies;
     private HashMap<String, Double> prices;
     private HashMap<String, ArrayList<order>> buyOrders;
@@ -15,7 +16,7 @@ public class planet {
     public planet(int id) {
         this.id = id;
         companies = new ArrayList<>();
-        Random rand = new Random(seed);
+        rand = new Random(seed);
         size = rand.nextInt(30, 60);
         for (int i = 0; i < size * 2 / 3; i++) {
             recipe temp = good.randPrimaryRecipe();
@@ -30,8 +31,12 @@ public class planet {
         String[] goods = good.getGoodList();
         Double[] basePrice = good.getPriceList();
         prices = new HashMap<>();
+        buyOrders = new HashMap<>();
+        sellOrders = new HashMap<>();
         for (int i = 0; i < goods.length; i++) {
             prices.put(goods[i], basePrice[i]);
+            buyOrders.put(goods[i], new ArrayList<>());
+            sellOrders.put(goods[i], new ArrayList<>());
         }
     }
     public static void setSeed(long newSeed) {
@@ -47,16 +52,48 @@ public class planet {
         buyOrders.get(order.getGood()).add(order);
     }
     public order[] getBuyOrders(String name) {
+        if (buyOrders.get(name) == null) {
+            return new order[0];
+        }
         return buyOrders.get(name).toArray(new order[0]);
     }
     public void addSellOrder(order order) {
         sellOrders.get(order.getGood()).add(order);
     }
     public order[] getSellOrders(String name) {
+        if (sellOrders.get(name) == null) {
+            return new order[0];
+        }
         return sellOrders.get(name).toArray(new order[0]);
     }
     public void addCompany(company toAdd) {
         companies.add(toAdd);
     }
 
+    public void completeOrders() {
+        for (String good: prices.keySet()) {
+            for (order buy: buyOrders.get(good)) {
+                if (buy.getAmount() == 0) {
+                    buyOrders.get(good).remove(buy);
+                    continue;
+                }
+                if (sellOrders.get(good).isEmpty()) {
+                    break;
+                }
+                order sell = sellOrders.get(good).get(rand.nextInt(0, sellOrders.get(good).size()));
+                while (sell.getAmount() == 0) {
+                    sellOrders.get(good).remove(sell);
+                    sell = sellOrders.get(good).get(rand.nextInt(0, sellOrders.get(good).size()));
+                }
+                order.makeDeal(buy, sell);
+            }
+        }
+    }
+
+    public void planetTick() {
+        for (company x: companies) {
+            x.tick();
+        }
+        completeOrders();
+    }
 }
