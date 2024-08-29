@@ -56,7 +56,7 @@ public class company {
         good[] input = recipe.getInputGood();
         for (int i = 0; i < input.length; i++) {
             good temp = input[i];
-            planet.addBuyOrder(new order(this, temp, ));
+            planet.addBuyOrder(new order(this, temp, 10, 10));
         }
     }
 
