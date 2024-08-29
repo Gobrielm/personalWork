@@ -12,9 +12,7 @@ public class graphicalInterface {
     static final Font MED = new Font("Monaco", Font.BOLD, 20);
     static final Font BIG = new Font("Monaco", Font.BOLD, 30);
 
-    public static void drawPlanetMenu(player player) {
-        int planetID = player.getPlanet();
-
+    public static void startGame() {
         StdDraw.setFont(SMALL);
         StdDraw.setCanvasSize((int) (WIDTH * CANVASSIZE), (int) (HEIGHT * CANVASSIZE));
         StdDraw.setXscale(0, WIDTH);
@@ -22,6 +20,11 @@ public class graphicalInterface {
         StdDraw.clear(Color.BLACK);
         StdDraw.setPenColor(Color.WHITE);
         StdDraw.enableDoubleBuffering();
+    }
+
+
+    public static void drawPlanetMenu(player player) {
+        int planetID = player.getPlanet();
         StdDraw.line(WIDTH / 3, 0, WIDTH / 3, HEIGHT);
         StdDraw.line(WIDTH / 3 * 2, 0, WIDTH / 3 * 2, HEIGHT);
 

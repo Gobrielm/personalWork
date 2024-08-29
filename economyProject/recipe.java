@@ -37,6 +37,12 @@ public class recipe {
         this.income = income;
         this.expenses = expenses;
     }
+    public good[] getInputGood() {
+        return input;
+    }
+    public good[] getOutputGood() {
+        return output;
+    }
 
     public String[] getOutput() {
         String[] toReturn = new String[output.length];

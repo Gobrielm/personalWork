@@ -5,9 +5,9 @@ import java.util.HashMap;
 
 public class economy {
     private static ArrayList<planet> galacticMarket;
-    private static HashMap<String, ArrayList<order>> buyOrders;
-    private static HashMap<String, ArrayList<order>> sellOrders;
+
     private static ArrayList<player> playerList;
+    public static int dayCount = 0;
     public economy(long seed, int playerCount) {
         good.createGoodList();
         good.createRecipes();
@@ -26,6 +26,8 @@ public class economy {
     }
 
     public void tick() {
+        dayCount++;
+        System.out.println(dayCount);
         int currID = 0;
         player currPlayer = playerList.get(currID);
         graphicalInterface.drawPlanetMenu(currPlayer);

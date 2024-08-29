@@ -8,8 +8,10 @@ public class planet {
     private int id;
     private int size;
     private static long seed;
-    ArrayList<company> companies;
-    HashMap<String, Double> prices;
+    private ArrayList<company> companies;
+    private HashMap<String, Double> prices;
+    private HashMap<String, ArrayList<order>> buyOrders;
+    private HashMap<String, ArrayList<order>> sellOrders;
     public planet(int id) {
         this.id = id;
         companies = new ArrayList<>();
@@ -17,12 +19,12 @@ public class planet {
         size = rand.nextInt(30, 60);
         for (int i = 0; i < size * 2 / 3; i++) {
             recipe temp = good.randPrimaryRecipe();
-            company newCompany = new company("Filler" , temp);
+            company newCompany = new company("Filler" , temp, this);
             companies.add(newCompany);
         }
         for (int i = 0; i < size / 3; i++) {
             recipe temp = good.randSecondaryRecipe();
-            company newCompany = new company("Filler", temp);
+            company newCompany = new company("Filler", temp, this);
             companies.add(newCompany);
         }
         String[] goods = good.getGoodList();
@@ -40,6 +42,12 @@ public class planet {
     }
     public Double[] getPriceList() {
         return prices.values().toArray(new Double[0]);
+    }
+    public void addBuyOrder(order order) {
+        buyOrders.get(order.getGood()).add(order);
+    }
+    public void addSellOrder(order order) {
+        sellOrders.get(order.getGood()).add(order);
     }
 
     public void addCompany(company toAdd) {

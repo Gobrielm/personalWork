@@ -10,9 +10,10 @@ public class company {
     private recipe recipe;
     private int order;
     private static long seed;
+    private planet planet;
     //Higher number is more aggressive
     private int personality;
-    public company(String name, recipe recipe) {
+    public company(String name, recipe recipe, planet planet) {
         this.name = name;
         this.recipe = new recipe(recipe.getInput(), recipe.getOutput(), recipe.getInputAmount(), recipe.getOutputAmount(), recipe.getExpenses(), recipe.getIncome());
         cash = 100;
@@ -25,6 +26,7 @@ public class company {
         }
         Random rand = new Random(seed);
         this.personality = rand.nextInt(1, 4);
+        this.planet = planet;
     }
     public static void setSeed(long newSeed) {
         seed = newSeed;
@@ -44,5 +46,28 @@ public class company {
 
     public void sellGood(int amount, double price) {
         cash += amount * price;
+    }
+
+    private void payExpenses() {
+        cash -= recipe.getExpenses();
+    }
+
+    private void createBuyOrders() {
+        good[] input = recipe.getInputGood();
+        for (int i = 0; i < input.length; i++) {
+            good temp = input[i];
+            planet.addBuyOrder(new order(this, temp, ));
+        }
+    }
+
+    public void tick() {
+        payExpenses();
+        if (order == 1) {
+
+        } else if (order == 2) {
+
+        } else {
+
+        }
     }
 }
