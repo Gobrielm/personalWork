@@ -6,7 +6,6 @@ public class order {
     private double limitPrice;
     private company owner;
     public order(company owner, good good, double expectedPrice, double limitPrice) {
-        
         this.good = new good(good.getName(), good.getAmount());
         this.expectedPrice = expectedPrice;
         this.limitPrice = limitPrice;
@@ -22,6 +21,7 @@ public class order {
     public static void makeDeal(order order1, order order2) {
         company company1 = order1.owner;
         company company2 = order2.owner;
+        System.out.println(company2.getRecipe());
         if (order1.getAmount() == 0 || order2.getAmount() == 0) {
             return;
         }
@@ -31,8 +31,8 @@ public class order {
                 double price2 = order2.expectedPrice;
                 double price = (price1 + price2) / 2;
                 int amount = Math.min(order1.getAmount(), order2.getAmount());
-                company1.buyGood(amount, order1.good.getName());
-                company2.sellGood(amount, price);
+                company1.buyGood(amount, order1.good.getName(), price);
+                company2.sellGood(amount, order2.good.getName(), price);
                 order1.good.changeAmount(-amount);
                 order2.good.changeAmount(-amount);
             } else if (company2.checkDeal(order2, order1)) {

@@ -1,6 +1,7 @@
 package core;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Objects;
 import java.util.Random;
 
@@ -12,15 +13,16 @@ public class company {
     private static long seed;
     private static Random rand;
     private planet planet;
-    private double[] lastBuyPrices;
+    private HashMap<String, Double[]> lastBuyPrices;
     private int lastBuyPricesSize;
-    private double[] lastSellPrices;
+    private HashMap<String, Double[]> lastSellPrices;
     private int lastSellPricesSize;
     //Higher number is more aggressive
     private int personality;
     public company(String name, recipe recipe, planet planet) {
         this.name = name;
         this.recipe = new recipe(recipe.getInput(), recipe.getOutput(), recipe.getInputAmount(), recipe.getOutputAmount(), recipe.getExpenses(), recipe.getIncome());
+        System.out.println(this.recipe);
         cash = 100;
         if (recipe.getInput() == null || Arrays.equals(recipe.getInput(), new String[]{})) {
             this.order = 1;
@@ -29,9 +31,9 @@ public class company {
         } else {
             this.order = 2;
         }
-        lastBuyPrices = new double[5];
+        lastBuyPrices = new HashMap<>();
         lastBuyPricesSize = 0;
-        lastSellPrices = new double[5];
+        lastSellPrices = new HashMap<>();
         lastSellPricesSize = 0;
         Random rand = new Random(seed);
         this.personality = rand.nextInt(1, 4);
@@ -49,19 +51,22 @@ public class company {
     }
     //order1 is the same as the company
     public boolean checkDeal(order order1, order order2) {
-        return false;
-//        double priceDiff = order1.getPrice() - order2.getPrice();
-//        double price = order1.getPrice();
-//        double change = Math.abs(priceDiff / price);
-//        return change < 0.03;
+        double priceDiff = order1.getPrice() - order2.getPrice();
+        double price = order1.getPrice();
+        double change = Math.abs(priceDiff / price);
+        return change < 0.01 * personality;
     }
 
-    public void buyGood(int amount, String good) {
+    public void buyGood(int amount, String good, double price) {
         recipe.changeInput(good, amount);
+        addLastBoughtPrice(price);
     }
-    private void addLastBoughtPrice(double price) {
-        lastBuyPrices[lastBuyPricesSize] = price;
-        if (lastBuyPricesSize < lastBuyPrices.length - 1) {
+    private void addLastBoughtPrice(String name, double price) {
+        if (lastBuyPricesSize == 0) {
+            lastBuyPrices.put(name, new Double[5]);
+        }
+        lastBuyPrices.get(name)[lastBuyPricesSize] = price;
+        if (lastBuyPricesSize < lastBuyPrices.get(name).length - 1) {
             lastBuyPricesSize++;
         }
     }
@@ -69,16 +74,19 @@ public class company {
         int temp = lastBuyPricesSize;
         double total = 0;
         for (int i = 0; i < temp; i++) {
-            total += lastBuyPrices[i];
+            total += lastBuyPrices.get(name)[i];
         }
         if (total == 0) {
             return good.getBasePrice(name);
         }
         return total;
     }
-    private void addLastSoldPrice(double price) {
-        lastSellPrices[lastSellPricesSize] = price;
-        if (lastSellPricesSize < lastSellPrices.length - 1) {
+    private void addLastSoldPrice(String name, double price) {
+        if (lastSellPricesSize == 0) {
+            lastSellPrices.put(name, new Double[5]);
+        }
+        lastSellPrices.get(name)[lastSellPricesSize] = price;
+        if (lastSellPricesSize < lastSellPrices.get(name).length - 1) {
             lastSellPricesSize++;
         }
     }
@@ -86,7 +94,7 @@ public class company {
         int temp = lastSellPricesSize;
         double total = 0;
         for (int i = 0; i < temp; i++) {
-            total += lastSellPrices[i];
+            total += lastSellPrices.get(name)[i];
         }
         if (total == 0) {
             return good.getBasePrice(name);
@@ -105,9 +113,9 @@ public class company {
         }
         return good.getBasePrice(name) * percentage;
     }
-    public void sellGood(int amount, double price) {
+    public void sellGood(int amount, String name, double price) {
         cash += amount * price;
-        addLastSoldPrice(price);
+        addLastSoldPrice(name, price);
     }
 
     private void payExpenses() {
@@ -130,21 +138,15 @@ public class company {
             good temp = output[i];
             if (recipe.getOutput(i) >= temp.getAmount()) {
                 planet.addSellOrder(new order(this, temp, getExpectSellPrice(temp.getName()), minSellPrice(temp.getName())));
-                temp.changeAmount(-temp.getAmount());
+                recipe.changeOutput(i, -temp.getAmount());
             }
         }
     }
-    private void createGoods() {
-        good[] output = recipe.getOutputGood();
-        for (int i = 0; i < output.length; i++) {
-            good temp = output[i];
-            recipe.changeOutput(i, temp.getAmount());
-        }
-    }
+
     public void tick() {
         payExpenses();
+        recipe.createRecipe();
         if (order == 1) {
-            createGoods();
             createSellOrders();
         } else if (order == 2) {
             createBuyOrders();

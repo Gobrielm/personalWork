@@ -89,7 +89,7 @@ public class graphicalInterface {
             for (int i = 0; i < listGoods.length; i++) {
                 if (listGoods[i].equals(name)) {
                     sellGraph[(int) Math.round(x.minSellPrice(name))] += x.getRecipe().getOutputAmount()[i];
-                    
+
                     System.out.println(x.getRecipe());
                     System.out.println(x.getRecipe().getOutputAmount()[i]);
                     break;
