@@ -14,9 +14,9 @@ public class company {
     private static Random rand;
     private planet planet;
     private HashMap<String, Double[]> lastBuyPrices;
-    private int lastBuyPricesSize;
+    private HashMap<String, Integer> lastBuyPricesSize;
     private HashMap<String, Double[]> lastSellPrices;
-    private int lastSellPricesSize;
+    private HashMap<String, Integer> lastSellPricesSize;
     //Higher number is more aggressive
     private int personality;
     public company(String name, recipe recipe, planet planet) {
@@ -30,10 +30,14 @@ public class company {
         } else {
             this.order = 2;
         }
-        lastBuyPrices = new HashMap<>();
-        lastBuyPricesSize = 0;
+        lastBuyPricesSize = new HashMap<>();
+        lastSellPricesSize = new HashMap<>();
+        for (String x: good.getGoodList()) {
+            lastBuyPricesSize.put(x, 0);
+            lastSellPricesSize.put(x, 0);
+        }
         lastSellPrices = new HashMap<>();
-        lastSellPricesSize = 0;
+        lastBuyPrices = new HashMap<>();
         Random rand = new Random(seed);
         this.personality = rand.nextInt(1, 4);
         this.planet = planet;
@@ -61,16 +65,17 @@ public class company {
         addLastBoughtPrice(good, price);
     }
     private void addLastBoughtPrice(String name, double price) {
-        if (lastBuyPricesSize == 0) {
+        int size = lastBuyPricesSize.get(name);
+        if (size == 0) {
             lastBuyPrices.put(name, new Double[5]);
         }
-        lastBuyPrices.get(name)[lastBuyPricesSize] = price;
-        if (lastBuyPricesSize < lastBuyPrices.get(name).length - 1) {
-            lastBuyPricesSize++;
+        lastBuyPrices.get(name)[size] = price;
+        if (size < lastBuyPrices.get(name).length - 1) {
+            lastBuyPricesSize.put(name, size + 1);
         }
     }
     private double getExpectBuyPrice(String name) {
-        int temp = lastBuyPricesSize;
+        int temp = lastBuyPricesSize.get(name);
         double total = 0;
         for (int i = 0; i < temp; i++) {
             total += lastBuyPrices.get(name)[i];
@@ -94,20 +99,20 @@ public class company {
         while (expenses + baseTotalBuy * percentage < baseTotalSell) {
             percentage += 0.01;
         }
-
         return good.getBasePrice(name) * percentage;
     }
     private void addLastSoldPrice(String name, double price) {
-        if (lastSellPricesSize == 0) {
+        int size = lastSellPricesSize.get(name);
+        if (size == 0) {
             lastSellPrices.put(name, new Double[5]);
         }
-        lastSellPrices.get(name)[lastSellPricesSize] = price;
-        if (lastSellPricesSize < lastSellPrices.get(name).length - 1) {
-            lastSellPricesSize++;
+        lastSellPrices.get(name)[size] = price;
+        if (size < lastSellPrices.get(name).length - 1) {
+            lastSellPricesSize.put(name, size + 1);
         }
     }
     private double getExpectSellPrice(String name) {
-        int temp = lastSellPricesSize;
+        int temp = lastSellPricesSize.get(name);
         double total = 0;
         for (int i = 0; i < temp; i++) {
             total += lastSellPrices.get(name)[i];
@@ -131,7 +136,7 @@ public class company {
         while (expenses + baseTotalBuy < baseTotalSell * percentage) {
             percentage -= 0.01;
         }
-
+        System.out.println(good.getBasePrice(name) * percentage);
         return good.getBasePrice(name) * percentage;
     }
     public void sellGood(int amount, String name, double price) {
@@ -149,7 +154,7 @@ public class company {
             good temp = input[i];
             double limit = good.getBasePrice(temp.getName());
             if (recipe.getInput(i) * limit <= cash) {
-                planet.addBuyOrder(new order(this, temp, getExpectBuyPrice(temp.getName()), 1));
+                planet.addBuyOrder(new order(this, temp, getExpectBuyPrice(temp.getName()), maxBuyPrice(temp.getName())));
             }
         }
     }

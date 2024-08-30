@@ -11,11 +11,11 @@ public class economy {
     private static ArrayList<player> playerList;
     public static int dayCount = 0;
     public economy(long seed, int playerCount) {
-        good.createGoodList();
-        good.createRecipes();
         planet.setSeed(seed);
         good.setSeed(seed);
         company.setSeed(seed);
+        good.createGoodList();
+        good.createRecipes();
         galacticMarket = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
             planet temp = new planet(i);

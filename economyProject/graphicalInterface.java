@@ -81,37 +81,34 @@ public class graphicalInterface {
         StdDraw.line(WIDTH * startX, HEIGHT * startY, WIDTH * (startX + 0.2), HEIGHT * startY);
         StdDraw.line(WIDTH * startX, HEIGHT * startY, WIDTH * startX, HEIGHT * (startY + 0.2));
 
-        int[] buyGraph = new int[20];
-        int[] sellGraph = new int[20];
+        int[] buyGraph = new int[200];
+        int[] sellGraph = new int[200];
 
         for (company x: planet.getCompanies()) {
             String[] listGoods = x.getRecipe().getOutput();
             for (int i = 0; i < listGoods.length; i++) {
                 if (listGoods[i].equals(name)) {
-                    sellGraph[(int) Math.round(x.minSellPrice(name))] += x.getRecipe().getOutputAmount()[i];
-
-                    System.out.println(x.getRecipe());
-                    System.out.println(x.getRecipe().getOutputAmount()[i]);
+                    sellGraph[(int) Math.round(x.minSellPrice(name) * 10)] += x.getRecipe().getOutputAmount()[i];
                     break;
                 }
             }
         }
         for (order x: planet.getBuyOrders(name)) {
-            buyGraph[(int) Math.round(x.getLimitPrice())] += x.getAmount();
+            buyGraph[(int) Math.round(x.getLimitPrice() * 10)] += x.getAmount();
         }
         StdDraw.setPenColor(Color.GREEN);
         for (int i = 0; i < buyGraph.length; i++) {
             if (buyGraph[i] == 0) {
                 continue;
             }
-            StdDraw.circle(WIDTH * (startX + buyGraph[i] * 0.0025), HEIGHT * (startY + i * 0.01), 0.1);
+            StdDraw.circle(WIDTH * (startX + buyGraph[i] * 0.0025), HEIGHT * (startY + i * 0.001), 0.1);
         }
         StdDraw.setPenColor(Color.RED);
         for (int i = 0; i < sellGraph.length; i++) {
             if (sellGraph[i] == 0) {
                 continue;
             }
-            StdDraw.circle(WIDTH * (startX + sellGraph[i] * 0.0025), HEIGHT * (startY + i * 0.01), 0.1);
+            StdDraw.circle(WIDTH * (startX + sellGraph[i] * 0.0025), HEIGHT * (startY + i * 0.001), 0.1);
         }
 
         StdDraw.setPenColor(Color.WHITE);

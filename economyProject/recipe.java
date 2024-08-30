@@ -3,12 +3,12 @@ package core;
 public class recipe {
     private good[] input;
     private good[] output;
-    private int expenses;
+    private double expenses;
     private int income;
     private int[] inputStorage;
     private int[] outputStorage;
 
-    public recipe(good[] input, good[] output, int expenses, int income) {
+    public recipe(good[] input, good[] output, double expenses, int income) {
         this.input = input;
         this.output = output;
         inputStorage = new int[input.length];
@@ -17,7 +17,7 @@ public class recipe {
         this.expenses = expenses;
     }
 
-    public recipe(String[] input, String[] output, int[] inputAmount, int[] outputAmount, int expenses, int income) {
+    public recipe(String[] input, String[] output, int[] inputAmount, int[] outputAmount, double expenses, int income) {
         this.input = new good[input.length];
         for (int i = 0; i < input.length; i++) {
             this.input[i] = new good(input[i], inputAmount[i]);
@@ -31,7 +31,7 @@ public class recipe {
         this.income = income;
         this.expenses = expenses;
     }
-    public recipe(String input, String output, int inputAmount, int outputAmount, int expenses, int income) {
+    public recipe(String input, String output, int inputAmount, int outputAmount, double expenses, int income) {
         this.input = new good[]{new good(input, inputAmount)};
         this.output = new good[]{new good(output, outputAmount)};
         this.income = income;
@@ -73,7 +73,7 @@ public class recipe {
         return toReturn;
     }
 
-    public int getExpenses() {
+    public double getExpenses() {
         return expenses;
     }
     public int getIncome() {
