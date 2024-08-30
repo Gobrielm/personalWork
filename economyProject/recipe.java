@@ -132,4 +132,15 @@ public class recipe {
         }
     }
 
+    @Override
+    public String toString() {
+        String toReturn = "";
+        for (good x: input) {
+            toReturn += x.getName() + ": " + x.getAmount();
+        }
+        for (good x: output) {
+            toReturn += x.getName() + ": " + x.getAmount();
+        }
+        return toReturn;
+    }
 }

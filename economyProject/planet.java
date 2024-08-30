@@ -13,7 +13,6 @@ public class planet {
     private HashMap<String, Double> prices;
     private HashMap<String, ArrayList<order>> buyOrders;
     private HashMap<String, ArrayList<order>> sellOrders;
-    private HashMap<String, ArrayList<coords>> graph;
     public planet(int id) {
         this.id = id;
         companies = new ArrayList<>();
@@ -43,8 +42,8 @@ public class planet {
     public static void setSeed(long newSeed) {
         seed = newSeed;
     }
-    public HashMap<String, ArrayList<coords>> getGraph() {
-        return graph;
+    public company[] getCompanies() {
+        return companies.toArray(new company[0]);
     }
     public String[] getGoodList() {
         return prices.keySet().toArray(new String[0]);
@@ -74,10 +73,8 @@ public class planet {
         companies.add(toAdd);
     }
 
-    public HashMap<String, ArrayList<coords>> completeOrders() {
-        HashMap<String, ArrayList<coords>> toReturn = new HashMap<>();
+    public void completeOrders() {
         for (String good: prices.keySet()) {
-            toReturn.put(good, new ArrayList<>());
             for (order buy: buyOrders.get(good)) {
                 if (buy.getAmount() == 0) {
                     continue;
@@ -91,20 +88,16 @@ public class planet {
                     sell = sellOrders.get(good).get(rand.nextInt(0, sellOrders.get(good).size()));
                     tries++;
                 }
-                coords temp = order.makeDeal(buy, sell);
-                if (temp != null) {
-                    toReturn.get(good).add(temp);
-                }
+                order.makeDeal(buy, sell);
 
             }
         }
-        return toReturn;
     }
 
     public void planetTick() {
         for (company x: companies) {
             x.tick();
         }
-        graph = completeOrders();
+        completeOrders();
     }
 }
