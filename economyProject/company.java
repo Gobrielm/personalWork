@@ -10,6 +10,7 @@ public class company {
     private double cash;
     private recipe recipe;
     private int order;
+    private double[] incomeWeeks;
     private static long seed;
     private static Random rand;
     private planet planet;
@@ -39,6 +40,7 @@ public class company {
         lastSellPrices = new HashMap<>();
         lastBuyPrices = new HashMap<>();
         Random rand = new Random(seed);
+        incomeWeeks = new double[20];
         this.personality = rand.nextInt(1, 4);
         this.planet = planet;
     }
