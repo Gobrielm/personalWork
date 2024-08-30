@@ -13,6 +13,7 @@ public class planet {
     private HashMap<String, Double> prices;
     private HashMap<String, ArrayList<order>> buyOrders;
     private HashMap<String, ArrayList<order>> sellOrders;
+    private HashMap<String, ArrayList<coords>> graph;
     public planet(int id) {
         this.id = id;
         companies = new ArrayList<>();
@@ -42,6 +43,9 @@ public class planet {
     public static void setSeed(long newSeed) {
         seed = newSeed;
     }
+    public HashMap<String, ArrayList<coords>> getGraph() {
+        return graph;
+    }
     public String[] getGoodList() {
         return prices.keySet().toArray(new String[0]);
     }
@@ -70,30 +74,37 @@ public class planet {
         companies.add(toAdd);
     }
 
-    public void completeOrders() {
+    public HashMap<String, ArrayList<coords>> completeOrders() {
+        HashMap<String, ArrayList<coords>> toReturn = new HashMap<>();
         for (String good: prices.keySet()) {
+            toReturn.put(good, new ArrayList<>());
             for (order buy: buyOrders.get(good)) {
                 if (buy.getAmount() == 0) {
-                    buyOrders.get(good).remove(buy);
                     continue;
                 }
                 if (sellOrders.get(good).isEmpty()) {
                     break;
                 }
                 order sell = sellOrders.get(good).get(rand.nextInt(0, sellOrders.get(good).size()));
-                while (sell.getAmount() == 0) {
-                    sellOrders.get(good).remove(sell);
+                int tries = 0;
+                while (sell.getAmount() == 0 && tries < 100) {
                     sell = sellOrders.get(good).get(rand.nextInt(0, sellOrders.get(good).size()));
+                    tries++;
                 }
-                order.makeDeal(buy, sell);
+                coords temp = order.makeDeal(buy, sell);
+                if (temp != null) {
+                    toReturn.get(good).add(temp);
+                }
+
             }
         }
+        return toReturn;
     }
 
     public void planetTick() {
         for (company x: companies) {
             x.tick();
         }
-        completeOrders();
+        graph = completeOrders();
     }
 }

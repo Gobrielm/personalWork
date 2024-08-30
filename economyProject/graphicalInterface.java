@@ -3,6 +3,8 @@ package core;
 import edu.princeton.cs.algs4.StdDraw;
 
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class graphicalInterface {
     static final double WIDTH = 60;
@@ -65,6 +67,24 @@ public class graphicalInterface {
         }
         for (int i = curr; i < total; i++) {
             StdDraw.text(WIDTH * 0.75,  HEIGHT / (total + 1) * (i + 1), "Sell Order: " + sellOrders[i - curr].toString());
+        }
+        StdDraw.show();
+    }
+
+    public static void drawGraph(player player, String name) {
+        StdDraw.clear(Color.BLACK);
+        drawPlanetMenu(player);
+        StdDraw.setFont(MED);
+        planet planet = economy.getPlanetFromID(player.getPlanet());
+        double startX = 0.75;
+        double startY = 0.5;
+        HashMap<String, ArrayList<coords>> graph = planet.getGraph();
+        StdDraw.line(WIDTH * startX, HEIGHT * startY, WIDTH * (startX + 0.2), HEIGHT * startY);
+        StdDraw.line(WIDTH * startX, HEIGHT * startY, WIDTH * startX, HEIGHT * (startY + 0.2));
+        for (coords x: graph.get(name)) {
+            StdDraw.circle(WIDTH * (startX + x.quantity * 0.002), HEIGHT * (startY + x.price * 0.01), 0.1);
+            System.out.println(WIDTH * (startX + x.quantity * 0.002));
+            System.out.println(HEIGHT * (startY - x.price * 0.01));
         }
         StdDraw.show();
     }

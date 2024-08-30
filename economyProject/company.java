@@ -10,6 +10,7 @@ public class company {
     private recipe recipe;
     private int order;
     private static long seed;
+    private static Random rand;
     private planet planet;
     //Higher number is more aggressive
     private int personality;
@@ -30,6 +31,7 @@ public class company {
     }
     public static void setSeed(long newSeed) {
         seed = newSeed;
+        rand = new Random(seed);
     }
     public String getName() {
         return name;
@@ -37,10 +39,11 @@ public class company {
 
     //order1 is the same as the company
     public boolean checkDeal(order order1, order order2) {
-        double priceDiff = order1.getPrice() - order2.getPrice();
-        double price = order1.getPrice();
-        double change = Math.abs(priceDiff / price);
-        return change > 0.03;
+        return true;
+//        double priceDiff = order1.getPrice() - order2.getPrice();
+//        double price = order1.getPrice();
+//        double change = Math.abs(priceDiff / price);
+//        return change < 0.03;
     }
 
     public void buyGood(int amount, String good) {
@@ -61,7 +64,7 @@ public class company {
             good temp = input[i];
             double limit = good.getBasePrice(temp.getName());
             if (recipe.getInput(i) * limit <= cash) {
-                planet.addBuyOrder(new order(this, temp, good.getBasePrice(temp.getName()), 1.05 * limit));
+                planet.addBuyOrder(new order(this, temp, rand.nextInt(1, 20), 50 * limit));
             }
         }
     }
@@ -70,7 +73,7 @@ public class company {
         for (int i = 0; i < output.length; i++) {
             good temp = output[i];
             if (recipe.getOutput(i) >= temp.getAmount()) {
-                planet.addSellOrder(new order(this, temp, good.getBasePrice(temp.getName()), 0.95 * good.getBasePrice(temp.getName())));
+                planet.addSellOrder(new order(this, temp, good.getBasePrice(temp.getName()), 0));
                 temp.changeAmount(-temp.getAmount());
             }
         }
