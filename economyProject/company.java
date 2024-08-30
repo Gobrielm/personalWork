@@ -22,7 +22,6 @@ public class company {
     public company(String name, recipe recipe, planet planet) {
         this.name = name;
         this.recipe = new recipe(recipe.getInput(), recipe.getOutput(), recipe.getInputAmount(), recipe.getOutputAmount(), recipe.getExpenses(), recipe.getIncome());
-        System.out.println(this.recipe);
         cash = 100;
         if (recipe.getInput() == null || Arrays.equals(recipe.getInput(), new String[]{})) {
             this.order = 1;
@@ -59,7 +58,7 @@ public class company {
 
     public void buyGood(int amount, String good, double price) {
         recipe.changeInput(good, amount);
-        addLastBoughtPrice(price);
+        addLastBoughtPrice(good, price);
     }
     private void addLastBoughtPrice(String name, double price) {
         if (lastBuyPricesSize == 0) {
@@ -80,6 +79,23 @@ public class company {
             return good.getBasePrice(name);
         }
         return total;
+    }
+    public double maxBuyPrice(String name) {
+        double percentage = 1;
+        double baseTotalBuy = 0;
+        double baseTotalSell = 0;
+        double expenses = recipe.getExpenses();
+        for (good x: recipe.getInputGood()) {
+            baseTotalBuy += x.getAmount() * good.getBasePrice(x.getName());
+        }
+        for (good x: recipe.getOutputGood()) {
+            baseTotalSell += x.getAmount() * good.getBasePrice(x.getName());
+        }
+        while (expenses + baseTotalBuy * percentage < baseTotalSell) {
+            percentage += 0.01;
+        }
+
+        return good.getBasePrice(name) * percentage;
     }
     private void addLastSoldPrice(String name, double price) {
         if (lastSellPricesSize == 0) {
@@ -103,14 +119,19 @@ public class company {
     }
     public double minSellPrice(String name) {
         double percentage = 1;
-        double baseTotalPrice = 0;
+        double baseTotalBuy = 0;
+        double baseTotalSell = 0;
         double expenses = recipe.getExpenses();
         for (good x: recipe.getInputGood()) {
-            baseTotalPrice += x.getAmount() * good.getBasePrice(x.getName());
+            baseTotalBuy += x.getAmount() * good.getBasePrice(x.getName());
         }
-        while (expenses < baseTotalPrice * percentage) {
+        for (good x: recipe.getOutputGood()) {
+            baseTotalSell += x.getAmount() * good.getBasePrice(x.getName());
+        }
+        while (expenses + baseTotalBuy < baseTotalSell * percentage) {
             percentage -= 0.01;
         }
+
         return good.getBasePrice(name) * percentage;
     }
     public void sellGood(int amount, String name, double price) {
@@ -128,7 +149,7 @@ public class company {
             good temp = input[i];
             double limit = good.getBasePrice(temp.getName());
             if (recipe.getInput(i) * limit <= cash) {
-                planet.addBuyOrder(new order(this, temp, getExpectBuyPrice(temp.getName()), rand.nextInt(1, 20)));
+                planet.addBuyOrder(new order(this, temp, getExpectBuyPrice(temp.getName()), 1));
             }
         }
     }

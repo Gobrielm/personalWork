@@ -21,7 +21,6 @@ public class order {
     public static void makeDeal(order order1, order order2) {
         company company1 = order1.owner;
         company company2 = order2.owner;
-        System.out.println(company2.getRecipe());
         if (order1.getAmount() == 0 || order2.getAmount() == 0) {
             return;
         }
