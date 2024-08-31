@@ -53,25 +53,24 @@ public class company {
     private void addLastBoughtPrice(String name, double price) {
         lastBuyPrices.computeIfAbsent(name, k -> new ArrayList<>());
         lastBuyPrices.get(name).add(price);
-        if (lastBuyPrices.get(name).size() > 20) {
+        if (lastBuyPrices.get(name).size() > 10) {
             lastBuyPrices.get(name).removeFirst();
         }
 
     }
     private double getExpectBuyPrice(String name) {
         double total = 0;
-        if (lastBuyPrices.get(name) != null) {
+        int amount = 0;
+        if (lastBuyPrices.get(name) != null && lastBuyPrices.get(name).size() < 9) {
             for (Double x: lastBuyPrices.get(name)) {
                 total += x;
+                amount++;
             }
         } else {
             return good.getBasePrice(name);
         }
 
-        if (total == 0) {
-            return good.getBasePrice(name);
-        }
-        return total;
+        return total / amount;
     }
     public double maxBuyPrice(String name) {
         double percentage = 1;
@@ -92,24 +91,23 @@ public class company {
     private void addLastSoldPrice(String name, double price) {
         lastSellPrices.computeIfAbsent(name, k -> new ArrayList<>());
         lastSellPrices.get(name).add(price);
-        if (lastSellPrices.get(name).size() > 20) {
+        if (lastSellPrices.get(name).size() > 10) {
             lastSellPrices.get(name).removeFirst();
         }
     }
     private double getExpectSellPrice(String name) {
         double total = 0;
-        if (lastSellPrices.get(name) != null) {
+        int amount = 0;
+        if (lastSellPrices.get(name) != null && lastSellPrices.get(name).size() < 9) {
             for (Double x: lastSellPrices.get(name)) {
                 total += x;
+                amount++;
             }
         } else {
             return good.getBasePrice(name);
         }
 
-        if (total == 0) {
-            return good.getBasePrice(name);
-        }
-        return total;
+        return total / amount;
     }
     public double minSellPrice(String name) {
         double percentage = 1;
@@ -142,7 +140,7 @@ public class company {
             good temp = input[i];
             double limit = good.getBasePrice(temp.getName());
             if (recipe.getInput(i) * limit <= cash) {
-                planet.addBuyOrder(new order(this, temp, getExpectBuyPrice(temp.getName()), maxBuyPrice(temp.getName())));
+                planet.addBuyOrder(new order(this, temp, getExpectBuyPrice(temp.getName()), maxBuyPrice(temp.getName()), true));
             }
         }
     }
@@ -151,7 +149,7 @@ public class company {
         for (int i = 0; i < output.length; i++) {
             good temp = output[i];
             if (recipe.getOutput(i) >= temp.getAmount()) {
-                planet.addSellOrder(new order(this, temp, getExpectSellPrice(temp.getName()), minSellPrice(temp.getName())));
+                planet.addSellOrder(new order(this, temp, getExpectSellPrice(temp.getName()), minSellPrice(temp.getName()), false));
                 recipe.changeOutput(i, -temp.getAmount());
             }
         }
