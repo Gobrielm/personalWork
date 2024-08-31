@@ -4,16 +4,16 @@ import edu.princeton.cs.algs4.StdDraw;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Random;
 
 public class economy {
     private static ArrayList<planet> galacticMarket;
 
     private static ArrayList<player> playerList;
     public static int dayCount = 0;
+    public static Random rand;
     public economy(long seed, int playerCount) {
-        planet.setSeed(seed);
-        good.setSeed(seed);
-        company.setSeed(seed);
+        rand = new Random(seed);
         good.createGoodList();
         good.createRecipes();
         galacticMarket = new ArrayList<>();

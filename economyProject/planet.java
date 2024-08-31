@@ -1,14 +1,15 @@
 package core;
 
+import org.checkerframework.checker.units.qual.A;
+
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Random;
 
 public class planet {
     private int id;
     private int size;
-    private static long seed;
-    private static Random rand;
     private ArrayList<company> companies;
     private HashMap<String, Double> prices;
     private HashMap<String, ArrayList<order>> buyOrders;
@@ -16,8 +17,7 @@ public class planet {
     public planet(int id) {
         this.id = id;
         companies = new ArrayList<>();
-        rand = new Random(seed);
-        size = rand.nextInt(30, 60);
+        size = economy.rand.nextInt(30, 60);
         for (int i = 0; i < size * 2 / 3; i++) {
             recipe temp = good.randPrimaryRecipe();
             company newCompany = new company("Filler" , temp, this);
@@ -38,9 +38,6 @@ public class planet {
             buyOrders.put(goods[i], new ArrayList<>());
             sellOrders.put(goods[i], new ArrayList<>());
         }
-    }
-    public static void setSeed(long newSeed) {
-        seed = newSeed;
     }
     public company[] getCompanies() {
         return companies.toArray(new company[0]);
@@ -82,17 +79,48 @@ public class planet {
                 if (sellOrders.get(good).isEmpty()) {
                     break;
                 }
-                order sell = sellOrders.get(good).get(rand.nextInt(0, sellOrders.get(good).size()));
-                int tries = 0;
-                while (sell.getAmount() == 0 && tries < 100) {
-                    sell = sellOrders.get(good).get(rand.nextInt(0, sellOrders.get(good).size()));
-                    tries++;
+                ArrayList<Integer> pickFrom = new ArrayList<>();
+                for (int i = 0; i < sellOrders.get(good).size(); i++) {
+                    pickFrom.add(i);
+                }
+                int num = economy.rand.nextInt(0, pickFrom.size());
+                int toChoose = pickFrom.get(num);
+                pickFrom.remove(num);
+
+                order sell = sellOrders.get(good).get(toChoose);
+                while (sell.getAmount() == 0 && !pickFrom.isEmpty()) {
+                    num = economy.rand.nextInt(0, pickFrom.size());
+                    toChoose = pickFrom.get(num);
+                    pickFrom.remove(num);
+                    sell = sellOrders.get(good).get(toChoose);
                 }
                 order.makeDeal(buy, sell);
+            }
+        }
+        cleanOrders();
+    }
 
+    public void cleanOrders() {
+        for (String good: prices.keySet()) {
+            int size = buyOrders.get(good).size();
+            for (int i = 0; i < size; i++) {
+                if (buyOrders.get(good).get(i).getAmount() == 0) {
+                    buyOrders.get(good).remove(i);
+                    i--;
+                    size--;
+                }
+            }
+            int size1 = sellOrders.get(good).size();
+            for (int i = 0; i < size1; i++) {
+                if (sellOrders.get(good).get(i).getAmount() == 0) {
+                    sellOrders.get(good).remove(i);
+                    i--;
+                    size1--;
+                }
             }
         }
     }
+
 
     public void planetTick() {
         for (company x: companies) {

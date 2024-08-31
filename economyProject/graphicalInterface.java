@@ -101,14 +101,26 @@ public class graphicalInterface {
             if (buyGraph[i] == 0) {
                 continue;
             }
-            StdDraw.circle(WIDTH * (startX + buyGraph[i] * 0.0025), HEIGHT * (startY + i * 0.001), 0.1);
+            double newX = WIDTH * (startX + buyGraph[i] * 0.025);
+            double newY = HEIGHT * (startY + i * 0.001);
+            if (newX > 0.95 * WIDTH || newY > 0.7 * HEIGHT) {
+                System.out.println("OFBs" + "x: " +  newX + " y: " + newY);
+            } else {
+                StdDraw.circle(newX, newY, 0.1);
+            }
         }
         StdDraw.setPenColor(Color.RED);
         for (int i = 0; i < sellGraph.length; i++) {
             if (sellGraph[i] == 0) {
                 continue;
             }
-            StdDraw.circle(WIDTH * (startX + sellGraph[i] * 0.0025), HEIGHT * (startY + i * 0.001), 0.1);
+            double newX = WIDTH * (startX + sellGraph[i] * 0.025);
+            double newY = HEIGHT * (startY + i * 0.001);
+            if (newX > 0.95 * WIDTH || newY > 0.7 * HEIGHT) {
+                System.out.println("OFBs" + "x: " +  newX + " y: " + newY);
+            } else {
+                StdDraw.circle(newX, newY, 0.1);
+            }
         }
 
         StdDraw.setPenColor(Color.WHITE);

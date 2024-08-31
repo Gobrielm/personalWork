@@ -1,28 +1,24 @@
 package core;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Objects;
-import java.util.Random;
+import java.util.*;
 
 public class company {
     private String name;
     private double cash;
     private recipe recipe;
     private int order;
-    private double[] incomeWeeks;
-    private static long seed;
-    private static Random rand;
     private planet planet;
-    private HashMap<String, Double[]> lastBuyPrices;
-    private HashMap<String, Integer> lastBuyPricesSize;
-    private HashMap<String, Double[]> lastSellPrices;
-    private HashMap<String, Integer> lastSellPricesSize;
+    private HashMap<String, ArrayList<Double>> lastBuyPrices;
+    private HashMap<String, ArrayList<Double>> lastSellPrices;
     //Higher number is more aggressive
     private int personality;
     public company(String name, recipe recipe, planet planet) {
         this.name = name;
-        this.recipe = new recipe(recipe.getInput(), recipe.getOutput(), recipe.getInputAmount(), recipe.getOutputAmount(), recipe.getExpenses(), recipe.getIncome());
+        if (recipe.getExpenses() > 0) {
+            this.recipe = new recipe(recipe.getInput(), recipe.getOutput(), recipe.getInputAmount(), recipe.getOutputAmount(), economy.rand.nextDouble(1, recipe.getExpenses()), recipe.getIncome());
+        } else {
+            this.recipe = new recipe(recipe.getInput(), recipe.getOutput(), recipe.getInputAmount(), recipe.getOutputAmount(), recipe.getExpenses(), recipe.getIncome());
+        }
         cash = 100;
         if (recipe.getInput() == null || Arrays.equals(recipe.getInput(), new String[]{})) {
             this.order = 1;
@@ -31,22 +27,10 @@ public class company {
         } else {
             this.order = 2;
         }
-        lastBuyPricesSize = new HashMap<>();
-        lastSellPricesSize = new HashMap<>();
-        for (String x: good.getGoodList()) {
-            lastBuyPricesSize.put(x, 0);
-            lastSellPricesSize.put(x, 0);
-        }
         lastSellPrices = new HashMap<>();
         lastBuyPrices = new HashMap<>();
-        Random rand = new Random(seed);
-        incomeWeeks = new double[20];
-        this.personality = rand.nextInt(1, 4);
+        this.personality = economy.rand.nextInt(1, 4);
         this.planet = planet;
-    }
-    public static void setSeed(long newSeed) {
-        seed = newSeed;
-        rand = new Random(seed);
     }
     public String getName() {
         return name;
@@ -67,21 +51,23 @@ public class company {
         addLastBoughtPrice(good, price);
     }
     private void addLastBoughtPrice(String name, double price) {
-        int size = lastBuyPricesSize.get(name);
-        if (size == 0) {
-            lastBuyPrices.put(name, new Double[5]);
+        lastBuyPrices.computeIfAbsent(name, k -> new ArrayList<>());
+        lastBuyPrices.get(name).add(price);
+        if (lastBuyPrices.get(name).size() > 20) {
+            lastBuyPrices.get(name).removeFirst();
         }
-        lastBuyPrices.get(name)[size] = price;
-        if (size < lastBuyPrices.get(name).length - 1) {
-            lastBuyPricesSize.put(name, size + 1);
-        }
+
     }
     private double getExpectBuyPrice(String name) {
-        int temp = lastBuyPricesSize.get(name);
         double total = 0;
-        for (int i = 0; i < temp; i++) {
-            total += lastBuyPrices.get(name)[i];
+        if (lastBuyPrices.get(name) != null) {
+            for (Double x: lastBuyPrices.get(name)) {
+                total += x;
+            }
+        } else {
+            return good.getBasePrice(name);
         }
+
         if (total == 0) {
             return good.getBasePrice(name);
         }
@@ -104,21 +90,22 @@ public class company {
         return good.getBasePrice(name) * percentage;
     }
     private void addLastSoldPrice(String name, double price) {
-        int size = lastSellPricesSize.get(name);
-        if (size == 0) {
-            lastSellPrices.put(name, new Double[5]);
-        }
-        lastSellPrices.get(name)[size] = price;
-        if (size < lastSellPrices.get(name).length - 1) {
-            lastSellPricesSize.put(name, size + 1);
+        lastSellPrices.computeIfAbsent(name, k -> new ArrayList<>());
+        lastSellPrices.get(name).add(price);
+        if (lastSellPrices.get(name).size() > 20) {
+            lastSellPrices.get(name).removeFirst();
         }
     }
     private double getExpectSellPrice(String name) {
-        int temp = lastSellPricesSize.get(name);
         double total = 0;
-        for (int i = 0; i < temp; i++) {
-            total += lastSellPrices.get(name)[i];
+        if (lastSellPrices.get(name) != null) {
+            for (Double x: lastSellPrices.get(name)) {
+                total += x;
+            }
+        } else {
+            return good.getBasePrice(name);
         }
+
         if (total == 0) {
             return good.getBasePrice(name);
         }
@@ -138,7 +125,6 @@ public class company {
         while (expenses + baseTotalBuy < baseTotalSell * percentage) {
             percentage -= 0.01;
         }
-        System.out.println(good.getBasePrice(name) * percentage);
         return good.getBasePrice(name) * percentage;
     }
     public void sellGood(int amount, String name, double price) {

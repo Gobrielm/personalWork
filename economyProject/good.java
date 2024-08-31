@@ -8,14 +8,12 @@ public class good {
     private static ArrayList<recipe> primaryRecipes = new ArrayList<>();
     private static ArrayList<recipe> secondaryRecipes = new ArrayList<>();
     private static HashMap<String, Double> basePrices;
-    private static long seed;
-    private static Random rand;
     public static void createGoodList() {
         basePrices = new HashMap<>();
-        basePrices.put("Bismuth", 5.0);
+        basePrices.put("Bismuth", 8.0);
         basePrices.put("Osmium", 5.0);
         basePrices.put("Copper", 5.0);
-        basePrices.put("Gold", 5.0);
+        basePrices.put("Gold", 10.0);
         basePrices.put("Zinc", 5.0);
         basePrices.put("Manganese", 5.0);
         basePrices.put("Argon", 5.0);
@@ -27,7 +25,7 @@ public class good {
         basePrices.put("Argonium", 5.0);
         basePrices.put("Wires", 5.0);
         basePrices.put("Bismanol", 5.0);
-        basePrices.put("Brass", 5.0);
+        basePrices.put("Brass", 15.0);
         basePrices.put("Batteries", 5.0);
         basePrices.put("CopperHydride", 5.0);
         basePrices.put("XenonTetroxide", 5.0);
@@ -37,10 +35,10 @@ public class good {
         basePrices.put("PerxenicAcid", 5.0);
     }
     public static void createRecipes() {
-        primaryRecipes.add(new recipe(new good[]{}, new good[]{new good("Copper", 1)}, rand.nextDouble(1, 3), 0));
-        primaryRecipes.add(new recipe(new good[]{}, new good[]{new good("Zinc", 1)}, rand.nextDouble(1, 3), 0));
-        primaryRecipes.add(new recipe(new good[]{}, new good[]{new good("Gold", 1)}, rand.nextDouble(1, 3), 0));
-        primaryRecipes.add(new recipe(new good[]{}, new good[]{new good("Bismuth", 1)}, rand.nextDouble(1, 3), 0));
+        primaryRecipes.add(new recipe(new good[]{}, new good[]{new good("Copper", 1)}, 3, 0));
+        primaryRecipes.add(new recipe(new good[]{}, new good[]{new good("Zinc", 1)}, 3, 0));
+        primaryRecipes.add(new recipe(new good[]{}, new good[]{new good("Gold", 1)}, 3, 0));
+        primaryRecipes.add(new recipe(new good[]{}, new good[]{new good("Bismuth", 1)}, 3, 0));
         secondaryRecipes.add(new recipe(new good[]{new good("Zinc", 1), new good("Copper", 2)}, new good[]{new good("Brass", 1)}, 3, 0));
         secondaryRecipes.add(new recipe(new good[]{new good("Bismuth", 1)}, new good[]{}, 0, 10));
         secondaryRecipes.add(new recipe(new good[]{new good("Brass", 1)}, new good[]{}, 0, 35));
@@ -63,15 +61,10 @@ public class good {
         return basePrices.get(name);
     }
     public static recipe randPrimaryRecipe() {
-        return primaryRecipes.get(rand.nextInt(0, primaryRecipes.size()));
+        return primaryRecipes.get(economy.rand.nextInt(0, primaryRecipes.size()));
     }
     public static recipe randSecondaryRecipe() {
-        return secondaryRecipes.get(rand.nextInt(0, secondaryRecipes.size()));
-    }
-
-    public static void setSeed(long newSeed) {
-        seed = newSeed;
-        rand = new Random(seed);
+        return secondaryRecipes.get(economy.rand.nextInt(0, secondaryRecipes.size()));
     }
     public int getAmount() {
         return this.amount;
