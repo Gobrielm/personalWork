@@ -4,4 +4,3 @@ Company - have them sell/buy at smart price
 graphicalInterface - add graphs for amount wanted of each good
 company - randomly do goods more
 company - make it so not buying a good lowers the price for the company, and just instantly selling it raises the price
-order - make sure all orders fill, a couple left that could work
