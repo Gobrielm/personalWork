@@ -92,44 +92,43 @@ public class planet {
                 pickFromBuy.add(i);
             }
             if (pickFromBuy.isEmpty()) {
-                break;
+                continue;
             }
-            int num1 = economy.rand.nextInt(0, pickFromBuy.size());
-            int toChoose1 = pickFromBuy.get(num1);
-            pickFromBuy.remove(num1);
-            order buy = sellOrders.get(good).get(toChoose1);
+            int num1 = 0;
+            int toChoose1 = 0;
+            order buy = null;
 
             ArrayList<Integer> pickFromSell = new ArrayList<>();
             for (int i = 0; i < sellOrders.get(good).size(); i++) {
                 pickFromSell.add(i);
             }
             if (pickFromSell.isEmpty()) {
-                break;
+                continue;
             }
-            int num = economy.rand.nextInt(0, pickFromSell.size());
-            int toChoose = pickFromSell.get(num);
-            pickFromSell.remove(num);
-
-            order sell = sellOrders.get(good).get(toChoose);
+            int num = 0;
+            int toChoose = 0;
+            order sell = null;
 
             while (!pickFromBuy.isEmpty() && !pickFromSell.isEmpty()) {
                 while(!pickFromBuy.isEmpty()) {
                     num1 = economy.rand.nextInt(0, pickFromBuy.size());
                     toChoose1 = pickFromBuy.get(num1);
-                    pickFromBuy.remove(num1);
-                    buy = sellOrders.get(good).get(toChoose1);
-                    if (!buy.checkValid()) {
+                    buy = buyOrders.get(good).get(toChoose1);
+                    if (buy.checkValid()) {
                         break;
+                    } else {
+                        pickFromBuy.remove(num1);
                     }
                 }
 
                 while (!pickFromSell.isEmpty()) {
                     num = economy.rand.nextInt(0, pickFromSell.size());
                     toChoose = pickFromSell.get(num);
-                    pickFromSell.remove(num);
                     sell = sellOrders.get(good).get(toChoose);
-                    if (!sell.checkValid()) {
+                    if (sell.checkValid()) {
                         break;
+                    } else {
+                        pickFromSell.remove(num);
                     }
                 }
                 if (sell.checkValid() && buy.checkValid()) {
@@ -139,9 +138,7 @@ public class planet {
                         priceSold.get(good).add(num2);
                     }
                 }
-
             }
-
         }
         cleanOrders();
     }
