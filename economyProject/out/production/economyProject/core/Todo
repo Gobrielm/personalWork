@@ -1,3 +1,7 @@
 
-Company - lastBuyPrices, lastSellPrices, broken, only adds to the last num. Change to arrayList
 Company - incomeWeeks broken too, change to ArrayList
+Company - have them sell/buy at smart price
+Planet - add equal companies so economy doesnt crash
+graphicalInterface - add graphs for amount wanted of each good
+company - randomly do goods more
+graphicalInterfect/order - track the prices goods are actually sold at

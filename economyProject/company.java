@@ -169,4 +169,16 @@ public class company {
             createBuyOrders();
         }
     }
+
+    @Override
+    public String toString() {
+        String toReturn = name + ": $" + Math.round(cash) + "----";
+        for (String x: recipe.getInput()) {
+            toReturn += x + "--";
+        }
+        for (String x: recipe.getOutput()) {
+            toReturn += x + "--";
+        }
+        return toReturn;
+    }
 }

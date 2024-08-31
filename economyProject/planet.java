@@ -1,5 +1,6 @@
 package core;
 
+import edu.princeton.cs.algs4.In;
 import org.checkerframework.checker.units.qual.A;
 
 import java.util.ArrayList;
@@ -14,16 +15,18 @@ public class planet {
     private HashMap<String, Double> prices;
     private HashMap<String, ArrayList<order>> buyOrders;
     private HashMap<String, ArrayList<order>> sellOrders;
+    private HashMap<String, ArrayList<Double>> priceSold;
     public planet(int id) {
         this.id = id;
         companies = new ArrayList<>();
+        priceSold = new HashMap<>();
         size = economy.rand.nextInt(30, 60);
-        for (int i = 0; i < size * 2 / 3; i++) {
+        for (int i = 0; i < size / 2; i++) {
             recipe temp = good.randPrimaryRecipe();
             company newCompany = new company("Filler" , temp, this);
             companies.add(newCompany);
         }
-        for (int i = 0; i < size / 3; i++) {
+        for (int i = 0; i < size / 2; i++) {
             recipe temp = good.randSecondaryRecipe();
             company newCompany = new company("Filler", temp, this);
             companies.add(newCompany);
@@ -41,6 +44,15 @@ public class planet {
     }
     public company[] getCompanies() {
         return companies.toArray(new company[0]);
+    }
+    public double getPriceSold(String good) {
+        double total = 0.0;
+        int amount = 0;
+        for (double x: priceSold.get(good)) {
+            total += x;
+            amount ++;
+        }
+        return total / amount;
     }
     public String[] getGoodList() {
         return prices.keySet().toArray(new String[0]);
@@ -71,6 +83,9 @@ public class planet {
     }
 
     public void completeOrders() {
+        for (String x: good.getGoodList()) {
+            priceSold.put(x, new ArrayList<>());
+        }
         for (String good: prices.keySet()) {
             for (order buy: buyOrders.get(good)) {
                 if (buy.getAmount() == 0) {
@@ -93,8 +108,12 @@ public class planet {
                     toChoose = pickFrom.get(num);
                     pickFrom.remove(num);
                     sell = sellOrders.get(good).get(toChoose);
+
                 }
-                order.makeDeal(buy, sell);
+                double num1 = order.makeDeal(buy, sell);
+                if (num1 != 0) {
+                    priceSold.get(good).add(num1);
+                }
             }
         }
         cleanOrders();

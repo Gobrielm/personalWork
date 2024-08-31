@@ -1,3 +1,5 @@
 
-Company - lastBuyPrices, lastSellPrices, broken, only adds to the last num. Change to arrayList
 Company - incomeWeeks broken too, change to ArrayList
+Company - have them sell/buy at smart price
+graphicalInterface - add graphs for amount wanted of each good
+company - randomly do goods more / change how price changes, instantly doubling price?

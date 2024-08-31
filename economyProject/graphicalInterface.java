@@ -126,4 +126,38 @@ public class graphicalInterface {
         StdDraw.setPenColor(Color.WHITE);
         StdDraw.show();
     }
+
+    public static void drawPrice(player player, String name) {
+        StdDraw.clear(Color.BLACK);
+        drawPlanetMenu(player);
+        planet planet = economy.getPlanetFromID(player.getPlanet());
+        StdDraw.setFont(MED);
+        StdDraw.text(WIDTH * 0.75, HEIGHT * 0.5, String.valueOf(planet.getPriceSold(name)));
+
+        StdDraw.show();
+    }
+
+    public static void drawCompanies(player player, String name) {
+        StdDraw.clear(Color.BLACK);
+        drawPlanetMenu(player);
+        planet planet = economy.getPlanetFromID(player.getPlanet());
+        company[] companies = planet.getCompanies();
+        int size = companies.length;
+        for (int i = 0; i < size; i++) {
+            company x = companies[i];
+            for (String k: x.getRecipe().getInput()) {
+                if (k.equals(name)) {
+                    StdDraw.text(WIDTH * 0.8, HEIGHT / (size + 1) * (i + 1), x.toString());
+                }
+            }
+            for (String k: x.getRecipe().getOutput()) {
+                if (k.equals(name)) {
+                    StdDraw.text(WIDTH * 0.8, HEIGHT / (size + 1) * (i + 1), x.toString());
+                }
+            }
+
+        }
+
+        StdDraw.show();
+    }
 }
