@@ -47,7 +47,7 @@ public class economy {
                         done = true;
                     } else if (x > 0.3 && x < 0.51) {
                         int temp = (int) Math.round((y * (good.getGoodList().length + 1) - 1));
-                        graphicalInterface.drawPrice(currPlayer, good.getGoodList()[temp]);
+                        graphicalInterface.drawGoods(currPlayer, good.getGoodList()[temp]);
                     }
                     StdDraw.pause(100);
                 }

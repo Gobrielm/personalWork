@@ -87,34 +87,61 @@ public class planet {
             priceSold.put(x, new ArrayList<>());
         }
         for (String good: prices.keySet()) {
-            for (order buy: buyOrders.get(good)) {
-                if (buy.getAmount() == 0) {
-                    continue;
-                }
-                if (sellOrders.get(good).isEmpty()) {
-                    break;
-                }
-                ArrayList<Integer> pickFrom = new ArrayList<>();
-                for (int i = 0; i < sellOrders.get(good).size(); i++) {
-                    pickFrom.add(i);
-                }
-                int num = economy.rand.nextInt(0, pickFrom.size());
-                int toChoose = pickFrom.get(num);
-                pickFrom.remove(num);
-
-                order sell = sellOrders.get(good).get(toChoose);
-                while (sell.getAmount() == 0 && !pickFrom.isEmpty()) {
-                    num = economy.rand.nextInt(0, pickFrom.size());
-                    toChoose = pickFrom.get(num);
-                    pickFrom.remove(num);
-                    sell = sellOrders.get(good).get(toChoose);
-
-                }
-                double num1 = order.makeDeal(buy, sell);
-                if (num1 != 0) {
-                    priceSold.get(good).add(num1);
-                }
+            ArrayList<Integer> pickFromBuy = new ArrayList<>();
+            for (int i = 0; i < buyOrders.get(good).size(); i++) {
+                pickFromBuy.add(i);
             }
+            if (pickFromBuy.isEmpty()) {
+                break;
+            }
+            int num1 = economy.rand.nextInt(0, pickFromBuy.size());
+            int toChoose1 = pickFromBuy.get(num1);
+            pickFromBuy.remove(num1);
+            order buy = sellOrders.get(good).get(toChoose1);
+
+            ArrayList<Integer> pickFromSell = new ArrayList<>();
+            for (int i = 0; i < sellOrders.get(good).size(); i++) {
+                pickFromSell.add(i);
+            }
+            if (pickFromSell.isEmpty()) {
+                break;
+            }
+            int num = economy.rand.nextInt(0, pickFromSell.size());
+            int toChoose = pickFromSell.get(num);
+            pickFromSell.remove(num);
+
+            order sell = sellOrders.get(good).get(toChoose);
+
+            while (!pickFromBuy.isEmpty() && !pickFromSell.isEmpty()) {
+                while(!pickFromBuy.isEmpty()) {
+                    num1 = economy.rand.nextInt(0, pickFromBuy.size());
+                    toChoose1 = pickFromBuy.get(num1);
+                    pickFromBuy.remove(num1);
+                    buy = sellOrders.get(good).get(toChoose1);
+                    if (!buy.checkValid()) {
+                        break;
+                    }
+                }
+
+                while (!pickFromSell.isEmpty()) {
+                    num = economy.rand.nextInt(0, pickFromSell.size());
+                    toChoose = pickFromSell.get(num);
+                    pickFromSell.remove(num);
+                    sell = sellOrders.get(good).get(toChoose);
+                    if (!sell.checkValid()) {
+                        break;
+                    }
+                }
+                if (sell.checkValid() && buy.checkValid()) {
+                    order.makeDeal(buy, sell);
+                    double num2 = order.makeDeal(buy, sell);
+                    if (num2 != 0) {
+                        priceSold.get(good).add(num2);
+                    }
+                }
+
+            }
+
         }
         cleanOrders();
     }
@@ -123,15 +150,28 @@ public class planet {
         for (String good: prices.keySet()) {
             int size = buyOrders.get(good).size();
             for (int i = 0; i < size; i++) {
-                if (buyOrders.get(good).get(i).getAmount() == 0) {
+                order order = buyOrders.get(good).get(i);
+                if (order.checkOut()) {
+                    buyOrders.get(good).remove(i);
+                    i--;
+                    size--;
+                } else if (order.checkOutPriced()) {
+                    order.getOwner().returnBuy(order);
                     buyOrders.get(good).remove(i);
                     i--;
                     size--;
                 }
             }
+
             int size1 = sellOrders.get(good).size();
             for (int i = 0; i < size1; i++) {
-                if (sellOrders.get(good).get(i).getAmount() == 0) {
+                order order = sellOrders.get(good).get(i);
+                if (order.checkOut()) {
+                    sellOrders.get(good).remove(i);
+                    i--;
+                    size1--;
+                } else if (order.checkOutPriced()) {
+                    order.getOwner().returnSell(order);
                     sellOrders.get(good).remove(i);
                     i--;
                     size1--;

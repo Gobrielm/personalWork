@@ -95,4 +95,7 @@ public class order {
     public String getGood() {
         return good.getName();
     }
+    public company getOwner() {
+        return owner;
+    }
 }

@@ -133,6 +133,12 @@ public class company {
     private void payExpenses() {
         cash -= recipe.getExpenses();
     }
+    public void returnBuy(order order) {
+
+    }
+    public void returnSell(order order) {
+        recipe.changeOutput(order.getGood(), order.getAmount());
+    }
 
     private void createBuyOrders() {
         good[] input = recipe.getInputGood();
