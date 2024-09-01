@@ -23,12 +23,14 @@ public class planet {
         size = economy.rand.nextInt(30, 60);
         for (int i = 0; i < size / 2; i++) {
             recipe temp = good.randPrimaryRecipe();
-            company newCompany = new company("Filler" , temp, this);
+            String name = good.pickRandName(1);
+            company newCompany = new company(name, temp, this);
             companies.add(newCompany);
         }
         for (int i = 0; i < size / 2; i++) {
             recipe temp = good.randSecondaryRecipe();
-            company newCompany = new company("Filler", temp, this);
+            String name = good.pickRandName(3);
+            company newCompany = new company(name, temp, this);
             companies.add(newCompany);
         }
         String[] goods = good.getGoodList();

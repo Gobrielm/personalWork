@@ -31,6 +31,8 @@ public class graphicalInterface {
             drawGraph(player, name);
         } else if (button == 3) {
             drawCompanies(player, name);
+        } else if (button == 4) {
+            drawSupplyDemand(player, name);
         } else {
             drawPrice(player, name);
         }
@@ -52,6 +54,8 @@ public class graphicalInterface {
         StdDraw.rectangle(WIDTH * 0.166, HEIGHT * 0.5, WIDTH * 0.0415, HEIGHT * 0.034);
         StdDraw.text(WIDTH * 0.249, HEIGHT * 0.5, "Companies");
         StdDraw.rectangle(WIDTH * 0.249, HEIGHT * 0.5, WIDTH * 0.0415, HEIGHT * 0.034);
+        StdDraw.text(WIDTH * 0.0833, HEIGHT * 0.433, "Demand");
+        StdDraw.rectangle(WIDTH * 0.0833, HEIGHT * 0.433, WIDTH * 0.0415, HEIGHT * 0.034);
         StdDraw.text(WIDTH * 0.166, HEIGHT * 0.433, "Price");
         StdDraw.rectangle(WIDTH * 0.166, HEIGHT * 0.433, WIDTH * 0.0415, HEIGHT * 0.034);
 
@@ -191,6 +195,34 @@ public class graphicalInterface {
 
         }
 
+        StdDraw.show();
+    }
+
+    public static void drawSupplyDemand(player player, String name) {
+        StdDraw.clear(Color.BLACK);
+        drawPlanetMenu(player);
+        planet planet = economy.getPlanetFromID(player.getPlanet());
+        int demand = 0;
+        int supply = 0;
+        for (company x: planet.getCompanies()) {
+            String[] Recipe = x.getRecipe().getInput();
+            for (int i = 0; i < Recipe.length; i++) {
+                String k = Recipe[i];
+                if (k.equals(name)) {
+                    demand += x.getRecipe().getInputAmount()[i];
+                }
+            }
+            Recipe = x.getRecipe().getOutput();
+            for (int i = 0; i < Recipe.length; i++) {
+                String k = Recipe[i];
+                if (k.equals(name)) {
+                    supply += x.getRecipe().getOutputAmount()[i];
+                }
+            }
+        }
+        StdDraw.setFont(MED);
+        StdDraw.text(WIDTH * 0.75, HEIGHT * 0.45, "Demand: " + demand);
+        StdDraw.text(WIDTH * 0.75, HEIGHT * 0.55, "Supply: " + supply);
         StdDraw.show();
     }
 }

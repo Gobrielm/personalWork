@@ -16,6 +16,7 @@ public class economy {
         rand = new Random(seed);
         good.createGoodList();
         good.createRecipes();
+        good.createNames();
         galacticMarket = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
             planet temp = new planet(i);
@@ -54,8 +55,10 @@ public class economy {
                         graphicalInterface.button = 2;
                     } else if (x > (0.249 - 0.0415) && x < (0.249 + 0.0415) && y > (0.5 - 0.034) && y < 0.5 + 0.034) {
                         graphicalInterface.button = 3;
-                    } else if (x > (0.166 - 0.0415) && x < (0.166 + 0.0415) && y > (0.433 - 0.034) && y < (0.433 + 0.034)) {
+                    } else if (x > (0.0833 - 0.0415) && x < (0.0833 + 0.0415) && y > (0.433 - 0.034) && y < (0.433 + 0.034)) {
                         graphicalInterface.button = 4;
+                    } else if (x > (0.166 - 0.0415) && x < (0.166 + 0.0415) && y > (0.433 - 0.034) && y < (0.433 + 0.034)) {
+                        graphicalInterface.button = 5;
                     }
                     StdDraw.pause(100);
                 }
