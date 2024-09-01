@@ -151,7 +151,7 @@ public class company {
                 if (confidence > 7) {
                     price *= 0.99;
                 } else if (confidence < 3) {
-                    price *= 1.01;
+                    price = good.getBasePrice(temp.getName()) * 1.01;
                 }
                 planet.addBuyOrder(new order(this, temp, price, maxBuyPrice(temp.getName()), true));
             }
@@ -166,7 +166,7 @@ public class company {
                 if (confidence > 7) {
                     price *= 1.01;
                 } else if (confidence < 3) {
-                    price *= 0.99;
+                    price = good.getBasePrice(temp.getName()) * 0.99;
                 }
                 planet.addSellOrder(new order(this, temp, price, minSellPrice(temp.getName()), false));
                 recipe.changeOutput(i, -temp.getAmount());
