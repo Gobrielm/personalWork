@@ -13,7 +13,7 @@ public class graphicalInterface {
     static final Font SMALL = new Font("Monaco", Font.BOLD, 15);
     static final Font MED = new Font("Monaco", Font.BOLD, 20);
     static final Font BIG = new Font("Monaco", Font.BOLD, 30);
-
+    static int button;
     public static void startGame() {
         StdDraw.setFont(SMALL);
         StdDraw.setCanvasSize((int) (WIDTH * CANVASSIZE), (int) (HEIGHT * CANVASSIZE));
@@ -22,8 +22,19 @@ public class graphicalInterface {
         StdDraw.clear(Color.BLACK);
         StdDraw.setPenColor(Color.WHITE);
         StdDraw.enableDoubleBuffering();
+        button = 1;
     }
-
+    public static void drawStuff(player player, String name) {
+        if (button == 1) {
+            drawGoods(player, name);
+        } else if (button == 2) {
+            drawGraph(player, name);
+        } else if (button == 3) {
+            drawCompanies(player, name);
+        } else {
+            drawPrice(player, name);
+        }
+    }
 
     public static void drawPlanetMenu(player player) {
         StdDraw.clear(Color.BLACK);
@@ -34,6 +45,15 @@ public class graphicalInterface {
         StdDraw.setFont(BIG);
         StdDraw.text(WIDTH * 0.166, HEIGHT * 0.9, player.getName());
         StdDraw.text(WIDTH * 0.166, HEIGHT * 0.8, Integer.toString((int) Math.round(player.getCash())));
+        StdDraw.setFont(MED);
+        StdDraw.text(WIDTH * 0.0833, HEIGHT * 0.5, "Goods");
+        StdDraw.rectangle(WIDTH * 0.0833, HEIGHT * 0.5, WIDTH * 0.0415, HEIGHT * 0.034);
+        StdDraw.text(WIDTH * 0.166, HEIGHT * 0.5, "Graph");
+        StdDraw.rectangle(WIDTH * 0.166, HEIGHT * 0.5, WIDTH * 0.0415, HEIGHT * 0.034);
+        StdDraw.text(WIDTH * 0.249, HEIGHT * 0.5, "Companies");
+        StdDraw.rectangle(WIDTH * 0.249, HEIGHT * 0.5, WIDTH * 0.0415, HEIGHT * 0.034);
+        StdDraw.text(WIDTH * 0.166, HEIGHT * 0.433, "Price");
+        StdDraw.rectangle(WIDTH * 0.166, HEIGHT * 0.433, WIDTH * 0.0415, HEIGHT * 0.034);
 
         StdDraw.setFont(SMALL);
         planet planet = economy.getPlanetFromID(planetID);

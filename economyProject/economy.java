@@ -47,7 +47,15 @@ public class economy {
                         done = true;
                     } else if (x > 0.3 && x < 0.51) {
                         int temp = (int) Math.round((y * (good.getGoodList().length + 1) - 1));
-                        graphicalInterface.drawCompanies(currPlayer, good.getGoodList()[temp]);
+                        graphicalInterface.drawStuff(currPlayer, good.getGoodList()[temp]);
+                    } else if (x > (0.0833 - 0.0415) && x < (0.0833 + 0.0415) && y > (0.5 - 0.034) && y < (0.5 + 0.034)) {
+                        graphicalInterface.button = 1;
+                    } else if (x > (0.166 - 0.0415) && x < (0.166 + 0.0415) && y > (0.5 - 0.034) && y < 0.5 + 0.034) {
+                        graphicalInterface.button = 2;
+                    } else if (x > (0.249 - 0.0415) && x < (0.249 + 0.0415) && y > (0.5 - 0.034) && y < 0.5 + 0.034) {
+                        graphicalInterface.button = 3;
+                    } else if (x > (0.166 - 0.0415) && x < (0.166 + 0.0415) && y > (0.433 - 0.034) && y < (0.433 + 0.034)) {
+                        graphicalInterface.button = 4;
                     }
                     StdDraw.pause(100);
                 }
