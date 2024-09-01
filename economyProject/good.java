@@ -60,14 +60,6 @@ public class good {
     public static double getBasePrice(String name) {
         return basePrices.get(name);
     }
-    public static void changeBasePrice(String name, double price, int amount) {
-        double percentage = (double) amount / 20;
-        if (percentage > 0.5) {
-            percentage = 0.5;
-        }
-        double value = basePrices.get(name) * (1 - percentage) + price * percentage;
-        basePrices.put(name, value);
-    }
     public static recipe randPrimaryRecipe() {
         return primaryRecipes.get(economy.rand.nextInt(0, primaryRecipes.size()));
     }

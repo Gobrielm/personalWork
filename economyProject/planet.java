@@ -179,6 +179,18 @@ public class planet {
         }
     }
 
+    public double getBasePrice(String name) {
+        return prices.get(name);
+    }
+
+    public void changeBasePrice(String name, double price, int amount) {
+        double percentage = (double) amount / 20;
+        if (percentage > 0.5) {
+            percentage = 0.5;
+        }
+        double value = prices.get(name) * (1 - percentage) + price * percentage;
+        prices.put(name, value);
+    }
 
     public void planetTick() {
         for (company x: companies) {

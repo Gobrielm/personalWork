@@ -3,3 +3,4 @@ Company - incomeWeeks broken too, change to ArrayList
 Company - have them sell/buy at smart price
 graphicalInterface - add graphs for amount wanted of each good
 company - Now the price just drops for no reason
+company/good - at certain point the base good for galaxy is changed, change to local planet

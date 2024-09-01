@@ -46,11 +46,10 @@ public class company {
         double price = order1.getPrice();
         double change = Math.abs(priceDiff / price);
         boolean toReturn = change < 0.01 * personality;
-        if (!(toReturn)) {
-            confidence--;
-        }
-        if (confidence > 5) {
-            return true;
+        if (!(confidence > 5)) {
+            if (!(toReturn)) {
+                changeConfidence(-1);
+            }
         }
         return toReturn;
     }
@@ -58,7 +57,7 @@ public class company {
     public void buyGood(int amount, String good, double price) {
         recipe.changeInput(good, amount);
         addLastBoughtPrice(good, price);
-        confidence += 2;
+        changeConfidence(2);
     }
     private void addLastBoughtPrice(String name, double price) {
         lastBuyPrices.put(name, price);
@@ -67,7 +66,15 @@ public class company {
         if (lastBuyPrices.containsKey(name)) {
             return lastBuyPrices.get(name);
         } else {
-            return good.getBasePrice(name);
+            return planet.getBasePrice(name);
+        }
+    }
+    public void changeConfidence(int num) {
+        confidence += num;
+        if (confidence > 10) {
+            confidence = 10;
+        } else if (confidence < 0) {
+            confidence = 0;
         }
     }
     public double maxBuyPrice(String name) {
@@ -84,7 +91,7 @@ public class company {
         while (expenses + baseTotalBuy * percentage < baseTotalSell) {
             percentage += 0.01;
         }
-        return good.getBasePrice(name) * percentage;
+        return planet.getBasePrice(name) * percentage;
     }
     private void addLastSoldPrice(String name, double price) {
         lastSellPrices.put(name, price);
@@ -93,7 +100,7 @@ public class company {
         if (lastSellPrices.containsKey(name)) {
             return lastSellPrices.get(name);
         } else {
-            return good.getBasePrice(name);
+            return planet.getBasePrice(name);
         }
     }
     public double minSellPrice(String name) {
@@ -102,41 +109,43 @@ public class company {
         double baseTotalSell = 0;
         double expenses = recipe.getExpenses();
         for (good x: recipe.getInputGood()) {
-            baseTotalBuy += x.getAmount() * good.getBasePrice(x.getName());
+            baseTotalBuy += x.getAmount() * planet.getBasePrice(x.getName());
         }
         for (good x: recipe.getOutputGood()) {
-            baseTotalSell += x.getAmount() * good.getBasePrice(x.getName());
+            baseTotalSell += x.getAmount() * planet.getBasePrice(x.getName());
         }
         while (expenses + baseTotalBuy < baseTotalSell * percentage) {
             percentage -= 0.01;
         }
-        return good.getBasePrice(name) * percentage;
+        return planet.getBasePrice(name) * percentage;
     }
     public void sellGood(int amount, String name, double price) {
         cash += amount * price;
         addLastSoldPrice(name, price);
-        confidence += 2;
+        changeConfidence(2);
     }
-
+    public planet getPlanet() {
+        return planet;
+    }
     private void payExpenses() {
         cash -= recipe.getExpenses();
     }
     public void returnBuy(order order) {
-        confidence -= 2;
+        changeConfidence(-2);
     }
     public void returnSell(order order) {
         recipe.changeOutput(order.getGood(), order.getAmount());
-        confidence -= 2;
+        changeConfidence(-2);
     }
 
     public void askToChange(order order) {
         if (order.isBuyOrder()) {
-            if (order.getPrice() < good.getBasePrice(order.getGood())) {
-                order.setPrice(good.getBasePrice(order.getGood()));
+            if (order.getPrice() < planet.getBasePrice(order.getGood())) {
+                order.setPrice(planet.getBasePrice(order.getGood()));
             }
         } else {
-            if (order.getPrice() > good.getBasePrice(order.getGood())) {
-                order.setPrice(good.getBasePrice(order.getGood()));
+            if (order.getPrice() > planet.getBasePrice(order.getGood())) {
+                order.setPrice(planet.getBasePrice(order.getGood()));
             }
         }
     }
@@ -145,15 +154,17 @@ public class company {
         good[] input = recipe.getInputGood();
         for (int i = 0; i < input.length; i++) {
             good temp = input[i];
-            double limit = good.getBasePrice(temp.getName());
+            double limit = maxBuyPrice(temp.getName());
             if (recipe.getInput(i) * limit <= cash) {
                 double price = getExpectBuyPrice(temp.getName());
-                if (confidence > 7) {
+                if (confidence >= 9) {
+                    price *= 0.97;
+                } else if (confidence > 7) {
                     price *= 0.99;
                 } else if (confidence < 3) {
-                    price = good.getBasePrice(temp.getName()) * 1.01;
+                    price = planet.getBasePrice(temp.getName()) * 1.01;
                 }
-                planet.addBuyOrder(new order(this, temp, price, maxBuyPrice(temp.getName()), true));
+                planet.addBuyOrder(new order(this, temp, price, limit, true));
             }
         }
     }
@@ -163,10 +174,12 @@ public class company {
             good temp = output[i];
             if (recipe.getOutput(i) >= temp.getAmount()) {
                 double price = getExpectSellPrice(temp.getName());
-                if (confidence > 7) {
+                if (confidence >= 9) {
+                    price *= 1.03;
+                } else if (confidence > 7) {
                     price *= 1.01;
                 } else if (confidence < 3) {
-                    price = good.getBasePrice(temp.getName()) * 0.99;
+                    price = planet.getBasePrice(temp.getName()) * 0.99;
                 }
                 planet.addSellOrder(new order(this, temp, price, minSellPrice(temp.getName()), false));
                 recipe.changeOutput(i, -temp.getAmount());
@@ -196,6 +209,7 @@ public class company {
         for (String x: recipe.getOutput()) {
             toReturn += x + "--";
         }
+        toReturn += "  Conf: " + confidence;
         return toReturn;
     }
 }

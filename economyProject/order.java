@@ -73,14 +73,14 @@ public class order {
             order2.good.changeAmount(-amount);
             order1.changeOut();
             order2.changeOut();
-            core.good.changeBasePrice(order1.good.getName(), price, amount);
+            order1.getOwner().getPlanet().changeBasePrice(order1.good.getName(), price, amount);
             return  price;
-        } else if (company2.checkDeal(order2, order1)) {
-            order1.expectedPrice += order1.expectedPrice * 0.01;
-            order1.changeOutPriced();
-        } else if (company1.checkDeal(order1, order2)) {
-            order2.expectedPrice -= order2.expectedPrice * 0.01;
-            order2.changeOutPriced();
+//        } else if (company2.checkDeal(order2, order1)) {
+//            order1.expectedPrice += order1.expectedPrice * 0.01;
+//            order1.changeOutPriced();
+//        } else if (company1.checkDeal(order1, order2)) {
+//            order2.expectedPrice -= order2.expectedPrice * 0.01;
+//            order2.changeOutPriced();
         } else {
             order1.expectedPrice += order1.expectedPrice * 0.01;
             order2.expectedPrice -= order2.expectedPrice * 0.01;
