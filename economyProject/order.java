@@ -8,6 +8,7 @@ public class order {
     private boolean out;
     private boolean outPriced;
     private boolean isBuyOrder;
+    private int age;
     public order(company owner, good good, double expectedPrice, double limitPrice, boolean isBuyOrder) {
         this.good = new good(good.getName(), good.getAmount());
         this.expectedPrice = expectedPrice;
@@ -16,6 +17,7 @@ public class order {
         out = false;
         outPriced = false;
         this.isBuyOrder = isBuyOrder;
+        this.age = 0;
     }
     public boolean checkGoods(order other) {
         return this.good.equals(other.good);
@@ -29,6 +31,10 @@ public class order {
         if (good.getAmount() == 0) {
             out = true;
         }
+    }
+    public boolean incrementAge() {
+        this.age ++;
+        return age > 3;
     }
     public boolean isBuyOrder() {
         return isBuyOrder;
@@ -76,14 +82,14 @@ public class order {
             order1.getOwner().getPlanet().changeBasePrice(order1.good.getName(), price, amount);
             return  price;
 //        } else if (company2.checkDeal(order2, order1)) {
-//            order1.expectedPrice += order1.expectedPrice * 0.01;
+//            company1.adjustDeal(order1);
 //            order1.changeOutPriced();
 //        } else if (company1.checkDeal(order1, order2)) {
-//            order2.expectedPrice -= order2.expectedPrice * 0.01;
+//            company2.adjustDeal(order2);
 //            order2.changeOutPriced();
         } else {
-            order1.expectedPrice += order1.expectedPrice * 0.01;
-            order2.expectedPrice -= order2.expectedPrice * 0.01;
+            company1.adjustDeal(order1);
+            company2.adjustDeal(order2);
             order1.changeOutPriced();
             order2.changeOutPriced();
         }

@@ -101,20 +101,33 @@ public class graphicalInterface {
         StdDraw.line(WIDTH * startX, HEIGHT * startY, WIDTH * (startX + 0.2), HEIGHT * startY);
         StdDraw.line(WIDTH * startX, HEIGHT * startY, WIDTH * startX, HEIGHT * (startY + 0.2));
 
-        int[] buyGraph = new int[200];
-        int[] sellGraph = new int[200];
+        int[] buyGraph = new int[100];
+        int[] sellGraph = new int[100];
 
         for (company x: planet.getCompanies()) {
             String[] listGoods = x.getRecipe().getOutput();
             for (int i = 0; i < listGoods.length; i++) {
                 if (listGoods[i].equals(name)) {
-                    sellGraph[(int) Math.round(x.minSellPrice(name) * 10)] += x.getRecipe().getOutputAmount()[i];
+                    int num = (int) Math.round(x.minSellPrice(name) * 2.5);
+                    if (num < 50) {
+                        sellGraph[num] += x.getRecipe().getOutputAmount()[i];
+                    }
+
                     break;
                 }
             }
         }
-        for (order x: planet.getBuyOrders(name)) {
-            buyGraph[(int) Math.round(x.getLimitPrice() * 10)] += x.getAmount();
+        for (company x: planet.getCompanies()) {
+            String[] listGoods = x.getRecipe().getInput();
+            for (int i = 0; i < listGoods.length; i++) {
+                if (listGoods[i].equals(name)) {
+                    int num = (int) Math.round(x.maxBuyPrice(name) * 2.5);
+                    if (num < 50) {
+                        buyGraph[num] += x.getRecipe().getInputAmount()[i];
+                    }
+                    break;
+                }
+            }
         }
         StdDraw.setPenColor(Color.GREEN);
         for (int i = 0; i < buyGraph.length; i++) {
@@ -122,7 +135,7 @@ public class graphicalInterface {
                 continue;
             }
             double newX = WIDTH * (startX + buyGraph[i] * 0.025);
-            double newY = HEIGHT * (startY + i * 0.001);
+            double newY = HEIGHT * (startY + i * 0.004);
             if (newX > 0.95 * WIDTH || newY > 0.7 * HEIGHT) {
                 System.out.println("OFBs" + "x: " +  newX + " y: " + newY);
             } else {
@@ -135,7 +148,7 @@ public class graphicalInterface {
                 continue;
             }
             double newX = WIDTH * (startX + sellGraph[i] * 0.025);
-            double newY = HEIGHT * (startY + i * 0.001);
+            double newY = HEIGHT * (startY + i * 0.004);
             if (newX > 0.95 * WIDTH || newY > 0.7 * HEIGHT) {
                 System.out.println("OFBs" + "x: " +  newX + " y: " + newY);
             } else {

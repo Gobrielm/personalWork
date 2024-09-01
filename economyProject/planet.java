@@ -94,8 +94,8 @@ public class planet {
             if (pickFromBuy.isEmpty()) {
                 continue;
             }
-            int num1 = 0;
-            int toChoose1 = 0;
+            int num1;
+            int toChoose1;
             order buy = null;
 
             ArrayList<Integer> pickFromSell = new ArrayList<>();
@@ -105,8 +105,8 @@ public class planet {
             if (pickFromSell.isEmpty()) {
                 continue;
             }
-            int num = 0;
-            int toChoose = 0;
+            int num;
+            int toChoose;
             order sell = null;
 
             while (!pickFromBuy.isEmpty() && !pickFromSell.isEmpty()) {
@@ -157,6 +157,11 @@ public class planet {
                     buyOrders.get(good).remove(i);
                     i--;
                     size--;
+                } else if (order.incrementAge()) {
+                    order.getOwner().returnBuy(order);
+                    buyOrders.get(good).remove(i);
+                    i--;
+                    size--;
                 }
             }
 
@@ -168,6 +173,11 @@ public class planet {
                     i--;
                     size1--;
                 } else if (order.checkOutPriced()) {
+                    order.getOwner().returnSell(order);
+                    sellOrders.get(good).remove(i);
+                    i--;
+                    size1--;
+                }  else if (order.incrementAge()) {
                     order.getOwner().returnSell(order);
                     sellOrders.get(good).remove(i);
                     i--;
