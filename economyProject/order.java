@@ -30,6 +30,9 @@ public class order {
             out = true;
         }
     }
+    public boolean isBuyOrder() {
+        return isBuyOrder;
+    }
     public boolean checkOut() {
         return out;
     }
@@ -70,6 +73,7 @@ public class order {
             order2.good.changeAmount(-amount);
             order1.changeOut();
             order2.changeOut();
+            core.good.changeBasePrice(order1.good.getName(), price, amount);
             return  price;
         } else if (company2.checkDeal(order2, order1)) {
             order1.expectedPrice += order1.expectedPrice * 0.01;
@@ -93,6 +97,9 @@ public class order {
 
     public double getPrice() {
         return expectedPrice;
+    }
+    public void setPrice(double price) {
+         expectedPrice = price;
     }
     public double getLimitPrice() {
         return limitPrice;

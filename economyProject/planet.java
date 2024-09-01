@@ -172,6 +172,8 @@ public class planet {
                     sellOrders.get(good).remove(i);
                     i--;
                     size1--;
+                } else {
+                    order.getOwner().askToChange(order);
                 }
             }
         }
