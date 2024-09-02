@@ -54,12 +54,12 @@ public class company {
         if (order1.isBuyOrder()) {
             changeConfidenceB(-1);
             if (confidenceB < 7) {
-                order1.setPrice(order1.getPrice() * 1.01);
+                order1.setPrice(order1.getPrice() * (1 + 0.01 * personality));
             }
         } else {
             changeConfidenceB(-1);
             if (confidenceS < 7) {
-                order1.setPrice(order1.getPrice() * 0.99);
+                order1.setPrice(order1.getPrice() * (1 - 0.01 * personality));
             }
         }
     }
@@ -176,11 +176,11 @@ public class company {
             if (recipe.getInputAmount()[i] * limit <= cash) {
                 double price = getExpectBuyPrice(temp.getName());
                 if (confidenceB >= 9) {
-                    price *= 0.97;
+                    price *= 0.98;
                 } else if (confidenceB > 7) {
                     price *= 0.99;
                 } else if (confidenceB < 3) {
-                    price = planet.getBasePrice(temp.getName()) * 1.01;
+//                    price = planet.getBasePrice(temp.getName()) * 1.01;
                 }
 
                 order newOrder = new order(this, temp, price, limit, true);
@@ -195,11 +195,11 @@ public class company {
             if (recipe.getOutput(i) >= temp.getAmount()) {
                 double price = getExpectSellPrice(temp.getName());
                 if (confidenceS >= 9) {
-                    price *= 1.03;
+                    price *= 1.02;
                 } else if (confidenceS > 7) {
                     price *= 1.01;
                 } else if (confidenceS < 3) {
-                    price = planet.getBasePrice(temp.getName()) * 0.99;
+//                    price = planet.getBasePrice(temp.getName()) * 0.99;
                 }
                 planet.addSellOrder(new order(this, temp, price, minSellPrice(temp.getName()), false));
                 recipe.changeOutput(i, -temp.getAmount());
