@@ -47,6 +47,11 @@ public class company {
         double priceDiff = order1.getPrice() - order2.getPrice();
         double price = order1.getPrice();
         double change = Math.abs(priceDiff / price);
+        if (order1.isBuyOrder() && priceDiff > 0) {
+            return true;
+        } else if (!order1.isBuyOrder() && priceDiff < 0) {
+            return true;
+        }
         return change < 0.01 * personality;
     }
     public void adjustDeal(order order1) {
@@ -180,9 +185,11 @@ public class company {
                 } else if (confidenceB > 7) {
                     price *= 0.99;
                 } else if (confidenceB < 3) {
-//                    price = planet.getBasePrice(temp.getName()) * 1.01;
+                    price = planet.getBasePrice(temp.getName()) * 1.01;
                 }
-
+                if ((price > limit)) {
+                    price = limit;
+                }
                 order newOrder = new order(this, temp, price, limit, true);
                 planet.addBuyOrder(newOrder);
             }
@@ -199,16 +206,34 @@ public class company {
                 } else if (confidenceS > 7) {
                     price *= 1.01;
                 } else if (confidenceS < 3) {
-//                    price = planet.getBasePrice(temp.getName()) * 0.99;
+                    price = planet.getBasePrice(temp.getName()) * 0.99;
                 }
-                planet.addSellOrder(new order(this, temp, price, minSellPrice(temp.getName()), false));
+                double limit = minSellPrice(temp.getName());
+                if ((price < limit)) {
+                    price = limit;
+                }
+                planet.addSellOrder(new order(this, temp, price, limit, false));
                 recipe.changeOutput(i, -temp.getAmount());
             }
         }
     }
 
+    private void degradeConfidence() {
+        if (confidenceB > 7) {
+            changeConfidenceB(-1);
+        } else if (confidenceB < 3) {
+            changeConfidenceB(1);
+        }
+        if (confidenceS > 7) {
+            changeConfidenceS(-1);
+        } else if (confidenceS < 3) {
+            changeConfidenceS(1);
+        }
+    }
+
     public void tick() {
         payExpenses();
+        degradeConfidence();
         recipe.createRecipe();
         if (order == 1) {
             createSellOrders();

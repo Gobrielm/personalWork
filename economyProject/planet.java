@@ -21,18 +21,19 @@ public class planet {
         companies = new ArrayList<>();
         priceSold = new HashMap<>();
         size = economy.rand.nextInt(30, 60);
-        for (int i = 0; i < size / 2; i++) {
-            recipe temp = good.randPrimaryRecipe();
-            String name = good.pickRandName(1);
-            company newCompany = new company(name, temp, this);
-            companies.add(newCompany);
-        }
-        for (int i = 0; i < size / 2; i++) {
-            recipe temp = good.randSecondaryRecipe();
-            String name = good.pickRandName(3);
-            company newCompany = new company(name, temp, this);
-            companies.add(newCompany);
-        }
+        testCompanies();
+//        for (int i = 0; i < size / 2; i++) {
+//            recipe temp = good.randPrimaryRecipe();
+//            String name = good.pickRandName(1);
+//            company newCompany = new company(name, temp, this);
+//            companies.add(newCompany);
+//        }
+//        for (int i = 0; i < size / 2; i++) {
+//            recipe temp = good.randSecondaryRecipe();
+//            String name = good.pickRandName(3);
+//            company newCompany = new company(name, temp, this);
+//            companies.add(newCompany);
+//        }
         String[] goods = good.getGoodList();
         Double[] basePrice = good.getPriceList();
         prices = new HashMap<>();
@@ -43,6 +44,13 @@ public class planet {
             buyOrders.put(goods[i], new ArrayList<>());
             sellOrders.put(goods[i], new ArrayList<>());
         }
+    }
+    private void testCompanies() {
+        companies.add(new company("MineA", new recipe(new good[]{}, new good[]{new good("Copper", 2)}, 3, 0), this));
+        companies.add(new company("MineB", new recipe(new good[]{}, new good[]{new good("Copper", 2)}, 3, 0), this));
+        companies.add(new company("MineC", new recipe(new good[]{}, new good[]{new good("Zinc", 1)}, 3, 0), this));
+        companies.add(new company("Factory", new recipe(new good[]{new good("Zinc", 1), new good("Copper", 2)}, new good[]{new good("Brass", 1)}, 3, 0), this));
+        companies.add(new company("Buyer", new recipe(new good[]{new good("Brass", 1)}, new good[]{}, 0, 35), this));
     }
     public company[] getCompanies() {
         return companies.toArray(new company[0]);
@@ -204,9 +212,10 @@ public class planet {
     }
 
     public void planetTick() {
+        completeOrders();
         for (company x: companies) {
             x.tick();
         }
-        completeOrders();
+
     }
 }

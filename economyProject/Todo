@@ -6,3 +6,6 @@ company - some companies just make more for some reason
 company - store the current orders for each company for easy access
 order - potentially change how the price for orders are negotiated and who adjusts when no deal is made
 company - use current price along with input price to determine price
+company - owner can vote on the new ceo
+company - split into shares
+company - add buyConfidence/sell Confidence for each good
