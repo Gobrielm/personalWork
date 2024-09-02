@@ -134,7 +134,6 @@ public class planet {
                     }
                 }
                 if (sell.checkValid() && buy.checkValid()) {
-                    order.makeDeal(buy, sell);
                     double num2 = order.makeDeal(buy, sell);
                     if (num2 != 0) {
                         priceSold.get(good).add(num2);

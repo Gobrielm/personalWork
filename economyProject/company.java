@@ -57,17 +57,11 @@ public class company {
                 order1.setPrice(order1.getPrice() * 1.01);
             }
         } else {
-            changeConfidenceS(-1);
+            changeConfidenceB(-1);
             if (confidenceS < 7) {
                 order1.setPrice(order1.getPrice() * 0.99);
             }
         }
-    }
-
-    public void buyGood(int amount, String good, double price) {
-        recipe.changeInput(good, amount);
-        addLastBoughtPrice(good, price);
-        changeConfidenceB(2);
     }
     private void addLastBoughtPrice(String name, double price) {
         lastBuyPrices.put(name, price);
@@ -107,7 +101,7 @@ public class company {
             baseTotalSell += x.getAmount() * good.getBasePrice(x.getName());
         }
         double percentage = (baseTotalSell - expenses + income) / baseTotalBuy;
-        return planet.getBasePrice(name) * percentage;
+        return planet.getBasePrice(name) * (percentage - 0.05);
     }
     private void addLastSoldPrice(String name, double price) {
         lastSellPrices.put(name, price);
@@ -133,10 +127,23 @@ public class company {
         double percentage = (expenses + baseTotalBuy) / baseTotalSell;
         return planet.getBasePrice(name) * percentage;
     }
+    public void buyGood(int amount, String good, double price) {
+        recipe.changeInput(good, amount);
+        addLastBoughtPrice(good, price);
+        changeConfidenceB(2);
+        cash -= (price * amount);
+    }
     public void sellGood(int amount, String name, double price) {
         cash += amount * price;
         addLastSoldPrice(name, price);
-        changeConfidenceS(3);
+        changeConfidenceS(2);
+    }
+    public void returnBuy(order order) {
+        changeConfidenceB(-1);
+    }
+    public void returnSell(order order) {
+        recipe.changeOutput(order.getGood(), order.getAmount());
+        changeConfidenceS(-1);
     }
     public planet getPlanet() {
         return planet;
@@ -145,14 +152,6 @@ public class company {
         cash -= recipe.getExpenses();
         cash += recipe.getIncome();
     }
-    public void returnBuy(order order) {
-        changeConfidenceB(-3);
-    }
-    public void returnSell(order order) {
-        recipe.changeOutput(order.getGood(), order.getAmount());
-        changeConfidenceS(-3);
-    }
-
     public void askToChange(order order) {
         if (order.isBuyOrder()) {
             if (confidenceB < 5) {
@@ -174,7 +173,7 @@ public class company {
         for (int i = 0; i < input.length; i++) {
             good temp = input[i];
             double limit = maxBuyPrice(temp.getName());
-            if (recipe.getInput(i) * limit <= cash) {
+            if (recipe.getInputAmount()[i] * limit <= cash) {
                 double price = getExpectBuyPrice(temp.getName());
                 if (confidenceB >= 9) {
                     price *= 0.97;
@@ -183,7 +182,9 @@ public class company {
                 } else if (confidenceB < 3) {
                     price = planet.getBasePrice(temp.getName()) * 1.01;
                 }
-                planet.addBuyOrder(new order(this, temp, price, limit, true));
+
+                order newOrder = new order(this, temp, price, limit, true);
+                planet.addBuyOrder(newOrder);
             }
         }
     }

@@ -81,12 +81,6 @@ public class order {
             order2.changeOut();
             order1.getOwner().getPlanet().changeBasePrice(order1.good.getName(), price, amount);
             return  price;
-//        } else if (company2.checkDeal(order2, order1)) {
-//            company1.adjustDeal(order1);
-//            order1.changeOutPriced();
-//        } else if (company1.checkDeal(order1, order2)) {
-//            company2.adjustDeal(order2);
-//            order2.changeOutPriced();
         } else {
             company1.adjustDeal(order1);
             company2.adjustDeal(order2);

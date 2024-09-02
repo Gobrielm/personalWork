@@ -28,7 +28,7 @@ public class good {
         basePrices.put("Argonium", 5.0);
         basePrices.put("Wires", 5.0);
         basePrices.put("Bismanol", 5.0);
-        basePrices.put("Brass", 15.0);
+        basePrices.put("Brass", 20.0);
         basePrices.put("Batteries", 5.0);
         basePrices.put("CopperHydride", 5.0);
         basePrices.put("XenonTetroxide", 5.0);
@@ -165,5 +165,12 @@ public class good {
             return Objects.equals(name, ((good) obj).name);
         }
         return false;
+    }
+
+    @Override
+    public String toString() {
+        String toReturn = "";
+        toReturn += name + ": " + amount;
+        return toReturn;
     }
 }
