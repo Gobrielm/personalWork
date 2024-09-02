@@ -6,7 +6,6 @@ public class order {
     private double limitPrice;
     private company owner;
     private boolean out;
-    private boolean outPriced;
     private boolean isBuyOrder;
     private int age;
     public order(company owner, good good, double expectedPrice, double limitPrice, boolean isBuyOrder) {
@@ -15,7 +14,6 @@ public class order {
         this.limitPrice = limitPrice;
         this.owner = owner;
         out = false;
-        outPriced = false;
         this.isBuyOrder = isBuyOrder;
         this.age = 0;
     }
@@ -42,26 +40,20 @@ public class order {
     public boolean checkOut() {
         return out;
     }
-    public void changeOutPriced() {
+    public void checkOutPriced() {
         if (isBuyOrder) {
             if (expectedPrice > limitPrice) {
-                outPriced = true;
+                expectedPrice = limitPrice;
             }
         } else {
             if (expectedPrice < limitPrice) {
-                outPriced = true;
+                expectedPrice = limitPrice;
             }
         }
     }
-    public boolean checkOutPriced() {
-        return outPriced;
-    }
+
     public boolean checkValid() {
-        if (out) {
-            return false;
-        } else {
-            return !outPriced;
-        }
+        return !out;
     }
 
     //order1 is the buyOrder, order2 is the seller
@@ -84,8 +76,8 @@ public class order {
         } else {
             company1.adjustDeal(order1);
             company2.adjustDeal(order2);
-            order1.changeOutPriced();
-            order2.changeOutPriced();
+            order1.checkOutPriced();
+            order2.checkOutPriced();
         }
         return 0;
     }

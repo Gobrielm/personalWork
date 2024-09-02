@@ -118,9 +118,10 @@ public class planet {
             int num;
             int toChoose;
             order sell = null;
-
+            int tries = 0;
             while (!pickFromBuy.isEmpty() && !pickFromSell.isEmpty()) {
                 while(!pickFromBuy.isEmpty()) {
+                    tries ++;
                     num1 = economy.rand.nextInt(0, pickFromBuy.size());
                     toChoose1 = pickFromBuy.get(num1);
                     buy = buyOrders.get(good).get(toChoose1);
@@ -161,11 +162,6 @@ public class planet {
                     buyOrders.get(good).remove(i);
                     i--;
                     size--;
-                } else if (order.checkOutPriced()) {
-                    order.getOwner().returnBuy(order);
-                    buyOrders.get(good).remove(i);
-                    i--;
-                    size--;
                 } else if (order.incrementAge()) {
                     order.getOwner().returnBuy(order);
                     buyOrders.get(good).remove(i);
@@ -178,11 +174,6 @@ public class planet {
             for (int i = 0; i < size1; i++) {
                 order order = sellOrders.get(good).get(i);
                 if (order.checkOut()) {
-                    sellOrders.get(good).remove(i);
-                    i--;
-                    size1--;
-                } else if (order.checkOutPriced()) {
-                    order.getOwner().returnSell(order);
                     sellOrders.get(good).remove(i);
                     i--;
                     size1--;
