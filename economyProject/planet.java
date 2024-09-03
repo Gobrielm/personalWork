@@ -118,7 +118,7 @@ public class planet {
             int num;
             int toChoose;
             order sell = null;
-            int tries = 0;
+            int tries = 0; // For Debugging
             while (!pickFromBuy.isEmpty() && !pickFromSell.isEmpty()) {
                 while(!pickFromBuy.isEmpty()) {
                     tries ++;
@@ -194,7 +194,7 @@ public class planet {
     }
 
     public void changeBasePrice(String name, double price, int amount) {
-        double percentage = (double) amount / 20;
+        double percentage = (double) amount / 8; // Number could be up for change
         if (percentage > 0.5) {
             percentage = 0.5;
         }

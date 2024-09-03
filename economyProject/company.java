@@ -13,6 +13,7 @@ public class company {
     private HashMap<String, Double> lastSellPrices;
     private HashMap<String, Integer> confidenceB;
     private HashMap<String, Integer> confidenceS;
+    private HashMap<String, Double> stock;
     //Higher number is more aggressive
     private int personality;
     public company(String name, recipe recipe, planet planet) {
@@ -41,6 +42,8 @@ public class company {
             confidenceB.put(good, 5);
             confidenceS.put(good, 5);
         }
+        stock = new HashMap<>();
+        stock.put(name, 100.0);
         lastSellPrices = new HashMap<>();
         lastBuyPrices = new HashMap<>();
         this.personality = economy.rand.nextInt(1, 4);
@@ -131,7 +134,8 @@ public class company {
         for (good x: recipe.getOutputGood()) {
             baseTotalSell += x.getAmount() * planet.getBasePrice(x.getName());
         }
-        double percentage = (baseTotalSell - expenses + income) / baseTotalBuy;
+        double minProfit = 1.0;
+        double percentage = (baseTotalSell - expenses - minProfit + income) / baseTotalBuy;
         return planet.getBasePrice(name) * (percentage - 0.05);
     }
     private void addLastSoldPrice(String name, double price) {
@@ -155,7 +159,8 @@ public class company {
         for (good x: recipe.getOutputGood()) {
             baseTotalSell += x.getAmount() * planet.getBasePrice(x.getName());
         }
-        double percentage = (expenses + baseTotalBuy) / baseTotalSell;
+        double minProfit = 1.0;
+        double percentage = (expenses + minProfit + baseTotalBuy) / (baseTotalSell);
         return planet.getBasePrice(name) * (percentage - 0.05);
     }
     public void buyGood(int amount, String good, double price) {
@@ -187,7 +192,7 @@ public class company {
         cash += recipe.getIncome();
         incomeRemoveFirst();
     }
-    public void askToChange(order order) {
+    public void askToChange(order order) { // This could be anti - helpful since basePrice is inaccurate
         if (order.isBuyOrder()) {
             if (confidenceB.get(order.getGood()) < 5) {
                 if (order.getPrice() < planet.getBasePrice(order.getGood())) {
@@ -210,9 +215,9 @@ public class company {
             double limit = maxBuyPrice(temp.getName());
             if (recipe.getInputAmount()[i] * limit <= cash) {
                 double price = getExpectBuyPrice(temp.getName());
-                if (confidenceB.get(temp.getName()) >= 9) {
+                if (confidenceB.get(temp.getName()) == 10) {
                     price *= 0.98;
-                } else if (confidenceB.get(temp.getName()) > 7) {
+                } else if (confidenceB.get(temp.getName()) > 8) {
                     price *= 0.99;
                 } else if (confidenceB.get(temp.getName()) < 3) {
                     price = planet.getBasePrice(temp.getName()) * 1.01;
@@ -231,9 +236,9 @@ public class company {
             good temp = output[i];
             if (recipe.getOutput(i) >= temp.getAmount()) {
                 double price = getExpectSellPrice(temp.getName());
-                if (confidenceS.get(temp.getName()) >= 9) {
+                if (confidenceS.get(temp.getName()) == 10) {
                     price *= 1.02;
-                } else if (confidenceS.get(temp.getName()) > 7) {
+                } else if (confidenceS.get(temp.getName()) > 8) {
                     price *= 1.01;
                 } else if (confidenceS.get(temp.getName()) < 3) {
                     price = planet.getBasePrice(temp.getName()) * 0.99;
