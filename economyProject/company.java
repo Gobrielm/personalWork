@@ -8,6 +8,7 @@ public class company {
     private recipe recipe;
     private int order;
     private planet planet;
+    private LinkedList<Double> incomeList;
     private HashMap<String, Double> lastBuyPrices;
     private HashMap<String, Double> lastSellPrices;
     private HashMap<String, Integer> confidenceB;
@@ -29,6 +30,11 @@ public class company {
         } else {
             this.order = 2;
         }
+        incomeList = new LinkedList<>();
+        int sizeOfIncomeList = 10;
+        for (int i = 0; i < sizeOfIncomeList; i++) {
+            incomeList.add(0.0);
+        }
         confidenceB = new HashMap<>();
         confidenceS = new HashMap<>();
         for (String good: good.getGoodList()) {
@@ -45,6 +51,22 @@ public class company {
     }
     public recipe getRecipe() {
         return recipe;
+    }
+    private void incomeEditLast(double num) {
+        double last = incomeList.getLast() + num;
+        incomeList.removeLast();
+        incomeList.add(last);
+    }
+    private void incomeRemoveFirst() {
+        incomeList.removeFirst();
+        incomeList.addLast(0.0);
+    }
+    public double getIncome() {
+        double total = 0.0;
+        for (double x: incomeList) {
+            total += x;
+        }
+        return (double) Math.round(total / incomeList.size() * 10) / 10;
     }
     //order1 is the same as the company
     public boolean checkDeal(order order1, order order2) {
@@ -141,9 +163,11 @@ public class company {
         addLastBoughtPrice(good, price);
         changeConfidenceB(2, good);
         cash -= (price * amount);
+        incomeEditLast(-price * amount);
     }
     public void sellGood(int amount, String good, double price) {
         cash += amount * price;
+        incomeEditLast(amount * price);
         addLastSoldPrice(good, price);
         changeConfidenceS(2, good);
     }
@@ -158,8 +182,10 @@ public class company {
         return planet;
     }
     private void payExpenses() {
+        incomeEditLast(-recipe.getExpenses() + recipe.getIncome());
         cash -= recipe.getExpenses();
         cash += recipe.getIncome();
+        incomeRemoveFirst();
     }
     public void askToChange(order order) {
         if (order.isBuyOrder()) {
@@ -255,6 +281,7 @@ public class company {
     @Override
     public String toString() {
         String toReturn = name + ": $" + Math.round(cash) + "--- ";
+        toReturn += "Income" + ": $" + getIncome() + "--- ";
 //        for (String x: recipe.getInput()) {
 //            toReturn += x + "--";
 //        }
