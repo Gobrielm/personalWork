@@ -37,6 +37,8 @@ public class economy {
     public void playerTurn() {
         int index = 0;
         boolean done = false;
+        boolean typing1 = false;
+        boolean typing2 = false;
         while (index < playerList.size()) {
             player currPlayer = playerList.get(index);
             graphicalInterface.drawPlanetMenu(currPlayer);
@@ -48,19 +50,61 @@ public class economy {
                         done = true;
                     } else if (x > 0.3 && x < 0.51) {
                         int temp = (int) Math.round((y * (good.getGoodList().length + 1) - 1));
-                        graphicalInterface.drawStuff(currPlayer, good.getGoodList()[temp]);
+                        currPlayer.setGoodSelected(good.getGoodList()[temp]);
+                        graphicalInterface.drawStuff(currPlayer);
                     } else if (x > (0.0833 - 0.0415) && x < (0.0833 + 0.0415) && y > (0.5 - 0.034) && y < (0.5 + 0.034)) {
                         graphicalInterface.button = 1;
+                        graphicalInterface.drawStuff(currPlayer);
                     } else if (x > (0.166 - 0.0415) && x < (0.166 + 0.0415) && y > (0.5 - 0.034) && y < 0.5 + 0.034) {
                         graphicalInterface.button = 2;
+                        graphicalInterface.drawStuff(currPlayer);
                     } else if (x > (0.249 - 0.0415) && x < (0.249 + 0.0415) && y > (0.5 - 0.034) && y < 0.5 + 0.034) {
                         graphicalInterface.button = 3;
+                        graphicalInterface.drawStuff(currPlayer);
                     } else if (x > (0.0833 - 0.0415) && x < (0.0833 + 0.0415) && y > (0.433 - 0.034) && y < (0.433 + 0.034)) {
                         graphicalInterface.button = 4;
+                        graphicalInterface.drawStuff(currPlayer);
                     } else if (x > (0.166 - 0.0415) && x < (0.166 + 0.0415) && y > (0.433 - 0.034) && y < (0.433 + 0.034)) {
                         graphicalInterface.button = 5;
+                        graphicalInterface.drawStuff(currPlayer);
+                    } else if (x > (0.588 - 0.0415) && x < (0.588 + 0.0415) && y > (0.567 - 0.034) && y < (0.567 + 0.034)) {
+                        graphicalInterface.button = 6;
+                        graphicalInterface.drawStuff(currPlayer);
+                        graphicalInterface.drawStuff(currPlayer);
+                    } else if (x > (0.588 - 0.0415) && x < (0.588 + 0.0415) && y > (0.5 - 0.034) && y < (0.5 + 0.034)) {
+                        graphicalInterface.button = 7;
+                        graphicalInterface.drawStuff(currPlayer);
+                    } else if (x > (0.588 - 0.0415) && x < (0.588 + 0.0415) && y > (0.433 - 0.034) && y < (0.433 + 0.034)) {
+                        graphicalInterface.button = 8;
+                        graphicalInterface.drawStuff(currPlayer);
+                    } else if (x > (0.833 - 0.133) && x < (0.833 + 0.133) && y > (0.55 - 0.025) && y < (0.55 + 0.025)) {
+                        typing1 = true;
+                        typing2 = false;
+                    } else if (x > (0.833 - 0.133) && x < (0.833 + 0.133) && y > (0.45 - 0.025) && y < (0.45 + 0.025)) {
+                        typing1 = false;
+                        typing2 = true;
+                    } else {
+                        typing1 = false;
+                        typing2 = false;
                     }
                     StdDraw.pause(100);
+                }
+                if (StdDraw.hasNextKeyTyped() && (typing1 || typing2)) {
+                    char c = StdDraw.nextKeyTyped();
+                    if (graphicalInterface.button == 6) {
+                        if (typing1) {
+                            graphicalInterface.drawTextbox(currPlayer, c, 1);
+                        } else {
+                            graphicalInterface.drawTextbox(currPlayer, c, 2);
+                        }
+
+                    } else if (graphicalInterface.button == 7) {
+                        if (typing1) {
+                            graphicalInterface.drawTextbox(currPlayer, c, 1);
+                        } else {
+                            graphicalInterface.drawTextbox(currPlayer, c, 2);
+                        }
+                    }
                 }
             }
             done = false;
