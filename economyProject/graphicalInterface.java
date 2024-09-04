@@ -261,10 +261,16 @@ public class graphicalInterface {
         StdDraw.text(0.833 * WIDTH, 0.49 * HEIGHT, "Limit Price");
         StdDraw.rectangle(0.833 * WIDTH, 0.45 * HEIGHT, 0.133 * WIDTH, 0.025 * HEIGHT);
 
+        drawTextbox(player, null, 1);
         StdDraw.show();
     }
 
-    public static void drawTextbox(player player, char text, int whichOne) {
+    public static void drawTextbox(player player, Character text, int whichOne) {
+        if (text == null) {
+            StdDraw.text(0.833 * WIDTH, 0.55 * HEIGHT, textbox1);
+            StdDraw.text(0.833 * WIDTH, 0.45 * HEIGHT, textbox2);
+            return;
+        }
         if (whichOne == 1) {
             if ((int) text == 8 && !textbox1.isEmpty()) {
                 textbox1 = textbox1.substring(0, textbox1.length() - 1);

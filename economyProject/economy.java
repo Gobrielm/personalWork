@@ -50,7 +50,10 @@ public class economy {
                         done = true;
                     } else if (x > 0.3 && x < 0.51) {
                         int temp = (int) Math.round((y * (good.getGoodList().length + 1) - 1));
-                        currPlayer.setGoodSelected(good.getGoodList()[temp]);
+                        if (currPlayer.setGoodSelected(good.getGoodList()[temp])) {
+                            graphicalInterface.textbox1 = "";
+                            graphicalInterface.textbox2 = "";
+                        }
                         graphicalInterface.drawStuff(currPlayer);
                     } else if (x > (0.0833 - 0.0415) && x < (0.0833 + 0.0415) && y > (0.5 - 0.034) && y < (0.5 + 0.034)) {
                         graphicalInterface.button = 1;

@@ -15,8 +15,12 @@ public class player {
         planet = 0;
         goodSelected = "";
     }
-    public void setGoodSelected(String goodSelected) {
+    public boolean setGoodSelected(String goodSelected) {
+        if (goodSelected.equals(this.goodSelected)) {
+            return false;
+        }
         this.goodSelected = goodSelected;
+        return true;
     }
     public String getGoodSelected() {
         return goodSelected;
