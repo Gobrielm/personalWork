@@ -69,7 +69,7 @@ public class company {
         for (double x: incomeList) {
             total += x;
         }
-        return (double) Math.round(total / incomeList.size() * 10) / 10;
+        return Utils.round(total / incomeList.size(), 1);
     }
     //order1 is the same as the company
     public boolean checkDeal(order order1, order order2) {
@@ -134,9 +134,17 @@ public class company {
         for (good x: recipe.getOutputGood()) {
             baseTotalSell += x.getAmount() * planet.getBasePrice(x.getName());
         }
-        double minProfit = 1.0;
+        double minProfit = 0.5;
+        if (confidenceB.get(name) > 9) {
+            minProfit = 2;
+        } else if (confidenceB.get(name) > 7) {
+            minProfit = 1.5;
+        } else if (confidenceB.get(name) > 5) {
+            minProfit = 1;
+        }
+
         double percentage = (baseTotalSell - expenses - minProfit + income) / baseTotalBuy;
-        return planet.getBasePrice(name) * (percentage - 0.05);
+        return planet.getBasePrice(name) * (percentage);
     }
     private void addLastSoldPrice(String name, double price) {
         lastSellPrices.put(name, price);
@@ -159,9 +167,16 @@ public class company {
         for (good x: recipe.getOutputGood()) {
             baseTotalSell += x.getAmount() * planet.getBasePrice(x.getName());
         }
-        double minProfit = 1.0;
+        double minProfit = 0.5;
+        if (confidenceS.get(name) > 9) {
+            minProfit = 2;
+        } else if (confidenceS.get(name) > 7) {
+            minProfit = 1.5;
+        } else if (confidenceS.get(name) > 5) {
+            minProfit = 1;
+        }
         double percentage = (expenses + minProfit + baseTotalBuy) / (baseTotalSell);
-        return planet.getBasePrice(name) * (percentage - 0.05);
+        return planet.getBasePrice(name) * (percentage);
     }
     public void buyGood(int amount, String good, double price) {
         recipe.changeInput(good, amount);
@@ -287,12 +302,6 @@ public class company {
     public String toString() {
         String toReturn = name + ": $" + Math.round(cash) + "--- ";
         toReturn += "Income" + ": $" + getIncome() + "--- ";
-//        for (String x: recipe.getInput()) {
-//            toReturn += x + "--";
-//        }
-//        for (String x: recipe.getOutput()) {
-//            toReturn += x + "--";
-//        }
         if (order == 2) {
             for (String good: recipe.getInput()) {
                 toReturn += good + " ConfB: " + confidenceB.get(good) + " ";

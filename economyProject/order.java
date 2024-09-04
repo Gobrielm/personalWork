@@ -84,7 +84,7 @@ public class order {
 
     @Override
     public String toString() {
-        return owner.getName() + ": " + good.getAmount() + "----" + ((double) Math.round(expectedPrice * 100) / 100);
+        return owner.getName() + ": " + good.getAmount() + "--" + Utils.round(expectedPrice, 2) + "--" + Utils.round(limitPrice, 2);
     }
 
     public double getPrice() {

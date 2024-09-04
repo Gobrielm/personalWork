@@ -7,6 +7,7 @@ public class main {
     public static void main(String[] args) throws InterruptedException {
         graphicalInterface.startGame();
         int playerCount = 4;
+        double x = Utils.round(1.3, 0.5);
         boolean turnEnd = true;
         economy economy = new economy(325235, 4);
         while (true) {

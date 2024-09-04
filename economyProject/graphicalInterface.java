@@ -3,8 +3,6 @@ package core;
 import edu.princeton.cs.algs4.StdDraw;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.HashMap;
 
 public class graphicalInterface {
     static final double WIDTH = 60;
@@ -13,7 +11,10 @@ public class graphicalInterface {
     static final Font SMALL = new Font("Monaco", Font.BOLD, 15);
     static final Font MED = new Font("Monaco", Font.BOLD, 20);
     static final Font BIG = new Font("Monaco", Font.BOLD, 30);
+    static final int precision = 2; // How many slots every dollar
     static int button;
+
+
     public static void startGame() {
         StdDraw.setFont(SMALL);
         StdDraw.setCanvasSize((int) (WIDTH * CANVASSIZE), (int) (HEIGHT * CANVASSIZE));
@@ -65,7 +66,7 @@ public class graphicalInterface {
         Double[] goodPrices = planet.getPriceList();
         for (int i = 0; i < goodNames.length; i++) {
             StdDraw.text(WIDTH * 0.42,  HEIGHT / (goodNames.length + 1) * (i + 1), goodNames[i]);
-            StdDraw.text(WIDTH * .50,  HEIGHT / (goodNames.length + 1) * (i + 1), Double.toString((double) Math.round(goodPrices[i] * 10) / 10));
+            StdDraw.text(WIDTH * .50,  HEIGHT / (goodNames.length + 1) * (i + 1), Double.toString(Utils.round(goodPrices[i], 1)));
             StdDraw.line(WIDTH * 0.333,  HEIGHT / (goodNames.length + 1) * (i + 1.5),  WIDTH * 0.51,  HEIGHT / (goodNames.length + 1) * (i + 1.5));
         }
         StdDraw.line(WIDTH * 0.333,  HEIGHT / (goodNames.length + 1) * (0.5),  WIDTH * 0.51,  HEIGHT / (goodNames.length + 1) * (0.5));
@@ -101,66 +102,54 @@ public class graphicalInterface {
         StdDraw.setFont(MED);
         planet planet = economy.getPlanetFromID(player.getPlanet());
         double startX = 0.75;
+        double diffX = 0.2;
         double startY = 0.5;
+        double diffY = 0.2;
         StdDraw.line(WIDTH * startX, HEIGHT * startY, WIDTH * (startX + 0.2), HEIGHT * startY);
         StdDraw.line(WIDTH * startX, HEIGHT * startY, WIDTH * startX, HEIGHT * (startY + 0.2));
-
-        int[] buyGraph = new int[100];
-        int[] sellGraph = new int[100];
-
-        for (company x: planet.getCompanies()) {
-            String[] listGoods = x.getRecipe().getOutput();
-            for (int i = 0; i < listGoods.length; i++) {
-                if (listGoods[i].equals(name)) {
-                    int num = (int) Math.round(x.minSellPrice(name) * 2.5);
-                    if (num < 50) {
-                        sellGraph[num] += x.getRecipe().getOutputAmount()[i];
-                    }
-
-                    break;
-                }
+        StdDraw.text(WIDTH * 0.73, HEIGHT * 0.6, "Price");
+        StdDraw.text(WIDTH * 0.85, HEIGHT * 0.46, "Amount");
+        int maxValue = 0;
+        for (order x: planet.getBuyOrders(name)) {
+            if (x.getLimitPrice() > maxValue) {
+                maxValue = (int) Math.round(x.getLimitPrice());
             }
         }
-        for (company x: planet.getCompanies()) {
-            String[] listGoods = x.getRecipe().getInput();
-            for (int i = 0; i < listGoods.length; i++) {
-                if (listGoods[i].equals(name)) {
-                    int num = (int) Math.round(x.maxBuyPrice(name) * 2.5);
-                    if (num < 50) {
-                        buyGraph[num] += x.getRecipe().getInputAmount()[i];
-                    }
-                    break;
-                }
-            }
+        //Used to make (price, amount) graph
+        int[] buyPairs = new int[precision * (maxValue + 1)]; //Represents mapping price -> amount
+        int[] sellPairs = new int[precision * (maxValue + 1)];
+
+        for (order x: planet.getBuyOrders(name)) {
+            buyPairs[(int) Utils.round(x.getLimitPrice(), 1 / precision)] += 1;
+        }
+        for (order x: planet.getSellOrders(name)) {
+            sellPairs[(int) Utils.round(x.getLimitPrice(), 1 / precision)] += 1;
         }
         StdDraw.setPenColor(Color.GREEN);
-        for (int i = 0; i < buyGraph.length; i++) {
-            if (buyGraph[i] == 0) {
+        for (int i = 0; i < buyPairs.length; i++) {
+            int a = buyPairs[i];
+            if (a == 0) {
                 continue;
             }
-            double newX = WIDTH * (startX + buyGraph[i] * 0.025);
-            double newY = HEIGHT * (startY + i * 0.004);
-            if (newX > 0.95 * WIDTH || newY > 0.7 * HEIGHT) {
-                System.out.println("OFBs" + "x: " +  newX + " y: " + newY);
-            } else {
-                StdDraw.circle(newX, newY, 0.1);
-            }
+            double x = startX + ((double) a / maxValue) * diffX;
+            double y = startY + ((double) i / buyPairs.length * precision) * diffY;
+            StdDraw.circle(x * WIDTH, y * HEIGHT, 0.02);
         }
         StdDraw.setPenColor(Color.RED);
-        for (int i = 0; i < sellGraph.length; i++) {
-            if (sellGraph[i] == 0) {
+        for (int i = 0; i < sellPairs.length; i++) {
+            int a = sellPairs[i];
+            if (a == 0) {
                 continue;
             }
-            double newX = WIDTH * (startX + sellGraph[i] * 0.025);
-            double newY = HEIGHT * (startY + i * 0.004);
-            if (newX > 0.95 * WIDTH || newY > 0.7 * HEIGHT) {
-                System.out.println("OFBs" + "x: " +  newX + " y: " + newY);
-            } else {
-                StdDraw.circle(newX, newY, 0.1);
-            }
+            double x = startX + ((double) a / maxValue) * diffX;
+            double y = startY + ((double) i / sellPairs.length * precision) * diffY;
+            StdDraw.circle(x * WIDTH, y * HEIGHT, 0.02);
         }
 
         StdDraw.setPenColor(Color.WHITE);
+
+        StdDraw.text(WIDTH * (startX + diffX), HEIGHT * (startY - 0.02), String.valueOf(maxValue));
+        StdDraw.text(WIDTH * (startX - 0.01), HEIGHT * (startY + diffY), String.valueOf(sellPairs.length * precision));
         StdDraw.show();
     }
 
