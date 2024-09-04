@@ -175,6 +175,12 @@ public class company {
         } else if (confidenceS.get(name) > 5) {
             minProfit = 1;
         }
+        if (getIncome() < minProfit) {
+            //SUPER BROKEN IN THEORY BUT KINDA WORKS
+            double diff = minProfit - getIncome();
+            minProfit *= diff / minProfit;
+        }
+
         double percentage = (expenses + minProfit + baseTotalBuy) / (baseTotalSell);
         return planet.getBasePrice(name) * (percentage);
     }
@@ -300,22 +306,22 @@ public class company {
 
     @Override
     public String toString() {
-        String toReturn = name + ": $" + Math.round(cash) + "--- ";
-        toReturn += "Income" + ": $" + getIncome() + "--- ";
+        String toReturn = name + ": $" + Math.round(cash) + "- ";
+        toReturn += "Income" + ": $" + getIncome() + "- ";
         if (order == 2) {
             for (String good: recipe.getInput()) {
-                toReturn += good + " ConfB: " + confidenceB.get(good) + " ";
+                toReturn += good + " CB: " + confidenceB.get(good) + " ";
             }
             for (String good: recipe.getOutput()) {
-                toReturn += good + " ConfS: " + confidenceS.get(good) + " ";
+                toReturn += good + " CS: " + confidenceS.get(good) + " ";
             }
         } else if (order == 1) {
             for (String good: recipe.getOutput()) {
-                toReturn += good + " ConfS: " + confidenceS.get(good) + " ";
+                toReturn += good + " CS: " + confidenceS.get(good) + " ";
             }
         } else {
             for (String good: recipe.getInput()) {
-                toReturn += good + " ConfB: " + confidenceB.get(good) + " ";
+                toReturn += good + " CB: " + confidenceB.get(good) + " ";
             }
         }
 
