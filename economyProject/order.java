@@ -5,14 +5,26 @@ public class order {
     private double expectedPrice;
     private double limitPrice;
     private company owner;
+    private player playerOwner;
     private boolean out;
     private boolean isBuyOrder;
     private int age;
+    //Ai's orders
     public order(company owner, good good, double expectedPrice, double limitPrice, boolean isBuyOrder) {
         this.good = new good(good.getName(), good.getAmount());
         this.expectedPrice = expectedPrice;
         this.limitPrice = limitPrice;
         this.owner = owner;
+        out = false;
+        this.isBuyOrder = isBuyOrder;
+        this.age = 0;
+    }
+    //Player orders
+    public order(player owner, good good, double expectedPrice, double limitPrice, boolean isBuyOrder) {
+        this.good = new good(good.getName(), good.getAmount());
+        this.expectedPrice = expectedPrice;
+        this.limitPrice = limitPrice;
+        this.playerOwner = owner;
         out = false;
         this.isBuyOrder = isBuyOrder;
         this.age = 0;

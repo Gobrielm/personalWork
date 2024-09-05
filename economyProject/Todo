@@ -6,4 +6,4 @@ order - potentially change how the price for orders are negotiated and who adjus
 company - use current price along with input price to determine price
 company - owner can vote on the new ceo
 company - split into shares
-Graphical Interface - Make the textbox num go away if click another good
+Graphical Interface - Make the textboxes and current good a player value

@@ -261,6 +261,9 @@ public class graphicalInterface {
         StdDraw.text(0.833 * WIDTH, 0.49 * HEIGHT, "Limit Price");
         StdDraw.rectangle(0.833 * WIDTH, 0.45 * HEIGHT, 0.133 * WIDTH, 0.025 * HEIGHT);
 
+        StdDraw.rectangle(0.833 * WIDTH, 0.35 * HEIGHT, 0.03 * WIDTH, 0.025 * HEIGHT);
+        StdDraw.text(0.833 * WIDTH, 0.35 * HEIGHT, "Confirm");
+
         drawTextbox(player, null, 1);
         StdDraw.show();
     }
@@ -275,8 +278,6 @@ public class graphicalInterface {
             if ((int) text == 8 && !textbox1.isEmpty()) {
                 textbox1 = textbox1.substring(0, textbox1.length() - 1);
             } else if ((int) text >= 48 && (int) text <= 57) {
-                textbox1 += text;
-            } else if (text == 46 && !textbox1.contains(".")) {
                 textbox1 += text;
             } else {
                 return;
@@ -293,13 +294,22 @@ public class graphicalInterface {
             }
         }
 
-
         drawPlanetMenu(player);
         drawOrderScreen(player);
         StdDraw.text(0.833 * WIDTH, 0.55 * HEIGHT, textbox1);
         StdDraw.text(0.833 * WIDTH, 0.45 * HEIGHT, textbox2);
 
-
         StdDraw.show();
+    }
+
+    public static void createOrder(player player) {
+        boolean isBuyOrder = (button == 6);
+        planet planet = economy.getPlanetFromID(player.getPlanet());
+        String goodName = player.getGoodSelected();
+        int amount = Integer.parseInt(textbox1);
+        double price = Double.parseDouble(textbox2);
+        order newOrder = new order(player, new good(goodName, amount), planet.getBasePrice(goodName), price, isBuyOrder);
+        textbox1 = "";
+        textbox2 = "";
     }
 }

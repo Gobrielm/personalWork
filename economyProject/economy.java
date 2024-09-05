@@ -86,6 +86,8 @@ public class economy {
                     } else if (x > (0.833 - 0.133) && x < (0.833 + 0.133) && y > (0.45 - 0.025) && y < (0.45 + 0.025)) {
                         typing1 = false;
                         typing2 = true;
+                    } else if (x > (0.833 - 0.03) && x < (0.833 + 0.03) && y > (0.35 - 0.025) && y < (0.35 + 0.025)) {
+                        graphicalInterface.createOrder(currPlayer);
                     } else {
                         typing1 = false;
                         typing2 = false;

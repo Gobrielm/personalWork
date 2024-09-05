@@ -22,6 +22,9 @@ public class player {
         this.goodSelected = goodSelected;
         return true;
     }
+    public void changeCash(double amount) {
+        cash += amount;
+    }
     public String getGoodSelected() {
         return goodSelected;
     }
