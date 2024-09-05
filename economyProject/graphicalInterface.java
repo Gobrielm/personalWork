@@ -12,8 +12,8 @@ public class graphicalInterface {
     static final Font MED = new Font("Monaco", Font.BOLD, 20);
     static final Font BIG = new Font("Monaco", Font.BOLD, 30);
     static final int precision = 2; // How many slots every dollar
-    static String textbox1 = "";
-    static String textbox2 = "";
+    static String textboxAmount = "";
+    static String textboxPrice = "";
     static int button;
 
 
@@ -27,10 +27,22 @@ public class graphicalInterface {
         StdDraw.enableDoubleBuffering();
         button = 1;
     }
-    public static void drawStuff(player player) {
-        if (!(button == 6 || button == 7)) {
-            textbox1 = "";
-            textbox2 = "";
+    public static boolean changeButton(int button) {
+        if (button <= 0) {
+            return false;
+        }
+        if (graphicalInterface.button == button) {
+            return false;
+        }
+        graphicalInterface.button = button;
+        return true;
+    }
+
+    public static void drawStuff(player player, int newButton) {
+        boolean change = changeButton(newButton);
+        if (change) {
+            textboxAmount = "";
+            textboxPrice = "";
         }
 
         if (button == 1) {
@@ -264,31 +276,31 @@ public class graphicalInterface {
         StdDraw.rectangle(0.833 * WIDTH, 0.35 * HEIGHT, 0.03 * WIDTH, 0.025 * HEIGHT);
         StdDraw.text(0.833 * WIDTH, 0.35 * HEIGHT, "Confirm");
 
-        drawTextbox(player, null, 1);
+        updateTextbox(player);
         StdDraw.show();
     }
+    public static void updateTextbox(player player) {
+        StdDraw.text(0.833 * WIDTH, 0.55 * HEIGHT, textboxAmount);
+        StdDraw.text(0.833 * WIDTH, 0.45 * HEIGHT, textboxPrice);
+    }
 
-    public static void drawTextbox(player player, Character text, int whichOne) {
-        if (text == null) {
-            StdDraw.text(0.833 * WIDTH, 0.55 * HEIGHT, textbox1);
-            StdDraw.text(0.833 * WIDTH, 0.45 * HEIGHT, textbox2);
-            return;
-        }
+
+    public static void drawTextbox(player player, char text, int whichOne) {
         if (whichOne == 1) {
-            if ((int) text == 8 && !textbox1.isEmpty()) {
-                textbox1 = textbox1.substring(0, textbox1.length() - 1);
+            if ((int) text == 8 && !textboxAmount.isEmpty()) {
+                textboxAmount = textboxAmount.substring(0, textboxAmount.length() - 1);
             } else if ((int) text >= 48 && (int) text <= 57) {
-                textbox1 += text;
+                textboxAmount += text;
             } else {
                 return;
             }
         } else {
-            if ((int) text == 8 && !textbox2.isEmpty()) {
-                textbox2 = textbox2.substring(0, textbox2.length() - 1);
+            if ((int) text == 8 && !textboxPrice.isEmpty()) {
+                textboxPrice = textboxPrice.substring(0, textboxPrice.length() - 1);
             } else if ((int) text >= 48 && (int) text <= 57) {
-                textbox2 += text;
-            } else if (text == 46 && !textbox2.contains(".")) {
-                textbox2 += text;
+                textboxPrice += text;
+            } else if (text == 46 && !textboxPrice.contains(".")) {
+                textboxPrice += text;
             } else {
                 return;
             }
@@ -296,20 +308,25 @@ public class graphicalInterface {
 
         drawPlanetMenu(player);
         drawOrderScreen(player);
-        StdDraw.text(0.833 * WIDTH, 0.55 * HEIGHT, textbox1);
-        StdDraw.text(0.833 * WIDTH, 0.45 * HEIGHT, textbox2);
+        StdDraw.text(0.833 * WIDTH, 0.55 * HEIGHT, textboxAmount);
+        StdDraw.text(0.833 * WIDTH, 0.45 * HEIGHT, textboxPrice);
 
         StdDraw.show();
     }
 
     public static void createOrder(player player) {
+        if (textboxAmount.isEmpty() || textboxPrice.isEmpty()) {
+            return;
+        }
         boolean isBuyOrder = (button == 6);
         planet planet = economy.getPlanetFromID(player.getPlanet());
         String goodName = player.getGoodSelected();
-        int amount = Integer.parseInt(textbox1);
-        double price = Double.parseDouble(textbox2);
+        int amount = Integer.parseInt(textboxAmount);
+        double price = Double.parseDouble(textboxPrice);
         order newOrder = new order(player, new good(goodName, amount), planet.getBasePrice(goodName), price, isBuyOrder);
-        textbox1 = "";
-        textbox2 = "";
+        textboxAmount = "";
+        textboxPrice = "";
+        drawOrderScreen(player);
+        updateTextbox(player);
     }
 }
