@@ -202,7 +202,7 @@ public class graphicalInterface {
         drawPlanetMenu(player);
         planet planet = economy.getPlanetFromID(player.getPlanet());
         StdDraw.setFont(MED);
-        StdDraw.text(WIDTH * 0.75, HEIGHT * 0.5, String.valueOf(planet.getPriceSold(name)));
+        StdDraw.text(WIDTH * 0.75, HEIGHT * 0.5, String.valueOf(planet.getBasePrice(name)));
 
         StdDraw.show();
     }

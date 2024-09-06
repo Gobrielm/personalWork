@@ -69,7 +69,7 @@ public class order {
     }
 
     //order1 is the buyOrder, order2 is the seller
-    public static double makeDeal(order order1, order order2) {
+    public static void makeDeal(order order1, order order2) {
         company company1 = order1.owner;
         company company2 = order2.owner;
         if (company2.checkDeal(order2, order1) && company1.checkDeal(order1, order2)) {
@@ -84,14 +84,12 @@ public class order {
             order1.changeOut();
             order2.changeOut();
             order1.getOwner().getPlanet().changeBasePrice(order1.good.getName(), price, amount);
-            return  price;
         } else {
             company1.adjustDeal(order1);
             company2.adjustDeal(order2);
             order1.checkOutPriced();
             order2.checkOutPriced();
         }
-        return 0;
     }
 
     @Override
