@@ -2,18 +2,18 @@ package core;
 
 import core.Managers.confidenceManager;
 import core.Managers.personalPriceManager;
+import core.Managers.financeManager;
 
 import java.util.*;
 
-public class company {
+public class company implements business{
     private String name;
     private double cash;
     private recipe recipe;
     private int order;
     private planet planet;
-    private LinkedList<Double> incomeList;
+    private financeManager financeManager;
     private personalPriceManager priceManager;
-    private HashMap<String, Double> stock;
     private confidenceManager confidenceObject;
     //Higher number is more aggressive
     private int personality;
@@ -33,40 +33,28 @@ public class company {
             this.order = 2;
         }
         confidenceObject = new confidenceManager();
-        incomeList = new LinkedList<>();
-        int sizeOfIncomeList = 10;
-        for (int i = 0; i < sizeOfIncomeList; i++) {
-            incomeList.add(0.0);
-        }
-        stock = new HashMap<>();
-        stock.put(name, 100.0);
+        financeManager = new financeManager(this);
         priceManager = new personalPriceManager();
         this.personality = economy.rand.nextInt(1, 4);
         this.planet = planet;
     }
+    @Override
     public String getName() {
         return name;
     }
     public recipe getRecipe() {
         return recipe;
     }
-    private void incomeEditLast(double num) {
-        double last = incomeList.getLast() + num;
-        incomeList.removeLast();
-        incomeList.add(last);
+    @Override
+    public double getCash() {
+        return cash;
     }
-    private void incomeRemoveFirst() {
-        incomeList.removeFirst();
-        incomeList.addLast(0.0);
-    }
-    public double getIncome() {
-        double total = 0.0;
-        for (double x: incomeList) {
-            total += x;
-        }
-        return Utils.round(total / incomeList.size(), 1);
+    @Override
+    public planet getPlanet() {
+        return planet;
     }
     //order1 is the same as the company
+    @Override
     public boolean checkDeal(order order1, order order2) {
         double priceDiff = order1.getPrice() - order2.getPrice();
         double price = order1.getPrice();
@@ -79,7 +67,6 @@ public class company {
         return change < 0.01 * personality;
     }
     public void adjustDeal(order order1) {
-
         if (order1.isBuyOrder()) {
             changeConfidenceB(-1, order1.getGood());
             if (getBuyConfidence(order1.getGood()) < 7) {
@@ -151,9 +138,9 @@ public class company {
         } else if (getSellConfidence(name) > 5) {
             minProfit = 1;
         }
-        if (getIncome() < minProfit) {
+        if (financeManager.getIncome() < minProfit) {
             //SUPER BROKEN IN THEORY BUT KINDA WORKS
-            double diff = minProfit - getIncome();
+            double diff = minProfit - financeManager.getIncome();
             minProfit *= diff / minProfit;
         }
 
@@ -165,11 +152,11 @@ public class company {
         priceManager.addLastBoughtPrice(good, price);
         changeConfidenceB(2, good);
         cash -= (price * amount);
-        incomeEditLast(-price * amount);
+        financeManager.incomeEditLast(-price * amount);
     }
     public void sellGood(int amount, String good, double price) {
         cash += amount * price;
-        incomeEditLast(amount * price);
+        financeManager.incomeEditLast(amount * price);
         priceManager.addLastSoldPrice(good, price);
         changeConfidenceS(2, good);
     }
@@ -180,14 +167,11 @@ public class company {
         recipe.changeOutput(order.getGood(), order.getAmount());
         changeConfidenceS(-1, order.getGood());
     }
-    public planet getPlanet() {
-        return planet;
-    }
     private void payExpenses() {
-        incomeEditLast(-recipe.getExpenses() + recipe.getIncome());
+        financeManager.incomeEditLast(-recipe.getExpenses() + recipe.getIncome());
         cash -= recipe.getExpenses();
         cash += recipe.getIncome();
-        incomeRemoveFirst();
+        financeManager.incomeRemoveFirst();
     }
     public void askToChange(order order) { // This could be anti - helpful since basePrice is inaccurate
         if (order.isBuyOrder()) {
@@ -219,9 +203,7 @@ public class company {
                 } else if (getBuyConfidence(temp.getName()) < 3) {
                     price = planet.getBasePrice(temp.getName()) * 1.01;
                 }
-                if ((price > limit)) {
-                    price = limit;
-                }
+                price = Math.min(price, limit);
                 order newOrder = new order(this, temp, price, limit, true);
                 planet.addBuyOrder(newOrder);
             }
@@ -241,10 +223,9 @@ public class company {
                     price = planet.getBasePrice(temp.getName()) * 0.99;
                 }
                 double limit = minSellPrice(temp.getName());
-                if ((price < limit)) {
-                    price = limit;
-                }
-                planet.addSellOrder(new order(this, temp, price, limit, false));
+                price = Math.max(price, limit);
+                order newOrder = new order(this, temp, price, limit, false);
+                planet.addSellOrder(newOrder);
                 recipe.changeOutput(i, -temp.getAmount());
             }
         }
@@ -267,7 +248,7 @@ public class company {
     @Override
     public String toString() {
         String toReturn = name + ": $" + Math.round(cash) + "- ";
-        toReturn += "Income" + ": $" + getIncome() + "- ";
+        toReturn += "Income" + ": $" + financeManager.getIncome() + "- ";
         if (order == 2) {
             for (String good: recipe.getInput()) {
                 toReturn += good + " CB: " + getBuyConfidence(good) + " ";

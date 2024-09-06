@@ -6,12 +6,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class planet {
-    private int id;
     private int size;
     private ArrayList<company> companies;
     private orderManager manager;
-    public planet(int id) {
-        this.id = id;
+    public planet() {
         companies = new ArrayList<>();
         size = economy.rand.nextInt(30, 60);
         testCompanies();
@@ -71,7 +69,6 @@ public class planet {
         }
 
     }
-
 
     private void testCompanies() {
         companies.add(new company("MineA", new recipe(new good[]{}, new good[]{new good("Copper", 1)}, 3, 0), this));

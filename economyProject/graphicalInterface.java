@@ -3,6 +3,7 @@ package core;
 import edu.princeton.cs.algs4.StdDraw;
 
 import java.awt.*;
+import java.util.Objects;
 
 public class graphicalInterface {
     static final double WIDTH = 60;
@@ -14,6 +15,7 @@ public class graphicalInterface {
     static final int precision = 2; // How many slots every dollar
     static String textboxAmount = "";
     static String textboxPrice = "";
+    static String goodSelected = "";
     static int button;
 
 
@@ -37,7 +39,16 @@ public class graphicalInterface {
         graphicalInterface.button = button;
         return true;
     }
-
+    public static boolean setGoodSelected(String goodName) {
+        boolean toReturn = !Objects.equals(goodName, goodSelected);
+        goodSelected = goodName;
+        return toReturn;
+    }
+    public static void resetStrings() {
+        textboxAmount = "";
+        textboxPrice = "";
+        goodSelected = "";
+    }
     public static void drawStuff(player player, int newButton) {
         boolean change = changeButton(newButton);
         if (change) {
@@ -66,7 +77,7 @@ public class graphicalInterface {
 
     public static void drawPlanetMenu(player player) {
         StdDraw.clear(Color.BLACK);
-        int planetID = player.getPlanet();
+        planet planet = player.getPlanet();
         StdDraw.line(WIDTH * 0.333, 0, WIDTH * 0.333, HEIGHT);
         StdDraw.line(WIDTH * 0.666, 0, WIDTH * 0.666, HEIGHT);
 
@@ -87,11 +98,10 @@ public class graphicalInterface {
 
 
         StdDraw.setFont(SMALL);
-        planet planet = economy.getPlanetFromID(planetID);
         String[] goodNames = good.getGoodList();
         Double[] goodPrices = planet.getPriceList();
         for (int i = 0; i < goodNames.length; i++) {
-            if (goodNames[i].equals(player.getGoodSelected())) {
+            if (goodNames[i].equals(goodSelected)) {
                 StdDraw.setPenColor(StdDraw.GREEN);
             }
             StdDraw.text(WIDTH * 0.42,  HEIGHT / (goodNames.length + 1) * (i + 1), goodNames[i]);
@@ -103,7 +113,7 @@ public class graphicalInterface {
         StdDraw.line( WIDTH * 0.51,  HEIGHT / (goodNames.length) * 0.5,  WIDTH * 0.51, HEIGHT -  HEIGHT / (goodNames.length) * 0.5);
         StdDraw.rectangle( WIDTH * 0.95,  HEIGHT * 0.95, WIDTH * 0.04, HEIGHT * 0.04);
 
-        if (!player.getGoodSelected().isEmpty()) {
+        if (!goodSelected.isEmpty()) {
             StdDraw.text(WIDTH * 0.588, HEIGHT * 0.567, "Make Buy Order");
             StdDraw.rectangle(WIDTH * 0.588, HEIGHT * 0.567, WIDTH * 0.0415, HEIGHT * 0.034);
             StdDraw.text(WIDTH * 0.588, HEIGHT * 0.5, "Make Sell Order");
@@ -120,10 +130,10 @@ public class graphicalInterface {
     }
 
     public static void drawGoods(player player) {
-        String name = player.getGoodSelected();
+        String name = goodSelected;
         StdDraw.clear(Color.BLACK);
         drawPlanetMenu(player);
-        planet planet = economy.getPlanetFromID(player.getPlanet());
+        planet planet = player.getPlanet();
         order[] buyOrders = planet.getBuyOrders(name);
         order[] sellOrders = planet.getSellOrders(name);
         int total = buyOrders.length + sellOrders.length;
@@ -139,11 +149,11 @@ public class graphicalInterface {
     }
 
     public static void drawGraph(player player) {
-        String name = player.getGoodSelected();
+        String name = goodSelected;
         StdDraw.clear(Color.BLACK);
         drawPlanetMenu(player);
         StdDraw.setFont(MED);
-        planet planet = economy.getPlanetFromID(player.getPlanet());
+        planet planet = player.getPlanet();
         double startX = 0.75;
         double diffX = 0.2;
         double startY = 0.5;
@@ -197,10 +207,10 @@ public class graphicalInterface {
     }
 
     public static void drawPrice(player player) {
-        String name = player.getGoodSelected();
+        String name = goodSelected;
         StdDraw.clear(Color.BLACK);
         drawPlanetMenu(player);
-        planet planet = economy.getPlanetFromID(player.getPlanet());
+        planet planet = player.getPlanet();
         StdDraw.setFont(MED);
         StdDraw.text(WIDTH * 0.75, HEIGHT * 0.5, String.valueOf(planet.getBasePrice(name)));
 
@@ -208,10 +218,10 @@ public class graphicalInterface {
     }
 
     public static void drawCompanies(player player) {
-        String name = player.getGoodSelected();
+        String name = goodSelected;
         StdDraw.clear(Color.BLACK);
         drawPlanetMenu(player);
-        planet planet = economy.getPlanetFromID(player.getPlanet());
+        planet planet = player.getPlanet();
         company[] companies = planet.getCompanies();
         int size = companies.length;
         for (int i = 0; i < size; i++) {
@@ -233,10 +243,10 @@ public class graphicalInterface {
     }
 
     public static void drawSupplyDemand(player player) {
-        String name = player.getGoodSelected();
+        String name = goodSelected;
         StdDraw.clear(Color.BLACK);
         drawPlanetMenu(player);
-        planet planet = economy.getPlanetFromID(player.getPlanet());
+        planet planet = player.getPlanet();
         int demand = 0;
         int supply = 0;
         for (company x: planet.getCompanies()) {
@@ -262,8 +272,7 @@ public class graphicalInterface {
     }
 
     public static void drawOrderScreen(player player) {
-        planet planet = economy.getPlanetFromID(player.getPlanet());
-        String name = player.getGoodSelected();
+        String name = goodSelected;
         drawPlanetMenu(player);
         if (name.isEmpty()) {
             return;
@@ -319,8 +328,8 @@ public class graphicalInterface {
             return;
         }
         boolean isBuyOrder = (button == 6);
-        planet planet = economy.getPlanetFromID(player.getPlanet());
-        String goodName = player.getGoodSelected();
+        planet planet = player.getPlanet();
+        String goodName = goodSelected;
         int amount = Integer.parseInt(textboxAmount);
         double price = Double.parseDouble(textboxPrice);
         order newOrder = new order(player, new good(goodName, amount), planet.getBasePrice(goodName), price, isBuyOrder);

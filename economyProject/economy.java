@@ -8,7 +8,6 @@ import java.util.Random;
 
 public class economy {
     private static ArrayList<planet> galacticMarket;
-
     private static ArrayList<player> playerList;
     public static int dayCount = 0;
     public static Random rand;
@@ -19,7 +18,7 @@ public class economy {
         good.createNames();
         galacticMarket = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
-            planet temp = new planet(i);
+            planet temp = new planet();
             galacticMarket.add(temp);
         }
         playerList = new ArrayList<>();
@@ -27,7 +26,9 @@ public class economy {
             playerList.add(new player("Player" + i));
         }
     }
-
+    public planet getPlanet(int id) {
+        return galacticMarket.get(id);
+    }
     public boolean tick() {
         dayCount++;
         playerTurn();
@@ -50,7 +51,7 @@ public class economy {
                         done = true;
                     } else if (x > 0.3 && x < 0.51) {
                         int temp = (int) Math.round((y * (good.getGoodList().length + 1) - 1));
-                        if (currPlayer.setGoodSelected(good.getGoodList()[temp])) {
+                        if (graphicalInterface.setGoodSelected(good.getGoodList()[temp])) {
                             graphicalInterface.textboxAmount = "";
                             graphicalInterface.textboxPrice = "";
                         }
@@ -101,6 +102,7 @@ public class economy {
             }
             done = false;
             index++;
+            graphicalInterface.resetStrings();
         }
     }
     public void computerTurn() {
