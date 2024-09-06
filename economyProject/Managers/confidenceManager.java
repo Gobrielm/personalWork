@@ -34,4 +34,19 @@ public class confidenceManager {
     public int getSellConfidence(String goodName) {
         return sellConfidence.get(goodName);
     }
+    public void degradeConfidence() {
+        for (String good: good.getGoodList()) {
+            if (getBuyConfidence(good) > 7) {
+                changeBuyConfidence(-1, good);
+            } else if (getBuyConfidence(good) < 3) {
+                changeBuyConfidence(1, good);
+            }
+            if (getSellConfidence(good) > 7) {
+                changeSellConfidence(-1, good);
+            } else if (getSellConfidence(good) < 3) {
+                changeSellConfidence(1, good);
+            }
+        }
+
+    }
 }
