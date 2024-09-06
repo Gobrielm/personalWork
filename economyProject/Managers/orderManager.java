@@ -91,8 +91,6 @@ public class orderManager {
                 sellOrders.get(goodName).remove(i);
                 i--;
                 size--;
-            } else {
-                order.getOwner().askToChange(order);
             }
         }
     }

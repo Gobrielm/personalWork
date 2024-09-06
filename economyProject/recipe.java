@@ -37,19 +37,22 @@ public class recipe {
         this.income = income;
         this.expenses = expenses;
     }
-    public good[] getInputGood() {
+    public good[] getInputGoodArray() {
         return input;
     }
-    public good[] getOutputGood() {
+    public good[] getOutputGoodArray() {
         return output;
     }
 
-    public String[] getOutput() {
+    public String[] getOutputName() {
         String[] toReturn = new String[output.length];
         for (int i = 0; i < output.length; i++) {
             toReturn[i] = output[i].getName();
         }
         return toReturn;
+    }
+    public int getOutputName(int index) {
+        return outputStorage[index];
     }
     public int[] getOutputAmount() {
         int[] toReturn = new int[output.length];
@@ -58,12 +61,15 @@ public class recipe {
         }
         return toReturn;
     }
-    public String[] getInput() {
+    public String[] getInputName() {
         String[] toReturn = new String[input.length];
         for (int i = 0; i < input.length; i++) {
             toReturn[i] = input[i].getName();
         }
         return toReturn;
+    }
+    public int getInputName(int index) {
+        return inputStorage[index];
     }
     public int[] getInputAmount() {
         int[] toReturn = new int[input.length];
@@ -80,7 +86,7 @@ public class recipe {
         return income;
     }
 
-    public void changeInput(String name, int amount) {
+    public void changeInputAmount(String name, int amount) {
         int i = 0;
         for (good good: input) {
             if (good.getName().equals(name)) {
@@ -90,13 +96,11 @@ public class recipe {
             i++;
         }
     }
-    public void changeInput(int index, int amount) {
+    public void changeInputAmount(int index, int amount) {
         inputStorage[index] += amount;
     }
-    public int getInput(int index) {
-        return inputStorage[index];
-    }
-    public void changeOutput(String name, int amount) {
+
+    public void changeOutputAmount(String name, int amount) {
         int i = 0;
         for (good good: output) {
             if (good.getName().equals(name)) {
@@ -106,11 +110,8 @@ public class recipe {
             i++;
         }
     }
-    public void changeOutput(int index, int amount) {
+    public void changeOutputAmount(int index, int amount) {
         outputStorage[index] += amount;
-    }
-    public int getOutput(int index) {
-        return outputStorage[index];
     }
     public void createRecipe() {
         for (int i = 0; i < input.length; i++) {

@@ -34,14 +34,18 @@ public class planet {
     public Double[] getPriceList() {
         return manager.getBasePrices();
     }
-    public void addBuyOrder(order order) {
-        manager.addBuyOrder(order);
+    public void addOrder(order order) {
+        if (order.getAmount() > 0) {
+            if (order.isBuyOrder()) {
+                manager.addBuyOrder(order);
+            } else {
+                manager.addSellOrder(order);
+            }
+        }
+
     }
     public order[] getBuyOrders(String goodName) {
         return manager.getBuyOrders(goodName);
-    }
-    public void addSellOrder(order order) {
-        manager.addSellOrder(order);
     }
     public order[] getSellOrders(String goodName) {
         return manager.getSellOrders(goodName);

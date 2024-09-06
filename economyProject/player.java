@@ -70,4 +70,14 @@ public class player implements business{
         changeStorage(goodName, -amount);
         cash += price * amount;
     }
+
+    @Override
+    public void returnBuy(order order) {
+        //Nothing to return
+    }
+
+    @Override
+    public void returnSell(order order) {
+        changeStorage(order.getGood(), order.getAmount());
+    }
 }

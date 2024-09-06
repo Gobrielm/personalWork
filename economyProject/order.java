@@ -4,13 +4,13 @@ public class order {
     private good good;
     private double expectedPrice;
     private double limitPrice;
-    private company owner;
+    private business owner;
     private player playerOwner;
     private boolean out;
     private boolean isBuyOrder;
     private int age;
     //Ai's orders
-    public order(company owner, good good, double expectedPrice, double limitPrice, boolean isBuyOrder) {
+    public order(business owner, good good, double expectedPrice, double limitPrice, boolean isBuyOrder) {
         this.good = new good(good.getName(), good.getAmount());
         this.expectedPrice = expectedPrice;
         this.limitPrice = limitPrice;
@@ -70,8 +70,8 @@ public class order {
 
     //order1 is the buyOrder, order2 is the seller
     public static void makeDeal(order order1, order order2) {
-        company company1 = order1.owner;
-        company company2 = order2.owner;
+        business company1 = order1.owner;
+        business company2 = order2.owner;
         if (company2.checkDeal(order2, order1) && company1.checkDeal(order1, order2)) {
             double price1 = order1.expectedPrice;
             double price2 = order2.expectedPrice;
@@ -109,7 +109,7 @@ public class order {
     public String getGood() {
         return good.getName();
     }
-    public company getOwner() {
+    public business getOwner() {
         return owner;
     }
 }

@@ -15,4 +15,9 @@ public interface business {
     public void buyGood(int amount, String good, double price);
 
     public void sellGood(int amount, String good, double price);
+
+    public void returnBuy(order order);
+
+    public void returnSell(order order);
+    
 }
