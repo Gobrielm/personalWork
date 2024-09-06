@@ -12,6 +12,7 @@ public class company implements business{
     private recipe recipe;
     private int order;
     private planet planet;
+
     private financeManager financeManager;
     private personalPriceManager priceManager;
     private confidenceManager confidenceObject;
