@@ -27,13 +27,21 @@ public class orderManager {
         buyOrders.get(newOrder.getGood()).add(newOrder);
     }
     public order[] getBuyOrders(String goodName) {
-        return buyOrders.get(goodName).toArray(new order[0]);
+        order[] toReturn = new order[0];
+        if (buyOrders.containsKey(goodName)) {
+            toReturn = buyOrders.get(goodName).toArray(new order[0]);
+        }
+        return toReturn;
     }
     public void addSellOrder(order newOrder) {
         sellOrders.get(newOrder.getGood()).add(newOrder);
     }
     public order[] getSellOrders(String goodName) {
-        return sellOrders.get(goodName).toArray(new order[0]);
+        order[] toReturn = new order[0];
+        if (sellOrders.containsKey(goodName)) {
+            toReturn = sellOrders.get(goodName).toArray(new order[0]);
+        }
+        return toReturn;
     }
     public double getBasePrice(String name) {
         return prices.get(name);

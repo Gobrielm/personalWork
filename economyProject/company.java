@@ -1,6 +1,7 @@
 package core;
 
 import core.Managers.confidenceManager;
+import core.Managers.personalPriceManager;
 
 import java.util.*;
 
@@ -11,8 +12,7 @@ public class company {
     private int order;
     private planet planet;
     private LinkedList<Double> incomeList;
-    private HashMap<String, Double> lastBuyPrices;
-    private HashMap<String, Double> lastSellPrices;
+    private personalPriceManager priceManager;
     private HashMap<String, Double> stock;
     private confidenceManager confidenceObject;
     //Higher number is more aggressive
@@ -40,8 +40,7 @@ public class company {
         }
         stock = new HashMap<>();
         stock.put(name, 100.0);
-        lastSellPrices = new HashMap<>();
-        lastBuyPrices = new HashMap<>();
+        priceManager = new personalPriceManager();
         this.personality = economy.rand.nextInt(1, 4);
         this.planet = planet;
     }
@@ -93,16 +92,6 @@ public class company {
             }
         }
     }
-    private void addLastBoughtPrice(String name, double price) {
-        lastBuyPrices.put(name, price);
-    }
-    private double getExpectBuyPrice(String name) {
-        if (lastBuyPrices.containsKey(name)) {
-            return lastBuyPrices.get(name);
-        } else {
-            return planet.getBasePrice(name);
-        }
-    }
     public void changeConfidenceB(int num, String goodName) {
         confidenceObject.changeBuyConfidence(num, goodName);
     }
@@ -114,6 +103,9 @@ public class company {
     }
     private int getSellConfidence(String goodName) {
         return confidenceObject.getSellConfidence(goodName);
+    }
+    private double getExpectBuyPrice(String name) {
+        return priceManager.getExpectBuyPrice(name, planet);
     }
     public double maxBuyPrice(String name) {
         double baseTotalBuy = 0;
@@ -138,18 +130,10 @@ public class company {
         double percentage = (baseTotalSell - expenses - minProfit + income) / baseTotalBuy;
         return planet.getBasePrice(name) * (percentage);
     }
-    private void addLastSoldPrice(String name, double price) {
-        lastSellPrices.put(name, price);
-    }
     private double getExpectSellPrice(String name) {
-        if (lastSellPrices.containsKey(name)) {
-            return lastSellPrices.get(name);
-        } else {
-            return planet.getBasePrice(name);
-        }
+        return priceManager.getExpectSellPrice(name, planet);
     }
     public double minSellPrice(String name) {
-
         double baseTotalBuy = 0;
         double baseTotalSell = 0;
         double expenses = recipe.getExpenses();
@@ -178,7 +162,7 @@ public class company {
     }
     public void buyGood(int amount, String good, double price) {
         recipe.changeInput(good, amount);
-        addLastBoughtPrice(good, price);
+        priceManager.addLastBoughtPrice(good, price);
         changeConfidenceB(2, good);
         cash -= (price * amount);
         incomeEditLast(-price * amount);
@@ -186,7 +170,7 @@ public class company {
     public void sellGood(int amount, String good, double price) {
         cash += amount * price;
         incomeEditLast(amount * price);
-        addLastSoldPrice(good, price);
+        priceManager.addLastSoldPrice(good, price);
         changeConfidenceS(2, good);
     }
     public void returnBuy(order order) {

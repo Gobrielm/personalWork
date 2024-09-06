@@ -14,20 +14,20 @@ public class personalPriceManager {
         lastSellPrices = new HashMap<>();
     }
 
-    private void addLastSoldPrice(String name, double price) {
+    public void addLastSoldPrice(String name, double price) {
         lastSellPrices.put(name, price);
     }
-    private void addLastBoughtPrice(String name, double price) {
+    public void addLastBoughtPrice(String name, double price) {
         lastBuyPrices.put(name, price);
     }
-    private double getExpectSellPrice(String goodName, planet currPlanet) {
+    public double getExpectSellPrice(String goodName, planet currPlanet) {
         if (lastSellPrices.containsKey(goodName)) {
             return lastSellPrices.get(goodName);
         } else {
             return currPlanet.getBasePrice(goodName);
         }
     }
-    private double getExpectBuyPrice(String goodName, planet currPlanet) {
+    public double getExpectBuyPrice(String goodName, planet currPlanet) {
         if (lastBuyPrices.containsKey(goodName)) {
             return lastBuyPrices.get(goodName);
         } else {
