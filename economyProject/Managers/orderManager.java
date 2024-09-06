@@ -13,21 +13,33 @@ public class orderManager {
     private HashMap<String, Double> prices;
 
     public orderManager() {
+        buyOrders = new HashMap<>();
+        sellOrders = new HashMap<>();
+        prices = new HashMap<>();
         for (String goodName: good.getGoodList()) {
             buyOrders.put(goodName, new ArrayList<>());
             sellOrders.put(goodName, new ArrayList<>());
-            prices.put(goodName, 0.0);
+            prices.put(goodName, good.getBasePrice(goodName));
         }
     }
 
     public void addBuyOrder(order newOrder) {
         buyOrders.get(newOrder.getGood()).add(newOrder);
     }
+    public order[] getBuyOrders(String goodName) {
+        return buyOrders.get(goodName).toArray(new order[0]);
+    }
     public void addSellOrder(order newOrder) {
         sellOrders.get(newOrder.getGood()).add(newOrder);
     }
+    public order[] getSellOrders(String goodName) {
+        return sellOrders.get(goodName).toArray(new order[0]);
+    }
     public double getBasePrice(String name) {
         return prices.get(name);
+    }
+    public Double[] getBasePrices() {
+        return prices.values().toArray(new Double[0]);
     }
     public void changeBasePrice(String goodName, double price, int amount) {
         double percentage = Math.min((double) amount / 8, 0.5); // Number could be up for change

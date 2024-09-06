@@ -1,5 +1,7 @@
 package core;
 
+import core.Managers.orderManager;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -7,9 +9,7 @@ public class planet {
     private int id;
     private int size;
     private ArrayList<company> companies;
-    private HashMap<String, Double> prices;
-    private HashMap<String, ArrayList<order>> buyOrders;
-    private HashMap<String, ArrayList<order>> sellOrders;
+    private orderManager manager;
     public planet(int id) {
         this.id = id;
         companies = new ArrayList<>();
@@ -27,16 +27,7 @@ public class planet {
 //            company newCompany = new company(name, temp, this);
 //            companies.add(newCompany);
 //        }
-        String[] goods = good.getGoodList();
-        Double[] basePrice = good.getPriceList();
-        prices = new HashMap<>();
-        buyOrders = new HashMap<>();
-        sellOrders = new HashMap<>();
-        for (int i = 0; i < goods.length; i++) {
-            prices.put(goods[i], basePrice[i]);
-            buyOrders.put(goods[i], new ArrayList<>());
-            sellOrders.put(goods[i], new ArrayList<>());
-        }
+        manager = new orderManager();
     }
     private void testCompanies() {
         companies.add(new company("MineA", new recipe(new good[]{}, new good[]{new good("Copper", 1)}, 3, 0), this));
@@ -48,136 +39,35 @@ public class planet {
     public company[] getCompanies() {
         return companies.toArray(new company[0]);
     }
-    public String[] getGoodList() {
-        return prices.keySet().toArray(new String[0]);
-    }
     public Double[] getPriceList() {
-        return prices.values().toArray(new Double[0]);
+        return manager.getBasePrices();
     }
     public void addBuyOrder(order order) {
-        buyOrders.get(order.getGood()).add(order);
+        manager.addBuyOrder(order);
     }
-    public order[] getBuyOrders(String name) {
-        if (buyOrders.get(name) == null) {
-            return new order[0];
-        }
-        return buyOrders.get(name).toArray(new order[0]);
+    public order[] getBuyOrders(String goodName) {
+        return manager.getBuyOrders(goodName);
     }
     public void addSellOrder(order order) {
-        sellOrders.get(order.getGood()).add(order);
+        manager.addSellOrder(order);
     }
-    public order[] getSellOrders(String name) {
-        if (sellOrders.get(name) == null) {
-            return new order[0];
-        }
-        return sellOrders.get(name).toArray(new order[0]);
+    public order[] getSellOrders(String goodName) {
+        return manager.getSellOrders(goodName);
     }
     public void addCompany(company toAdd) {
         companies.add(toAdd);
     }
 
     public void completeOrders() {
-        for (String good: prices.keySet()) {
-            ArrayList<Integer> pickFromBuy = new ArrayList<>();
-            for (int i = 0; i < buyOrders.get(good).size(); i++) {
-                pickFromBuy.add(i);
-            }
-            if (pickFromBuy.isEmpty()) {
-                continue;
-            }
-            int num1;
-            int toChoose1;
-            order buy = null;
-
-            ArrayList<Integer> pickFromSell = new ArrayList<>();
-            for (int i = 0; i < sellOrders.get(good).size(); i++) {
-                pickFromSell.add(i);
-            }
-            if (pickFromSell.isEmpty()) {
-                continue;
-            }
-            int num;
-            int toChoose;
-            order sell = null;
-            int tries = 0; // For Debugging
-            while (!pickFromBuy.isEmpty() && !pickFromSell.isEmpty()) {
-                while(!pickFromBuy.isEmpty()) {
-                    tries ++;
-                    num1 = economy.rand.nextInt(0, pickFromBuy.size());
-                    toChoose1 = pickFromBuy.get(num1);
-                    buy = buyOrders.get(good).get(toChoose1);
-                    if (buy.checkValid()) {
-                        break;
-                    } else {
-                        pickFromBuy.remove(num1);
-                    }
-                }
-
-                while (!pickFromSell.isEmpty()) {
-                    num = economy.rand.nextInt(0, pickFromSell.size());
-                    toChoose = pickFromSell.get(num);
-                    sell = sellOrders.get(good).get(toChoose);
-                    if (sell.checkValid()) {
-                        break;
-                    } else {
-                        pickFromSell.remove(num);
-                    }
-                }
-                if (sell.checkValid() && buy.checkValid()) {
-                    order.makeDeal(buy, sell);
-                }
-            }
-        }
-        cleanOrders();
+        manager.completeOrders();
     }
 
-    public void cleanOrders() {
-        for (String good: prices.keySet()) {
-            int size = buyOrders.get(good).size();
-            for (int i = 0; i < size; i++) {
-                order order = buyOrders.get(good).get(i);
-                if (order.checkOut()) {
-                    buyOrders.get(good).remove(i);
-                    i--;
-                    size--;
-                } else if (order.incrementAge()) {
-                    order.getOwner().returnBuy(order);
-                    buyOrders.get(good).remove(i);
-                    i--;
-                    size--;
-                }
-            }
-
-            int size1 = sellOrders.get(good).size();
-            for (int i = 0; i < size1; i++) {
-                order order = sellOrders.get(good).get(i);
-                if (order.checkOut()) {
-                    sellOrders.get(good).remove(i);
-                    i--;
-                    size1--;
-                }  else if (order.incrementAge()) {
-                    order.getOwner().returnSell(order);
-                    sellOrders.get(good).remove(i);
-                    i--;
-                    size1--;
-                } else {
-                    order.getOwner().askToChange(order);
-                }
-            }
-        }
+    public double getBasePrice(String goodName) {
+        return manager.getBasePrice(goodName);
     }
 
-    public double getBasePrice(String name) {
-        return prices.get(name);
-    }
-
-    public void changeBasePrice(String name, double price, int amount) {
-        double percentage = (double) amount / 8; // Number could be up for change
-        if (percentage > 0.5) {
-            percentage = 0.5;
-        }
-        double value = prices.get(name) * (1 - percentage) + price * percentage;
-        prices.put(name, value);
+    public void changeBasePrice(String goodName, double price, int amount) {
+        manager.changeBasePrice(goodName, price, amount);
     }
 
     public void planetTick() {

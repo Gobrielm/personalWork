@@ -88,7 +88,7 @@ public class graphicalInterface {
 
         StdDraw.setFont(SMALL);
         planet planet = economy.getPlanetFromID(planetID);
-        String[] goodNames = planet.getGoodList();
+        String[] goodNames = good.getGoodList();
         Double[] goodPrices = planet.getPriceList();
         for (int i = 0; i < goodNames.length; i++) {
             if (goodNames[i].equals(player.getGoodSelected())) {
