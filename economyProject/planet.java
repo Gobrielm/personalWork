@@ -1,6 +1,7 @@
 package core;
 
 import core.Managers.orderManager;
+import edu.princeton.cs.algs4.RedBlackBST;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -8,6 +9,8 @@ import java.util.HashMap;
 public class planet {
     private int size;
     private ArrayList<company> companies;
+    private RedBlackBST<company, company> tree;
+    private ArrayList<company> bankruptCompanies;
     private orderManager manager;
     public planet() {
         companies = new ArrayList<>();
