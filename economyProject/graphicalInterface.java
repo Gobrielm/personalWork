@@ -71,7 +71,7 @@ public class graphicalInterface {
         } else if (button == 7) {
             drawOrderScreen(player);
         } else if (button == 8) {
-
+            drawBuildScreen(player);
         }
     }
     private static void drawMedButton(double x, double y, String text) {
@@ -128,7 +128,6 @@ public class graphicalInterface {
             drawLongSmallButton(0.38333, (double) 1 / num * (i + 1), goodNames[i], green);
             drawSmallButton(0.44333, (double) 1 / num * (i + 1), Double.toString(Utils.round(goodPrices[i], 1)), green);
             drawSmallButton(0.46333, (double) (i + 1) / num, String.valueOf(player.getAmount(goodNames[i])), green);
-            green = false;
         }
 
 
@@ -299,10 +298,10 @@ public class graphicalInterface {
         StdDraw.rectangle(0.833 * WIDTH, 0.35 * HEIGHT, 0.03 * WIDTH, 0.025 * HEIGHT);
         StdDraw.text(0.833 * WIDTH, 0.35 * HEIGHT, "Confirm");
 
-        updateTextbox(player);
+        updateTextbox();
         StdDraw.show();
     }
-    public static void updateTextbox(player player) {
+    public static void updateTextbox() {
         StdDraw.text(0.833 * WIDTH, 0.55 * HEIGHT, textboxAmount);
         StdDraw.text(0.833 * WIDTH, 0.45 * HEIGHT, textboxPrice);
     }
@@ -351,6 +350,16 @@ public class graphicalInterface {
         textboxAmount = "";
         textboxPrice = "";
         drawOrderScreen(player);
-        updateTextbox(player);
+        updateTextbox();
+    }
+
+    public static void drawBuildScreen(player player) {
+        planet planet = player.getPlanet();
+        StdDraw.text(0.833 * WIDTH, 0.59 * HEIGHT, "Name");
+        StdDraw.rectangle(0.833 * WIDTH, 0.55 * HEIGHT, 0.133 * WIDTH, 0.025 * HEIGHT);
+
+        StdDraw.rectangle(0.833 * WIDTH, 0.35 * HEIGHT, 0.03 * WIDTH, 0.025 * HEIGHT);
+        StdDraw.text(0.833 * WIDTH, 0.35 * HEIGHT, "Confirm");
+        StdDraw.show();
     }
 }

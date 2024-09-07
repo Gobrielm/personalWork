@@ -16,4 +16,9 @@ public class Utils {
         }
         return num;
     }
+    public static int roundNoZero(double num) {
+        int toReturn = num < 0 ? -1: 1;
+        toReturn = num == 0 ? 0: toReturn;
+        return toReturn;
+    }
 }

@@ -6,7 +6,7 @@ import core.Managers.financeManager;
 
 import java.util.*;
 
-public class company implements business{
+public class company implements business, Comparable<company> {
     private String name;
     private double cash;
     private recipe recipe;
@@ -258,5 +258,13 @@ public class company implements business{
         }
 
         return toReturn;
+    }
+
+    @Override
+    public int compareTo(company o) {
+        long toReturn = Utils.roundNoZero(financeManager.getIncome() - o.financeManager.getIncome());
+        toReturn = toReturn == 0 ? (Utils.roundNoZero(cash - o.cash)): toReturn;
+        toReturn = toReturn == 0 ? (name.compareTo(o.name)): toReturn;
+        return (int) toReturn;
     }
 }
