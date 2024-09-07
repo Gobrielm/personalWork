@@ -74,7 +74,32 @@ public class graphicalInterface {
 
         }
     }
-
+    private static void drawMedButton(double x, double y, String text) {
+        double width = 0.0415;
+        double height = 0.034;
+        StdDraw.text(WIDTH * x, HEIGHT * y, text);
+        StdDraw.rectangle(WIDTH * x, HEIGHT * y, WIDTH * width, HEIGHT * height);
+    }
+    private static void drawLongSmallButton(double x, double y, String text, boolean green) {
+        double width = 0.05;
+        double height = (double) 1 / (2 * (good.getGoodList().length + 1));
+        if (green) {
+            StdDraw.setPenColor(StdDraw.GREEN);
+        }
+        StdDraw.text(WIDTH * x, HEIGHT * y, text);
+        StdDraw.setPenColor(StdDraw.WHITE);
+        StdDraw.rectangle(WIDTH * x, HEIGHT * y, WIDTH * width, HEIGHT * height);
+    }
+    private static void drawSmallButton(double x, double y, String text, boolean green) {
+        double width = 0.01;
+        double height = (double) 1 / (2 * (good.getGoodList().length + 1));
+        if (green) {
+            StdDraw.setPenColor(StdDraw.GREEN);
+        }
+        StdDraw.text(WIDTH * x, HEIGHT * y, text);
+        StdDraw.setPenColor(StdDraw.WHITE);
+        StdDraw.rectangle(WIDTH * x, HEIGHT * y, WIDTH * width, HEIGHT * height);
+    }
     public static void drawPlanetMenu(player player) {
         StdDraw.clear(Color.BLACK);
         planet planet = player.getPlanet();
@@ -85,45 +110,37 @@ public class graphicalInterface {
         StdDraw.text(WIDTH * 0.166, HEIGHT * 0.9, player.getName());
         StdDraw.text(WIDTH * 0.166, HEIGHT * 0.8, Integer.toString((int) Math.round(player.getCash())));
         StdDraw.setFont(MED);
-        StdDraw.text(WIDTH * 0.0833, HEIGHT * 0.5, "Goods");
-        StdDraw.rectangle(WIDTH * 0.0833, HEIGHT * 0.5, WIDTH * 0.0415, HEIGHT * 0.034);
-        StdDraw.text(WIDTH * 0.166, HEIGHT * 0.5, "Graph");
-        StdDraw.rectangle(WIDTH * 0.166, HEIGHT * 0.5, WIDTH * 0.0415, HEIGHT * 0.034);
-        StdDraw.text(WIDTH * 0.249, HEIGHT * 0.5, "Companies");
-        StdDraw.rectangle(WIDTH * 0.249, HEIGHT * 0.5, WIDTH * 0.0415, HEIGHT * 0.034);
-        StdDraw.text(WIDTH * 0.0833, HEIGHT * 0.433, "Demand");
-        StdDraw.rectangle(WIDTH * 0.0833, HEIGHT * 0.433, WIDTH * 0.0415, HEIGHT * 0.034);
-        StdDraw.text(WIDTH * 0.166, HEIGHT * 0.433, "Price");
-        StdDraw.rectangle(WIDTH * 0.166, HEIGHT * 0.433, WIDTH * 0.0415, HEIGHT * 0.034);
-
+        drawMedButton(0.0833, 0.5, "Goods");
+        drawMedButton(0.166, 0.5, "Graph");
+        drawMedButton(0.249, 0.5, "Companies");
+        drawMedButton(0.0833, 0.433,  "Demand");
+        drawMedButton(0.166, 0.433, "Price");
 
         StdDraw.setFont(SMALL);
         String[] goodNames = good.getGoodList();
         Double[] goodPrices = planet.getPriceList();
+        int num = (goodNames.length + 1);
         for (int i = 0; i < goodNames.length; i++) {
+            boolean green = false;
             if (goodNames[i].equals(goodSelected)) {
-                StdDraw.setPenColor(StdDraw.GREEN);
+                green = true;
             }
-            StdDraw.text(WIDTH * 0.42,  HEIGHT / (goodNames.length + 1) * (i + 1), goodNames[i]);
-            StdDraw.text(WIDTH * .50,  HEIGHT / (goodNames.length + 1) * (i + 1), Double.toString(Utils.round(goodPrices[i], 1)));
-            StdDraw.setPenColor(StdDraw.WHITE);
-            StdDraw.line(WIDTH * 0.333,  HEIGHT / (goodNames.length + 1) * (i + 1.5),  WIDTH * 0.51,  HEIGHT / (goodNames.length + 1) * (i + 1.5));
+            drawLongSmallButton(0.38333, (double) 1 / num * (i + 1), goodNames[i], green);
+            drawSmallButton(0.44333, (double) 1 / num * (i + 1), Double.toString(Utils.round(goodPrices[i], 1)), green);
+            drawSmallButton(0.46333, (double) (i + 1) / num, String.valueOf(player.getAmount(goodNames[i])), green);
+            green = false;
         }
-        StdDraw.line(WIDTH * 0.333,  HEIGHT / (goodNames.length + 1) * (0.5),  WIDTH * 0.51,  HEIGHT / (goodNames.length + 1) * (0.5));
-        StdDraw.line( WIDTH * 0.51,  HEIGHT / (goodNames.length) * 0.5,  WIDTH * 0.51, HEIGHT -  HEIGHT / (goodNames.length) * 0.5);
-        StdDraw.rectangle( WIDTH * 0.95,  HEIGHT * 0.95, WIDTH * 0.04, HEIGHT * 0.04);
+
 
         if (!goodSelected.isEmpty()) {
-            StdDraw.text(WIDTH * 0.588, HEIGHT * 0.567, "Make Buy Order");
-            StdDraw.rectangle(WIDTH * 0.588, HEIGHT * 0.567, WIDTH * 0.0415, HEIGHT * 0.034);
-            StdDraw.text(WIDTH * 0.588, HEIGHT * 0.5, "Make Sell Order");
-            StdDraw.rectangle(WIDTH * 0.588, HEIGHT * 0.5, WIDTH * 0.0415, HEIGHT * 0.034);
-            StdDraw.text(WIDTH * 0.588, HEIGHT * 0.433, "Build Building");
-            StdDraw.rectangle(WIDTH * 0.588, HEIGHT * 0.433, WIDTH * 0.0415, HEIGHT * 0.034);
+            drawMedButton(0.6, 0.567, "Make Buy Order");
+            drawMedButton(0.6, 0.5, "Make Sell Order");
+            drawMedButton(0.6, 0.433, "Build Building");
         }
 
 
         StdDraw.setFont(MED);
+        StdDraw.rectangle( WIDTH * 0.95,  HEIGHT * 0.95, WIDTH * 0.04, HEIGHT * 0.04);
         StdDraw.text( WIDTH / 100 * 95,  HEIGHT / 100 * 95, "Next Turn!");
 
         StdDraw.show();

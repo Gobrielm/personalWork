@@ -5,7 +5,6 @@ public class order {
     private double expectedPrice;
     private double limitPrice;
     private business owner;
-    private player playerOwner;
     private boolean out;
     private boolean isBuyOrder;
     private int age;
@@ -15,16 +14,6 @@ public class order {
         this.expectedPrice = expectedPrice;
         this.limitPrice = limitPrice;
         this.owner = owner;
-        out = false;
-        this.isBuyOrder = isBuyOrder;
-        this.age = 0;
-    }
-    //Player orders
-    public order(player owner, good good, double expectedPrice, double limitPrice, boolean isBuyOrder) {
-        this.good = new good(good.getName(), good.getAmount());
-        this.expectedPrice = expectedPrice;
-        this.limitPrice = limitPrice;
-        this.playerOwner = owner;
         out = false;
         this.isBuyOrder = isBuyOrder;
         this.age = 0;
@@ -44,7 +33,8 @@ public class order {
     }
     public boolean incrementAge() {
         this.age ++;
-        return age > 3;
+        int maxAge = this.owner.getMaxAge();
+        return age > maxAge;
     }
     public boolean isBuyOrder() {
         return isBuyOrder;
@@ -96,7 +86,6 @@ public class order {
     public String toString() {
         return owner.getName() + ": " + good.getAmount() + "--" + Utils.round(expectedPrice, 2) + "--" + Utils.round(limitPrice, 2);
     }
-
     public double getPrice() {
         return expectedPrice;
     }

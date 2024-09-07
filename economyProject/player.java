@@ -37,6 +37,9 @@ public class player implements business{
     private void changeStorage(String goodName, int amount) {
         storage.put(goodName, storage.get(goodName) + amount);
     }
+    public int getAmount(String goodName) {
+        return storage.get(goodName);
+    }
     @Override
     public boolean checkDeal(order thisOrder, order otherOrder) {
         double priceDiff = thisOrder.getPrice() - otherOrder.getPrice();
@@ -79,5 +82,10 @@ public class player implements business{
     @Override
     public void returnSell(order order) {
         changeStorage(order.getGood(), order.getAmount());
+    }
+
+    @Override
+    public int getMaxAge() {
+        return 20;
     }
 }

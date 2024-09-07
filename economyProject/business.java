@@ -19,5 +19,6 @@ public interface business {
     public void returnBuy(order order);
 
     public void returnSell(order order);
-    
+
+    public int getMaxAge();
 }

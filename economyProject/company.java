@@ -12,7 +12,7 @@ public class company implements business{
     private recipe recipe;
     private int order;
     private planet planet;
-
+    private int maxAge;
     private financeManager financeManager;
     private personalPriceManager priceManager;
     private confidenceManager confidenceObject;
@@ -26,6 +26,7 @@ public class company implements business{
             this.recipe = new recipe(recipe.getInputName(), recipe.getOutputName(), recipe.getInputAmount(), recipe.getOutputAmount(), recipe.getExpenses(), recipe.getIncome());
         }
         cash = 100;
+        maxAge = 3;
         if (recipe.getInputName() == null || Arrays.equals(recipe.getInputName(), new String[]{})) {
             this.order = 1;
         } else if (recipe.getOutputName() == null || Arrays.equals(recipe.getOutputName(), new String[]{})) {
@@ -38,6 +39,10 @@ public class company implements business{
         priceManager = new personalPriceManager();
         this.personality = economy.rand.nextInt(1, 4);
         this.planet = planet;
+    }
+    @Override
+    public int getMaxAge() {
+        return maxAge;
     }
     @Override
     public String getName() {
