@@ -6,10 +6,9 @@ public class main {
     public static boolean turnEnd = true;
     public static void main(String[] args) throws InterruptedException {
         graphicalInterface.startGame();
-        int playerCount = 4;
-        double x = Utils.round(1.3, 0.5);
+        int playerCount = 1;
         boolean turnEnd = true;
-        economy economy = new economy(325235, 4);
+        economy economy = new economy(325235, playerCount);
         while (true) {
             if (turnEnd) {
                 turnEnd = economy.tick();
