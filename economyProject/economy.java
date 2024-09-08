@@ -56,15 +56,15 @@ public class economy {
                             graphicalInterface.textboxPrice = "";
                         }
                         graphicalInterface.drawStuff(currPlayer, 0);
-                        //For buttons 1-3
+                    //For buttons 1-3
                     } else if (x > (0.0833 - 0.0415) && x < (0.249 + 0.0415) && y > (0.5 - 0.034) && y < (0.5 + 0.034)) {
                         double newX = (x - 0.0833 + 0.0415) / (2 * 0.0415);
                         graphicalInterface.drawStuff(currPlayer, (int) Math.ceil(newX));
-                        //For buttons 4-5
+                    //For buttons 4-5
                     } else if (x > (0.0833 - 0.0415) && x < (0.166 + 0.0415) && y > (0.433 - 0.034) && y < (0.433 + 0.034)) {
                         double newX = (x - 0.0833 + 0.0415) / (2 * 0.0415) + 3;
                         graphicalInterface.drawStuff(currPlayer, (int) Math.ceil(newX));
-                        //For buttons 6-8
+                    //For buttons 6-8
                     } else if (x > (0.588 - 0.0415) && x < (0.588 + 0.0415) && y > (0.433 - 0.034) && y < (0.567 + 0.034)) {
                         double newY = -(y - 0.433 + 0.034) / (2 * 0.034) + 8;
                         graphicalInterface.drawStuff(currPlayer, (int) Math.ceil(newY));
@@ -76,6 +76,8 @@ public class economy {
                         typing2 = true;
                     } else if (x > (0.833 - 0.03) && x < (0.833 + 0.03) && y > (0.35 - 0.025) && y < (0.35 + 0.025)) {
                         graphicalInterface.createOrder(currPlayer);
+                    } else if (graphicalInterface.button == 8 && (x > (0.8325 - 0.14) && x < (0.8325 + 0.14) && y > (0.4) && y < (0.8))) {
+                        System.out.println("AAAA");
                     } else {
                         typing1 = false;
                         typing2 = false;
@@ -84,14 +86,7 @@ public class economy {
                 }
                 if (StdDraw.hasNextKeyTyped() && (typing1 || typing2)) {
                     char c = StdDraw.nextKeyTyped();
-                    if (graphicalInterface.button == 6) {
-                        if (typing1) {
-                            graphicalInterface.drawTextbox(currPlayer, c, 1);
-                        } else {
-                            graphicalInterface.drawTextbox(currPlayer, c, 2);
-                        }
-
-                    } else if (graphicalInterface.button == 7) {
+                    if (graphicalInterface.button == 6 || graphicalInterface.button == 7) {
                         if (typing1) {
                             graphicalInterface.drawTextbox(currPlayer, c, 1);
                         } else {

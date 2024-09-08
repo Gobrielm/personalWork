@@ -1,5 +1,7 @@
 package core;
 
+import org.checkerframework.checker.units.qual.A;
+
 import java.util.*;
 
 public class good {
@@ -128,6 +130,39 @@ public class good {
         }
         return toReturn;
     }
+    public static recipe randPrimaryRecipe() {
+        return primaryRecipes.get(economy.rand.nextInt(0, primaryRecipes.size()));
+    }
+    public static recipe randSecondaryRecipe() {
+        return secondaryRecipes.get(economy.rand.nextInt(0, secondaryRecipes.size()));
+    }
+    public static recipe[] getRecipesWithGood(String goodName) {
+        ArrayList<recipe> toReturn = new ArrayList<>();
+        for (recipe x: primaryRecipes) {
+            if (doesRecipeContainGood(x, goodName)) {
+                toReturn.add(x);
+            }
+        }
+        for (recipe x: secondaryRecipes) {
+            if (doesRecipeContainGood(x, goodName)) {
+                toReturn.add(x);
+            }
+        }
+        return toReturn.toArray(new recipe[0]);
+    }
+    private static boolean doesRecipeContainGood(recipe given, String goodName) {
+        for (good x: given.getInputGoodArray()) {
+            if (x.getName().equals(goodName)) {
+                return true;
+            }
+        }
+        for (good x: given.getOutputGoodArray()) {
+            if (x.getName().equals(goodName)) {
+                return true;
+            }
+        }
+        return false;
+    }
     public good(String newName, int amount) {
         name = newName;
         this.amount = amount;
@@ -143,12 +178,6 @@ public class good {
     }
     public static double getBasePrice(String name) {
         return basePrices.get(name);
-    }
-    public static recipe randPrimaryRecipe() {
-        return primaryRecipes.get(economy.rand.nextInt(0, primaryRecipes.size()));
-    }
-    public static recipe randSecondaryRecipe() {
-        return secondaryRecipes.get(economy.rand.nextInt(0, secondaryRecipes.size()));
     }
     public int getAmount() {
         return this.amount;

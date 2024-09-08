@@ -137,11 +137,14 @@ public class recipe {
     public String toString() {
         String toReturn = "";
         for (good x: input) {
-            toReturn += x.getName() + ": " + x.getAmount();
+            toReturn += x.getAmount() + " " + x.getName() + " + ";
         }
+        toReturn = toReturn.length() >= 3 ? toReturn.substring(0, toReturn.length() - 2): toReturn;
+        toReturn += "->";
         for (good x: output) {
-            toReturn += x.getName() + ": " + x.getAmount();
+            toReturn += x.getAmount() + " " + x.getName() + " + ";
         }
+        toReturn = toReturn.length() >= 3 ? toReturn.substring(0, toReturn.length() - 2): toReturn;
         return toReturn;
     }
 }

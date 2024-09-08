@@ -5,6 +5,8 @@ import edu.princeton.cs.algs4.StdDraw;
 import java.awt.*;
 import java.util.Objects;
 
+import static core.good.getRecipesWithGood;
+
 public class graphicalInterface {
     static final double WIDTH = 60;
     static final double HEIGHT = 30;
@@ -55,7 +57,6 @@ public class graphicalInterface {
             textboxAmount = "";
             textboxPrice = "";
         }
-
         if (button == 1) {
             drawGoods(player);
         } else if (button == 2) {
@@ -354,12 +355,17 @@ public class graphicalInterface {
     }
 
     public static void drawBuildScreen(player player) {
-        planet planet = player.getPlanet();
-        StdDraw.text(0.833 * WIDTH, 0.59 * HEIGHT, "Name");
-        StdDraw.rectangle(0.833 * WIDTH, 0.55 * HEIGHT, 0.133 * WIDTH, 0.025 * HEIGHT);
-
+        drawPlanetMenu(player);
+        StdDraw.rectangle(0.8325 * WIDTH, 0.6 * HEIGHT, 0.14 * WIDTH, 0.2 * HEIGHT);
         StdDraw.rectangle(0.833 * WIDTH, 0.35 * HEIGHT, 0.03 * WIDTH, 0.025 * HEIGHT);
         StdDraw.text(0.833 * WIDTH, 0.35 * HEIGHT, "Confirm");
+
+        recipe[] toDisplay = getRecipesWithGood(goodSelected);
+        int n = toDisplay.length;
+        for (int i = 0; i < n; i++) {
+            double y = 0.75 - (0.35 * (i) / (n));
+            StdDraw.text(0.8325 * WIDTH, y * HEIGHT, toDisplay[i].toString());
+        }
         StdDraw.show();
     }
 }
