@@ -77,7 +77,7 @@ public class economy {
                     } else if (x > (0.833 - 0.03) && x < (0.833 + 0.03) && y > (0.35 - 0.025) && y < (0.35 + 0.025)) {
                         graphicalInterface.createOrder(currPlayer);
                     } else if (graphicalInterface.button == 8 && (x > (0.8325 - 0.14) && x < (0.8325 + 0.14) && y > (0.4) && y < (0.8))) {
-                        System.out.println("AAAA");
+                        System.out.println("TODO");
                     } else {
                         typing1 = false;
                         typing2 = false;

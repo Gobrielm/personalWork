@@ -18,6 +18,7 @@ public class graphicalInterface {
     static String textboxAmount = "";
     static String textboxPrice = "";
     static String goodSelected = "";
+    static recipe selected = null;
     static int button;
 
 
@@ -50,6 +51,7 @@ public class graphicalInterface {
         textboxAmount = "";
         textboxPrice = "";
         goodSelected = "";
+        selected = null;
     }
     public static void drawStuff(player player, int newButton) {
         boolean change = changeButton(newButton);
