@@ -28,6 +28,12 @@ public class player implements business{
     public planet getPlanet() {
         return economy.getPlanetFromID(planet);
     }
+    public int getPlanetId() {
+        return planet;
+    }
+    public void setPlanet(int id) {
+        planet = id;
+    }
     public String getName() {
         return name;
     }
