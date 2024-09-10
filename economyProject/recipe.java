@@ -16,7 +16,14 @@ public class recipe {
         this.income = income;
         this.expenses = expenses;
     }
-
+    public recipe(String input1, String input2, String output, int inputAmount1, int inputAmount2, int outputAmount, double expenses, int income) {
+        input = new good[]{new good(input1, inputAmount1), new good(input2, inputAmount2)};
+        this.output = new good[]{new good(output, outputAmount)};
+        inputStorage = new int[input.length];
+        outputStorage = new int[this.output.length];
+        this.income = income;
+        this.expenses = expenses;
+    }
     public recipe(String[] input, String[] output, int[] inputAmount, int[] outputAmount, double expenses, int income) {
         this.input = new good[input.length];
         for (int i = 0; i < input.length; i++) {

@@ -42,11 +42,30 @@ public class good {
     public static void createRecipes() {
         primaryRecipes.add(new recipe(new good[]{}, new good[]{new good("Copper", 1)}, 3, 0));
         primaryRecipes.add(new recipe(new good[]{}, new good[]{new good("Zinc", 1)}, 3, 0));
-        primaryRecipes.add(new recipe(new good[]{}, new good[]{new good("Gold", 1)}, 3, 0));
-        primaryRecipes.add(new recipe(new good[]{}, new good[]{new good("Bismuth", 1)}, 3, 0));
-        secondaryRecipes.add(new recipe(new good[]{new good("Zinc", 1), new good("Copper", 2)}, new good[]{new good("Brass", 1)}, 3, 0));
-        secondaryRecipes.add(new recipe(new good[]{new good("Bismuth", 1)}, new good[]{}, 0, 10));
-        secondaryRecipes.add(new recipe(new good[]{new good("Brass", 1)}, new good[]{}, 0, 35));
+        primaryRecipes.add(new recipe(new good[]{}, new good[]{new good("Gold", 1)}, 6, 0));
+        primaryRecipes.add(new recipe(new good[]{}, new good[]{new good("Bismuth", 1)}, 4, 0));
+        primaryRecipes.add(new recipe(new good[]{}, new good[]{new good("Osmium", 1)}, 8, 0));
+        primaryRecipes.add(new recipe(new good[]{}, new good[]{new good("Manganese", 1)}, 5, 0));
+        primaryRecipes.add(new recipe(new good[]{}, new good[]{new good("Oxygen", 1)}, 1, 0));
+        primaryRecipes.add(new recipe(new good[]{}, new good[]{new good("Hydrogen", 1)}, 2, 0));
+        primaryRecipes.add(new recipe(new good[]{}, new good[]{new good("Xenon", 1)}, 5, 0));
+        primaryRecipes.add(new recipe(new good[]{}, new good[]{new good("Water", 1)}, 1, 0));
+
+
+        secondaryRecipes.add(new recipe("Zinc", "Copper", "Brass", 1, 2, 1, 3, 0));
+        secondaryRecipes.add(new recipe("Osmium", "Argon", "Argonium", 1, 2, 1, 3, 0));
+        secondaryRecipes.add(new recipe("Zinc", "Manganese", "Batteries", 2, 1, 1, 3, 0));
+        secondaryRecipes.add(new recipe("Xenon", "Water", "PerxenicAcid", 3, 1, 1, 5, 0));
+        secondaryRecipes.add(new recipe("Carbon", "Hydrogen", "Butane", 2, 5, 3, 3, 0));
+        secondaryRecipes.add(new recipe("Xenon", "Hydrogen", "IonFuel", 4, 1, 2, 5, 0));
+        secondaryRecipes.add(new recipe("Xenon", "Oxygen", "XenonTetroxide", 1, 3, 1, 4, 0));
+        secondaryRecipes.add(new recipe("Copper", "Wires", 2, 1, 4, 0));
+
+        secondaryRecipes.add(new recipe(new good[]{new good("Argonium", 1), new good("PerxenicAcid", 2), new good("Bismanol", 1)}, new good[]{new good("Weapons", 1)}, 3, 0));
+
+        for (String key: basePrices.keySet()) {
+            secondaryRecipes.add(new recipe(new good[]{new good(key, 1)}, new good[]{}, 0, 10));
+        }
     }
     public static void createNames() {
         companyName3.add("Starlight Innovations");

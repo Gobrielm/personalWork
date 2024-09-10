@@ -62,14 +62,14 @@ public class graphicalInterface {
     }
     public static boolean keyBoardInput(player player, char input) {
         if (planetSelected == 0) {
-            planetSelected = player.getPlanetId();
+            planetSelected = player.getPlanetId() + 1;
         }
         //Buttons
         if (typing == 0) {
             if (input >= buttonInputs[0] && input <= buttonInputs[5]) {
                 changeButton(Character.digit(input, 10));
             } else if (input == buttonInputs[9]) {
-                player.setPlanet(planetSelected);
+                player.setPlanet(planetSelected - 1);
                 resetStrings();
                 return true;
             } else if (input == buttonInputs[8]) {
@@ -176,8 +176,10 @@ public class graphicalInterface {
         StdDraw.line(WIDTH * 0.666, 0, WIDTH * 0.666, HEIGHT);
 
         StdDraw.setFont(BIG);
+
         StdDraw.text(WIDTH * 0.166, HEIGHT * 0.9, player.getName());
-        StdDraw.text(WIDTH * 0.166, HEIGHT * 0.8, Integer.toString((int) Math.round(player.getCash())));
+        StdDraw.text(WIDTH * 0.166, HEIGHT * 0.8, "Cash: " + (int) Math.round(player.getCash()));
+        StdDraw.text(WIDTH * 0.166, HEIGHT * 0.7, "Planet: " + (player.getPlanetId() + 1));
         StdDraw.setFont(MED);
         drawMedButton(0.0833, 0.5, "Goods" + "(" + buttonInputs[0] + ")");
         drawMedButton(0.166, 0.5, "Graph" + "(" + buttonInputs[1] + ")");

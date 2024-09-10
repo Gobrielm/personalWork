@@ -5,6 +5,6 @@ order - potentially change how the price for orders are negotiated and who adjus
 company - use current price along with input price to determine price
 company - owner can vote on the new ceo
 company - split into shares
-graphical Interface - add moving between planets
 graphical Interface - implement building factories
 financeManager - store company trying to sell their shares on some ranked list where companies buying make their offers
+graphical Interface - change color when price changes

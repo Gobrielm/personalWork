@@ -12,19 +12,19 @@ public class planet {
     public planet() {
         companies = new ArrayList<>();
         size = economy.rand.nextInt(30, 60);
-        testCompanies();
-//        for (int i = 0; i < size / 2; i++) {
-//            recipe temp = good.randPrimaryRecipe();
-//            String name = good.pickRandName(1);
-//            company newCompany = new company(name, temp, this);
-//            companies.add(newCompany);
-//        }
-//        for (int i = 0; i < size / 2; i++) {
-//            recipe temp = good.randSecondaryRecipe();
-//            String name = good.pickRandName(3);
-//            company newCompany = new company(name, temp, this);
-//            companies.add(newCompany);
-//        }
+//        testCompanies();
+        for (int i = 0; i < size / 2; i++) {
+            recipe temp = good.randPrimaryRecipe();
+            String name = good.pickRandName(1);
+            company newCompany = new company(name, temp, this);
+            companies.add(newCompany);
+        }
+        for (int i = 0; i < size / 2; i++) {
+            recipe temp = good.randSecondaryRecipe();
+            String name = good.pickRandName(3);
+            company newCompany = new company(name, temp, this);
+            companies.add(newCompany);
+        }
         manager = new orderManager();
     }
 

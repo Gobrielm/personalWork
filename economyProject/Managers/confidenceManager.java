@@ -32,7 +32,13 @@ public class confidenceManager {
         return buyConfidence.get(goodName);
     }
     public int getSellConfidence(String goodName) {
-        return sellConfidence.get(goodName);
+        try {
+            return sellConfidence.get(goodName);
+        } catch (NullPointerException e) {
+            System.out.println(goodName);
+            throw e;
+
+        }
     }
     public void degradeConfidence() {
         for (String good: good.getGoodList()) {
