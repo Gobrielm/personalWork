@@ -99,8 +99,13 @@ public class orderManager {
         for (String goodName: prices.keySet()) {
             ArrayList<order> pickFromBuy = buyOrders.get(goodName);
             ArrayList<order> pickFromSell = sellOrders.get(goodName);
-
+            int check = 1;
             while (!pickFromBuy.isEmpty() && !pickFromSell.isEmpty()) {
+                check++;
+                if (check > 1000) {
+                    System.out.println("Exceeded max order 0limit, something went wrong");
+                    System.exit(1);
+                }
                 order buyOrder = null;
                 order sellOrder = null;
                 while(!pickFromBuy.isEmpty()) {

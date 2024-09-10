@@ -24,42 +24,50 @@ public class good {
         basePrices.put("Argon", 5.0);
         basePrices.put("Oxygen", 5.0);
         basePrices.put("Hydrogen", 5.0);
-        basePrices.put("Xenon", 5.0);
+        basePrices.put("Xenon", 8.0);
         basePrices.put("Carbon", 5.0);
         basePrices.put("Water", 5.0);
-        basePrices.put("Argonium", 5.0);
-        basePrices.put("Wires", 5.0);
-        basePrices.put("Bismanol", 5.0);
+        basePrices.put("Argonium", 8.0);
+        basePrices.put("Wires", 15.0);
+        basePrices.put("Bismanol", 15.0);
         basePrices.put("Brass", 25.0);
-        basePrices.put("Batteries", 5.0);
-        basePrices.put("CopperHydride", 5.0);
-        basePrices.put("XenonTetroxide", 5.0);
-        basePrices.put("Butane", 5.0);
-        basePrices.put("IonFuel", 5.0);
-        basePrices.put("Weapons", 5.0);
-        basePrices.put("PerxenicAcid", 5.0);
+        basePrices.put("Batteries", 15.0);
+        basePrices.put("CopperHydride", 15.0);
+        basePrices.put("XenonTetroxide", 15.0);
+        basePrices.put("Butane", 15.0);
+        basePrices.put("IonFuel", 15.0);
+        basePrices.put("Weapons", 50.0);
+        basePrices.put("PerxenicAcid", 15.0);
+    }
+    public static void primaryRecipeMaker(String goodName, int amount, int expenses) {
+        primaryRecipes.add(new recipe(new good[]{}, new good[]{new good(goodName, amount)}, expenses, 0));
+    }
+    public static void secondaryRecipeMaker(String goodName1, String goodName2, int amount1, int amount2, String output, int amount3, int expenses) {
+        secondaryRecipes.add(new recipe(new good[]{new good(goodName1, amount1), new good(goodName2, amount2)}, new good[]{new good(output, amount3)}, expenses, 0));
+    }
+    public static void secondaryRecipeMaker(String goodName1, int amount1, String output, int amount3, int expenses) {
+        secondaryRecipes.add(new recipe(new good[]{new good(goodName1, amount1)}, new good[]{new good(output, amount3)}, expenses, 0));
     }
     public static void createRecipes() {
-        primaryRecipes.add(new recipe(new good[]{}, new good[]{new good("Copper", 1)}, 3, 0));
-        primaryRecipes.add(new recipe(new good[]{}, new good[]{new good("Zinc", 1)}, 3, 0));
-        primaryRecipes.add(new recipe(new good[]{}, new good[]{new good("Gold", 1)}, 6, 0));
-        primaryRecipes.add(new recipe(new good[]{}, new good[]{new good("Bismuth", 1)}, 4, 0));
-        primaryRecipes.add(new recipe(new good[]{}, new good[]{new good("Osmium", 1)}, 8, 0));
-        primaryRecipes.add(new recipe(new good[]{}, new good[]{new good("Manganese", 1)}, 5, 0));
-        primaryRecipes.add(new recipe(new good[]{}, new good[]{new good("Oxygen", 1)}, 1, 0));
-        primaryRecipes.add(new recipe(new good[]{}, new good[]{new good("Hydrogen", 1)}, 2, 0));
-        primaryRecipes.add(new recipe(new good[]{}, new good[]{new good("Xenon", 1)}, 5, 0));
-        primaryRecipes.add(new recipe(new good[]{}, new good[]{new good("Water", 1)}, 1, 0));
+        primaryRecipeMaker("Copper", 1, 3);
+        primaryRecipeMaker("Zinc", 1, 3);
+        primaryRecipeMaker("Gold", 1, 6);
+        primaryRecipeMaker("Bismuth", 1, 4);
+        primaryRecipeMaker("Osmium", 1, 8);
+        primaryRecipeMaker("Manganese", 1, 5);
+        primaryRecipeMaker("Oxygen", 1, 1);
+        primaryRecipeMaker("Hydrogen", 1, 2);
+        primaryRecipeMaker("Xenon", 1, 5);
+        primaryRecipeMaker("Water", 1, 1);
 
-
-        secondaryRecipes.add(new recipe("Zinc", "Copper", "Brass", 1, 2, 1, 3, 0));
-        secondaryRecipes.add(new recipe("Osmium", "Argon", "Argonium", 1, 2, 1, 3, 0));
-        secondaryRecipes.add(new recipe("Zinc", "Manganese", "Batteries", 2, 1, 1, 3, 0));
-        secondaryRecipes.add(new recipe("Xenon", "Water", "PerxenicAcid", 3, 1, 1, 5, 0));
-        secondaryRecipes.add(new recipe("Carbon", "Hydrogen", "Butane", 2, 5, 3, 3, 0));
-        secondaryRecipes.add(new recipe("Xenon", "Hydrogen", "IonFuel", 4, 1, 2, 5, 0));
-        secondaryRecipes.add(new recipe("Xenon", "Oxygen", "XenonTetroxide", 1, 3, 1, 4, 0));
-        secondaryRecipes.add(new recipe("Copper", "Wires", 2, 1, 4, 0));
+        secondaryRecipeMaker("Zinc", "Copper", 1, 2, "Brass", 1, 3);
+        secondaryRecipeMaker("Osmium", "Argon", 1, 2, "Argonium", 1, 3);
+        secondaryRecipeMaker("Zinc", "Manganese", 2, 1, "Batteries", 1, 3);
+        secondaryRecipeMaker("Xenon", "Water", 3, 1, "PerxenicAcid", 1, 5);
+        secondaryRecipeMaker("Carbon", "Hydrogen", 2, 5, "Butane", 3, 3);
+        secondaryRecipeMaker("Xenon", "Hydrogen", 4, 1, "IonFuel", 2, 5);
+        secondaryRecipeMaker("Xenon", "Oxygen", 1, 3, "XenonTetroxide", 1, 4);
+        secondaryRecipeMaker("Copper", 2, "Wires", 1, 4);
 
         secondaryRecipes.add(new recipe(new good[]{new good("Argonium", 1), new good("PerxenicAcid", 2), new good("Bismanol", 1)}, new good[]{new good("Weapons", 1)}, 3, 0));
 
