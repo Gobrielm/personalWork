@@ -13,18 +13,16 @@ public class planet {
         companies = new ArrayList<>();
         size = economy.rand.nextInt(30, 60);
 //        testCompanies();
-        for (int i = 0; i < size / 2; i++) {
-            recipe temp = good.randPrimaryRecipe();
-            String name = good.pickRandName(1);
-            company newCompany = new company(name, temp, this);
-            companies.add(newCompany);
+        for (int i = 0; i < size / 10; i++) {
+            String randGood = good.randGoodName();
+            for (int j = 0; j < 10; j++) {
+                recipe temp = good.randRecipe(randGood);
+                String name = good.pickRandName();
+                company newCompany = new company(name, temp, this);
+                companies.add(newCompany);
+            }
         }
-        for (int i = 0; i < size / 2; i++) {
-            recipe temp = good.randSecondaryRecipe();
-            String name = good.pickRandName(3);
-            company newCompany = new company(name, temp, this);
-            companies.add(newCompany);
-        }
+
         manager = new orderManager();
     }
 

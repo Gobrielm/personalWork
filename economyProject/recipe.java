@@ -16,7 +16,7 @@ public class recipe {
         this.income = income;
         this.expenses = expenses;
     }
-    public recipe(String[] input, String[] output, int[] inputAmount, int[] outputAmount, double expenses, int income) {
+    public recipe(String[] input, int[] inputAmount, String[] output, int[] outputAmount, double expenses, int income) {
         this.input = new good[input.length];
         for (int i = 0; i < input.length; i++) {
             this.input[i] = new good(input[i], inputAmount[i]);

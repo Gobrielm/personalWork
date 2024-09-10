@@ -21,9 +21,9 @@ public class company implements business, Comparable<company> {
     public company(String name, recipe recipe, planet planet) {
         this.name = name;
         if (recipe.getExpenses() > 0) {
-            this.recipe = new recipe(recipe.getInputName(), recipe.getOutputName(), recipe.getInputAmount(), recipe.getOutputAmount(), economy.rand.nextDouble(0, recipe.getExpenses()), recipe.getIncome());
+            this.recipe = new recipe(recipe.getInputName(), recipe.getInputAmount(), recipe.getOutputName(), recipe.getOutputAmount(), economy.rand.nextDouble(0, recipe.getExpenses()), recipe.getIncome());
         } else {
-            this.recipe = new recipe(recipe.getInputName(), recipe.getOutputName(), recipe.getInputAmount(), recipe.getOutputAmount(), recipe.getExpenses(), recipe.getIncome());
+            this.recipe = new recipe(recipe.getInputName(), recipe.getInputAmount(), recipe.getOutputName(), recipe.getOutputAmount(), recipe.getExpenses(), recipe.getIncome());
         }
         cash = 100;
         maxAge = 3;
