@@ -165,16 +165,27 @@ public class good {
         return companyName.get(randNum);
     }
     public static recipe[] primaryRecipeWithGood(String goodName) {
-        ArrayList<recipe> toReturn = new ArrayList<>(List.of(recipes.get(goodName).toArray(new recipe[0])));
-        int size = toReturn.size();
-        for (int i = 0; i < size; i++) {
-            if (!doesRecipeMakeGoodName(toReturn.get(i), goodName)) {
-                toReturn.remove(i);
-                i--;
-                size--;
+        ArrayList<recipe> toReturn = new ArrayList<>();
+        for (recipe x: recipes.get(goodName)) {
+            if (doesRecipeMakeGoodName(x, goodName)) {
+                toReturn.add(x);
+                for (String s : x.getInputName()) {
+                    ArrayList<recipe> toAdd = new ArrayList<>(List.of(primaryRecipeWithGood(s)));
+                    toReturn.addAll(toAdd);
+                }
             }
         }
         return toReturn.toArray(new recipe[0]);
+    }
+    public static recipe getBuyer(String goodName) {
+        for (recipe x: recipes.get(goodName)) {
+            if (x.getOutputName().length == 0) {
+                return x;
+            }
+        }
+        System.out.println("Broken");
+        System.exit(1);
+        return null;
     }
     private static boolean doesRecipeMakeGoodName(recipe given, String goodName) {
         boolean toReturn = false;

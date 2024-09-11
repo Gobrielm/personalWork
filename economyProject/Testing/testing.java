@@ -47,10 +47,15 @@ public class testing {
 
     @Test
     public void primaryRecipeWithGoodTest() {
-        recipe[] check = good.primaryRecipeWithGood("Copper");
-        assertThat(check).asList().contains(new recipe(new good[]{}, new good[]{new good("Copper", 1)}, 3, 0));
-        check = good.primaryRecipeWithGood("Zinc");
-        assertThat(check).asList().contains(new recipe(new good[]{}, new good[]{new good("Zinc", 1)}, 3, 0));
-    }
+        recipe zinc = new recipe(new good[]{}, new good[]{new good("Zinc", 1)}, 3, 0);
+        recipe copper = new recipe(new good[]{}, new good[]{new good("Copper", 1)}, 3, 0);
+        recipe brass = new recipe(new good[]{new good("Zinc", 1), new good("Copper", 2)}, new good[]{new good("Brass", 1)}, 3, 0);
 
+        recipe[] check = good.primaryRecipeWithGood("Copper");
+        assertThat(check).asList().contains(copper);
+        check = good.primaryRecipeWithGood("Zinc");
+        assertThat(check).asList().contains(zinc);
+        check = good.primaryRecipeWithGood("Brass");
+        assertThat(check).asList().containsAnyIn(new recipe[]{copper, zinc, brass});
+    }
 }

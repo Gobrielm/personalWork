@@ -14,18 +14,17 @@ public class planet {
         size = economy.rand.nextInt(30, 60);
 //        testCompanies();
         for (int i = 0; i < size / 10; i++) {
-            String randGood = good.randGoodName();
-            for (int j = 0; j < 10; j++) {
-                recipe temp;
-                if (j <= 5) {
-                    temp = good.randRecipe(randGood, true);
-                } else {
-                    temp = good.randRecipe(randGood, false);
+            for (int k = 0; k < 5; k++) {
+                String randGood = good.randGoodName();
+                recipe buyer = good.getBuyer(randGood);
+                recipe[] primary = good.primaryRecipeWithGood(randGood);
+                companies.add(new company("Filler", buyer, this));
+                for (recipe r: primary) {
+                    companies.add(new company("Filler", r, this));
                 }
-                String name = good.pickRandName();
-                company newCompany = new company(name, temp, this);
-                companies.add(newCompany);
             }
+
+
         }
 
         manager = new orderManager();
