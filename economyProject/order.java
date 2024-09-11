@@ -45,11 +45,17 @@ public class order {
     public void checkOutPriced() {
         if (isBuyOrder) {
             if (expectedPrice > limitPrice) {
-                out = true;
+                if (economy.rand.nextInt(0, 30) == 0) {
+                    out = true;
+                }
+                expectedPrice = limitPrice;
             }
         } else {
             if (expectedPrice < limitPrice) {
-                out = true;
+                if (economy.rand.nextInt(0, 30) == 0) {
+                    out = true;
+                }
+                expectedPrice = limitPrice;
             }
         }
     }

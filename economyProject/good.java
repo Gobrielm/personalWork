@@ -12,29 +12,35 @@ public class good {
     private static ArrayList<String> companyName = new ArrayList<>();
     public static void createGoodList() {
         basePrices = new HashMap<>();
-        basePrices.put("Bismuth", 8.0);
         basePrices.put("Osmium", 5.0);
         basePrices.put("Copper", 5.0);
-        basePrices.put("Gold", 10.0);
         basePrices.put("Zinc", 5.0);
         basePrices.put("Manganese", 5.0);
         basePrices.put("Argon", 5.0);
         basePrices.put("Oxygen", 5.0);
         basePrices.put("Hydrogen", 5.0);
-        basePrices.put("Xenon", 8.0);
         basePrices.put("Carbon", 5.0);
         basePrices.put("Water", 5.0);
-        basePrices.put("Argonium", 8.0);
+        basePrices.put("Bismuth", 5.0);
+        basePrices.put("Xenon", 5.0);
+
+        basePrices.put("Gold", 10.0);
+        basePrices.put("Butane", 10.0);
+
         basePrices.put("Wires", 15.0);
         basePrices.put("Bismanol", 15.0);
-        basePrices.put("Brass", 25.0);
-        basePrices.put("Batteries", 15.0);
         basePrices.put("CopperHydride", 15.0);
-        basePrices.put("XenonTetroxide", 15.0);
-        basePrices.put("Butane", 15.0);
         basePrices.put("IonFuel", 15.0);
-        basePrices.put("Weapons", 50.0);
-        basePrices.put("PerxenicAcid", 15.0);
+
+        basePrices.put("Batteries", 20.0);
+        basePrices.put("Argonium", 20.0);
+        basePrices.put("Brass", 20.0);
+
+        basePrices.put("XenonTetroxide", 25.0);
+        basePrices.put("PerxenicAcid", 25.0);
+
+        basePrices.put("Weapons", 70.0);
+
         for (String x: basePrices.keySet()) {
             recipes.put(x, new ArrayList<>());
         }
@@ -48,8 +54,8 @@ public class good {
         recipes.get(goodName2).add(toAdd);
         recipes.get(output).add(toAdd);
     }
-    public static void secondaryRecipeMaker(String[] input, int[] inputAmount, String[] output, int[] outputAmount, int expenses, int income) {
-        recipe toAdd = new recipe(input, inputAmount, output, outputAmount, expenses, 0);
+    public static void secondaryRecipeMaker(String[] input, int[] inputAmount, String[] output, int[] outputAmount, int expenses, double income) {
+        recipe toAdd = new recipe(input, inputAmount, output, outputAmount, expenses, income);
         for (String x: input) {
             recipes.get(x).add(toAdd);
         }
@@ -80,7 +86,7 @@ public class good {
         secondaryRecipeMaker("Osmium", "Argon", 1, 2, "Argonium", 1, 3);
         secondaryRecipeMaker("Zinc", "Manganese", 2, 1, "Batteries", 1, 3);
         secondaryRecipeMaker("Xenon", "Water", 3, 1, "PerxenicAcid", 1, 5);
-        secondaryRecipeMaker("Carbon", "Hydrogen", 2, 5, "Butane", 3, 3);
+        secondaryRecipeMaker("Carbon", "Hydrogen", 1, 2, "Butane", 2, 3);
         secondaryRecipeMaker("Xenon", "Hydrogen", 4, 1, "IonFuel", 2, 5);
         secondaryRecipeMaker("Xenon", "Oxygen", 1, 3, "XenonTetroxide", 1, 4);
         secondaryRecipeMaker("Copper", "Hydrogen", 2, 3, "CopperHydride", 2, 4);
@@ -89,7 +95,7 @@ public class good {
         secondaryRecipeMaker(new String[]{"Argonium", "PerxenicAcid", "Bismanol"}, new int[]{1, 2, 1}, new String[]{"Weapons"}, new int[]{1}, 3, 0);
         //Add a buyer for every type of good
         for (String key: basePrices.keySet()) {
-            secondaryRecipeMaker(new String[]{key}, new int[]{1}, new String[]{}, new int[]{}, 0, 10);
+            secondaryRecipeMaker(new String[]{key}, new int[]{1}, new String[]{}, new int[]{}, 0, basePrices.get(key));
         }
     }
     public static void createNames() {

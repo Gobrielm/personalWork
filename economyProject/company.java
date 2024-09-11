@@ -25,7 +25,7 @@ public class company implements business, Comparable<company> {
         } else {
             this.recipe = new recipe(recipe.getInputName(), recipe.getInputAmount(), recipe.getOutputName(), recipe.getOutputAmount(), recipe.getExpenses(), recipe.getIncome());
         }
-        cash = 1000;
+        cash = 10000;
         maxAge = 3;
         if (recipe.getInputName() == null || Arrays.equals(recipe.getInputName(), new String[]{})) {
             this.order = 1;
@@ -76,12 +76,12 @@ public class company implements business, Comparable<company> {
         if (order1.isBuyOrder()) {
             changeConfidenceB(-1, order1.getGood());
             if (getBuyConfidence(order1.getGood()) < 7) {
-                order1.setPrice(order1.getPrice() * (1 + 0.01 * personality));
+                order1.setPrice(order1.getPrice() * (1 + 0.02 * personality));
             }
         } else {
             changeConfidenceS(-1, order1.getGood());
             if (getSellConfidence(order1.getGood()) < 7) {
-                order1.setPrice(order1.getPrice() * (1 - 0.01 * personality));
+                order1.setPrice(order1.getPrice() * (1 - 0.02 * personality));
             }
         }
     }
@@ -256,7 +256,6 @@ public class company implements business, Comparable<company> {
                 toReturn += good + " CB: " + getBuyConfidence(good) + " ";
             }
         }
-
         return toReturn;
     }
 

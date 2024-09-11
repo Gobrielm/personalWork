@@ -6,7 +6,7 @@ public class recipe {
     private good[] input;
     private good[] output;
     private double expenses;
-    private int income;
+    private double income;
     private int[] inputStorage;
     private int[] outputStorage;
 
@@ -18,7 +18,7 @@ public class recipe {
         this.income = income;
         this.expenses = expenses;
     }
-    public recipe(String[] input, int[] inputAmount, String[] output, int[] outputAmount, double expenses, int income) {
+    public recipe(String[] input, int[] inputAmount, String[] output, int[] outputAmount, double expenses, double income) {
         this.input = new good[input.length];
         for (int i = 0; i < input.length; i++) {
             this.input[i] = new good(input[i], inputAmount[i]);
@@ -29,12 +29,6 @@ public class recipe {
         }
         inputStorage = new int[input.length];
         outputStorage = new int[output.length];
-        this.income = income;
-        this.expenses = expenses;
-    }
-    public recipe(String input, String output, int inputAmount, int outputAmount, double expenses, int income) {
-        this.input = new good[]{new good(input, inputAmount)};
-        this.output = new good[]{new good(output, outputAmount)};
         this.income = income;
         this.expenses = expenses;
     }
@@ -83,7 +77,7 @@ public class recipe {
     public double getExpenses() {
         return expenses;
     }
-    public int getIncome() {
+    public double getIncome() {
         return income;
     }
 
@@ -123,7 +117,6 @@ public class recipe {
             }
         }
         //From here the recipe is valid
-
         for (int i = 0; i < input.length; i++) {
             good temp = input[i];
             inputStorage[i] -= temp.getAmount();
@@ -133,6 +126,7 @@ public class recipe {
             outputStorage[i] += temp.getAmount();
         }
     }
+
 
     @Override
     public String toString() {

@@ -12,7 +12,6 @@ public class planet {
     public planet() {
         companies = new ArrayList<>();
         size = economy.rand.nextInt(30, 60);
-//        testCompanies();
         for (int i = 0; i < size / 10; i++) {
             for (int k = 0; k < 5; k++) {
                 String randGood = good.randGoodName();

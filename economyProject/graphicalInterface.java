@@ -15,6 +15,7 @@ public class graphicalInterface {
     static final Font BIG = new Font("Monaco", Font.BOLD, 30);
     static final char[] buttonInputs = new char[]{'1', '2', '3', '4', '5', '6', '7', '8', '9', '0'};
     static final int precision = 2; // How many slots every dollar
+    static double[] lastPrices;
     static int typing = 0;
     static String textboxAmount = "";
     static String textboxPrice = "";
@@ -41,6 +42,9 @@ public class graphicalInterface {
         graphicalInterface.goodSelected = goodName;
         updateScreen(player);
         return true;
+    }
+    public static void initialize() {
+        lastPrices = new double[good.getGoodList().length];
     }
     public static boolean changeButton(int button) {
         if (button <= 0) {
@@ -160,11 +164,17 @@ public class graphicalInterface {
         StdDraw.rectangle(WIDTH * x, HEIGHT * y, WIDTH * width, HEIGHT * height);
     }
     private static void drawSmallButton(double x, double y, String text, boolean green) {
+        if (green) {
+            drawSmallButton(x, y, text, Color.GREEN);
+        } else {
+            drawSmallButton(x, y, text, Color.WHITE);
+        }
+
+    }
+    private static void drawSmallButton(double x, double y, String text, Color color) {
         double width = 0.01;
         double height = (double) 1 / (2 * (good.getGoodList().length + 1));
-        if (green) {
-            StdDraw.setPenColor(StdDraw.GREEN);
-        }
+        StdDraw.setPenColor(color);
         StdDraw.text(WIDTH * x, HEIGHT * y, text);
         StdDraw.setPenColor(StdDraw.WHITE);
         StdDraw.rectangle(WIDTH * x, HEIGHT * y, WIDTH * width, HEIGHT * height);
@@ -212,8 +222,12 @@ public class graphicalInterface {
                 green = true;
             }
             drawLongSmallButton(0.38333, (double) 1 / num * (i + 1), goodNames[i], green);
-            drawSmallButton(0.44333, (double) 1 / num * (i + 1), String.valueOf(Utils.round(goodPrices[i], 1)), green);
-            drawSmallButton(0.46333, (double) (i + 1) / num, String.valueOf(player.getAmount(goodNames[i])), green);
+            Color color = Color.WHITE;
+            color = lastPrices[i] > goodPrices[i] ? Color.RED: color;
+            color = lastPrices[i] < goodPrices[i] ? Color.GREEN: color;
+            drawSmallButton(0.44333, (double) 1 / num * (i + 1), String.valueOf(Utils.round(goodPrices[i], 1)), color);
+            drawSmallButton(0.46333, (double) (i + 1) / num, String.valueOf(player.getAmount(goodNames[i])), false);
+            lastPrices[i] = goodPrices[i];
         }
 
 
@@ -283,6 +297,11 @@ public class graphicalInterface {
 
         int maxValue = 0;
         for (order x: planet.getBuyOrders(name)) {
+            if (x.getLimitPrice() > maxValue) {
+                maxValue = (int) Math.round(x.getLimitPrice());
+            }
+        }
+        for (order x: planet.getSellOrders(name)) {
             if (x.getLimitPrice() > maxValue) {
                 maxValue = (int) Math.round(x.getLimitPrice());
             }

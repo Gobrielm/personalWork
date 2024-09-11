@@ -7,4 +7,3 @@ company - owner can vote on the new ceo
 company - split into shares
 graphical Interface - implement building factories
 financeManager - store company trying to sell their shares on some ranked list where companies buying make their offers
-graphical Interface - change color when price changes

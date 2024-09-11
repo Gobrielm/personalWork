@@ -14,6 +14,7 @@ public class economy {
         good.createGoodList();
         good.createRecipes();
         good.createNames();
+        graphicalInterface.initialize();
     }
     public economy(long seed, int playerCount) {
         rand = new Random(seed);
@@ -34,6 +35,20 @@ public class economy {
         computerTurn();
         return true;
     }
+    public void mouseActions(player currPlayer, double x, double y) {
+        if (x > 0.333 && x < 0.47333) {
+            int order = (int) ((y * 24.5) - 1);
+            if (order >= 0 && order < good.getGoodList().length) {
+                String goodName = good.getGoodList()[order];
+                graphicalInterface.changeGoodSelected(currPlayer, goodName);
+            }
+        } else if (x > 0.136 && x < 0.196 && y < (0.25 + 0.041667) && y > (0.1667 - 0.041667)) {
+            int column = (int) (Utils.round(x - 0.146, 0.02) / 0.02) + 1;
+            int row = (int) (Utils.round(0.25 - y, 0.041667) / 0.041667);
+            int num = row * 3 + column;
+            graphicalInterface.selectPlanet(currPlayer, num);
+        }
+    }
     public void playerTurn() {
         int index = 0;
         boolean done = false;
@@ -50,19 +65,7 @@ public class economy {
                 if (StdDraw.isMousePressed()) {
                     double x = StdDraw.mouseX() / graphicalInterface.WIDTH;
                     double y = StdDraw.mouseY() / graphicalInterface.HEIGHT;
-                    if (x > 0.333 && x < 0.47333) {
-                        int order = (int) ((y * 24.5) - 1);
-                        if (order >= 0 && order < good.getGoodList().length) {
-                            String goodName = good.getGoodList()[order];
-                            graphicalInterface.changeGoodSelected(currPlayer, goodName);
-                        }
-                    } else if (x > 0.136 && x < 0.196 && y < (0.25 + 0.041667) && y > (0.1667 - 0.041667)) {
-                        int column = (int) (Utils.round(x - 0.146, 0.02) / 0.02) + 1;
-                        int row = (int) (Utils.round(0.25 - y, 0.041667) / 0.041667);
-                        int num = row * 3 + column;
-                        graphicalInterface.selectPlanet(currPlayer, num);
-
-                    }
+                    mouseActions(currPlayer, x, y);
                     StdDraw.pause(100);
                 }
                 StdDraw.pause(10);
