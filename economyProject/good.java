@@ -37,7 +37,6 @@ public class good {
         basePrices.put("PerxenicAcid", 15.0);
         for (String x: basePrices.keySet()) {
             recipes.put(x, new ArrayList<>());
-            recipes.put(x, new ArrayList<>());
         }
     }
     public static void primaryRecipeMaker(String goodName, int amount, int expenses) {
@@ -75,6 +74,7 @@ public class good {
         primaryRecipeMaker("Xenon", 1, 5);
         primaryRecipeMaker("Water", 1, 1);
         primaryRecipeMaker("Argon", 1, 1);
+        primaryRecipeMaker("Carbon", 1, 1);
 
         secondaryRecipeMaker("Zinc", "Copper", 1, 2, "Brass", 1, 3);
         secondaryRecipeMaker("Osmium", "Argon", 1, 2, "Argonium", 1, 3);
@@ -83,10 +83,11 @@ public class good {
         secondaryRecipeMaker("Carbon", "Hydrogen", 2, 5, "Butane", 3, 3);
         secondaryRecipeMaker("Xenon", "Hydrogen", 4, 1, "IonFuel", 2, 5);
         secondaryRecipeMaker("Xenon", "Oxygen", 1, 3, "XenonTetroxide", 1, 4);
+        secondaryRecipeMaker("Copper", "Hydrogen", 2, 3, "CopperHydride", 2, 4);
+        secondaryRecipeMaker("Bismuth", "Manganese", 1, 1, "Bismanol", 1, 5);
         secondaryRecipeMaker("Copper", 2, "Wires", 1, 4);
-
         secondaryRecipeMaker(new String[]{"Argonium", "PerxenicAcid", "Bismanol"}, new int[]{1, 2, 1}, new String[]{"Weapons"}, new int[]{1}, 3, 0);
-
+        //Add a buyer for every type of good
         for (String key: basePrices.keySet()) {
             secondaryRecipeMaker(new String[]{key}, new int[]{1}, new String[]{}, new int[]{}, 0, 10);
         }
@@ -152,8 +153,6 @@ public class good {
         companyName.add("MetalFlow Systems");
         companyName.add("QuantumSteel Works");
         companyName.add("ForgeTech Solutions");
-
-
     }
 
     public static String randGoodName() {
@@ -161,13 +160,52 @@ public class good {
         return basePrices.keySet().toArray(new String[0])[randNum];
     }
 
-    //1 is Mining Stuff, 2 is Factories, 3 is general stuff
     public static String pickRandName() {
         int randNum = economy.rand.nextInt(0, companyName.size());
         return companyName.get(randNum);
     }
-    public static recipe randRecipe(String goodName) {
-        return recipes.get(goodName).get(economy.rand.nextInt(0, recipes.get(goodName).size()));
+    public static recipe[] primaryRecipeWithGood(String goodName) {
+        ArrayList<recipe> toReturn = new ArrayList<>(List.of(recipes.get(goodName).toArray(new recipe[0])));
+        int size = toReturn.size();
+        for (int i = 0; i < size; i++) {
+            if (!doesRecipeMakeGoodName(toReturn.get(i), goodName)) {
+                toReturn.remove(i);
+                i--;
+                size--;
+            }
+        }
+        return toReturn.toArray(new recipe[0]);
+    }
+    private static boolean doesRecipeMakeGoodName(recipe given, String goodName) {
+        boolean toReturn = false;
+        for (String x: given.getOutputName()) {
+            if (x.equals(goodName)) {
+                toReturn = true;
+                break;
+            }
+        }
+        return toReturn;
+    }
+
+    public static recipe randRecipe(String goodName, boolean primary) {
+        boolean matches = false;
+        recipe toReturn = null;
+        while (!matches) {
+            toReturn = recipes.get(goodName).get(economy.rand.nextInt(0, recipes.get(goodName).size()));
+            String[] goods = null;
+            if (primary) {
+                goods = toReturn.getInputName();
+            } else {
+                goods = toReturn.getOutputName();
+            }
+            for (String x: goods) {
+                if (x.equals(goodName)) {
+                    matches = true;
+                    break;
+                }
+            }
+        }
+        return toReturn;
     }
     public static recipe[] getRecipesWithGood(String goodName) {
         return recipes.get(goodName).toArray(new recipe[0]);

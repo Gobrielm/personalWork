@@ -16,7 +16,12 @@ public class planet {
         for (int i = 0; i < size / 10; i++) {
             String randGood = good.randGoodName();
             for (int j = 0; j < 10; j++) {
-                recipe temp = good.randRecipe(randGood);
+                recipe temp;
+                if (j <= 5) {
+                    temp = good.randRecipe(randGood, true);
+                } else {
+                    temp = good.randRecipe(randGood, false);
+                }
                 String name = good.pickRandName();
                 company newCompany = new company(name, temp, this);
                 companies.add(newCompany);

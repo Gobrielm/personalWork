@@ -1,5 +1,7 @@
 package core;
 
+import java.util.Arrays;
+
 public class recipe {
     private good[] input;
     private good[] output;
@@ -144,6 +146,16 @@ public class recipe {
             toReturn += x.getAmount() + " " + x.getName() + " + ";
         }
         toReturn = toReturn.length() >= 3 ? toReturn.substring(0, toReturn.length() - 2): toReturn;
+        return toReturn;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        recipe temp = obj instanceof recipe ? ((recipe) obj) : null;
+        boolean toReturn = false;
+        if (temp != null) {
+            toReturn = Arrays.equals(input, temp.input) && Arrays.equals(output, temp.output);
+        }
         return toReturn;
     }
 }

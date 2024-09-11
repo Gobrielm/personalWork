@@ -10,11 +10,14 @@ public class economy {
     private static ArrayList<player> playerList;
     public static int dayCount = 0;
     public static Random rand;
-    public economy(long seed, int playerCount) {
-        rand = new Random(seed);
+    public static void initialize() {
         good.createGoodList();
         good.createRecipes();
         good.createNames();
+    }
+    public economy(long seed, int playerCount) {
+        rand = new Random(seed);
+        initialize();
         galacticMarket = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
             planet temp = new planet();

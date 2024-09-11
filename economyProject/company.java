@@ -238,7 +238,7 @@ public class company implements business, Comparable<company> {
 
     @Override
     public String toString() {
-        String toReturn = name + ": $" + Math.round(cash) + "- ";
+        String toReturn = name.substring(0, 3) + ".: $" + Math.round(cash) + "- ";
         toReturn += "Income" + ": $" + financeManager.getIncome() + "- ";
         if (order == 2) {
             for (String good: recipe.getInputName()) {
