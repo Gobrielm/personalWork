@@ -27,19 +27,19 @@ public class good {
         basePrices.put("Gold", 10.0);
         basePrices.put("Butane", 10.0);
 
-        basePrices.put("Wires", 15.0);
-        basePrices.put("Bismanol", 15.0);
-        basePrices.put("CopperHydride", 15.0);
-        basePrices.put("IonFuel", 15.0);
+        basePrices.put("Wires", 20.0);
+        basePrices.put("Bismanol", 20.0);
+        basePrices.put("CopperHydride", 20.0);
+        basePrices.put("IonFuel", 20.0);
 
-        basePrices.put("Batteries", 20.0);
-        basePrices.put("Argonium", 20.0);
-        basePrices.put("Brass", 20.0);
+        basePrices.put("Batteries", 25.0);
+        basePrices.put("Argonium", 25.0);
+        basePrices.put("Brass", 25.0);
 
-        basePrices.put("XenonTetroxide", 25.0);
-        basePrices.put("PerxenicAcid", 25.0);
+        basePrices.put("XenonTetroxide", 30.0);
+        basePrices.put("PerxenicAcid", 30.0);
 
-        basePrices.put("Weapons", 70.0);
+        basePrices.put("Weapons", 100.0);
 
         for (String x: basePrices.keySet()) {
             recipes.put(x, new ArrayList<>());

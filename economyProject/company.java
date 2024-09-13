@@ -76,12 +76,12 @@ public class company implements business, Comparable<company> {
         if (order1.isBuyOrder()) {
             changeConfidenceB(-1, order1.getGood());
             if (getBuyConfidence(order1.getGood()) < 7) {
-                order1.setPrice(order1.getPrice() * (1 + 0.02 * personality));
+                order1.setPrice(order1.getPrice() * (1 + 0.01 * personality));
             }
         } else {
             changeConfidenceS(-1, order1.getGood());
             if (getSellConfidence(order1.getGood()) < 7) {
-                order1.setPrice(order1.getPrice() * (1 - 0.02 * personality));
+                order1.setPrice(order1.getPrice() * (1 - 0.01 * personality));
             }
         }
     }
@@ -188,8 +188,6 @@ public class company implements business, Comparable<company> {
             if (recipe.getInputAmount()[i] * limit <= cash) {
                 double price = getExpectBuyPrice(temp.getName());
                 if (getBuyConfidence(temp.getName()) == 10) {
-                    price *= 0.98;
-                } else if (getBuyConfidence(temp.getName()) > 8) {
                     price *= 0.99;
                 } else if (getBuyConfidence(temp.getName()) < 3) {
                     price = planet.getBasePrice(temp.getName()) * 1.01;
@@ -208,8 +206,6 @@ public class company implements business, Comparable<company> {
                 double price = getExpectSellPrice(temp.getName());
                 if (getSellConfidence(temp.getName()) == 10) {
                     price *= 1.02;
-                } else if (getSellConfidence(temp.getName()) > 8) {
-                    price *= 1.01;
                 } else if (getSellConfidence(temp.getName()) < 3) {
                     price = planet.getBasePrice(temp.getName()) * 0.99;
                 }

@@ -3,6 +3,9 @@ package core;
 import edu.princeton.cs.algs4.StdDraw;
 
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import static core.good.getRecipesWithGood;
 
@@ -15,7 +18,7 @@ public class graphicalInterface {
     static final Font BIG = new Font("Monaco", Font.BOLD, 30);
     static final char[] buttonInputs = new char[]{'1', '2', '3', '4', '5', '6', '7', '8', '9', '0'};
     static final int precision = 2; // How many slots every dollar
-    static double[] lastPrices;
+    static Map<String, ArrayList<Double>> lastPrices;
     static int typing = 0;
     static String textboxAmount = "";
     static String textboxPrice = "";
@@ -44,7 +47,23 @@ public class graphicalInterface {
         return true;
     }
     public static void initialize() {
-        lastPrices = new double[good.getGoodList().length];
+        lastPrices = new HashMap<>();
+        for (String goodName: good.getGoodList()) {
+            lastPrices.put(goodName, new ArrayList<>());
+            for (int x = 0; x < 20; x++) {
+                lastPrices.get(goodName).add(good.getBasePrice(goodName));
+            }
+        }
+    }
+    private static void addLastPrice(String goodName, double value) {
+        lastPrices.get(goodName).add(value);
+        lastPrices.get(goodName).removeFirst();
+    }
+    private static double getLastPrice(String goodName) {
+        return lastPrices.get(goodName).getLast();
+    }
+    private static Double[] getLastPriceArray(String goodName) {
+        return lastPrices.get(goodName).toArray(new Double[0]);
     }
     public static boolean changeButton(int button) {
         if (button <= 0) {
@@ -223,11 +242,12 @@ public class graphicalInterface {
             }
             drawLongSmallButton(0.38333, (double) 1 / num * (i + 1), goodNames[i], green);
             Color color = Color.WHITE;
-            color = lastPrices[i] > goodPrices[i] ? Color.RED: color;
-            color = lastPrices[i] < goodPrices[i] ? Color.GREEN: color;
-            drawSmallButton(0.44333, (double) 1 / num * (i + 1), String.valueOf(Utils.round(goodPrices[i], 1)), color);
+            double toCompare = Utils.round(goodPrices[i], 1);
+            color = getLastPrice(goodNames[i]) > toCompare ? Color.RED: color;
+            color = getLastPrice(goodNames[i]) < toCompare ? Color.GREEN: color;
+            drawSmallButton(0.44333, (double) 1 / num * (i + 1), String.valueOf(toCompare), color);
             drawSmallButton(0.46333, (double) (i + 1) / num, String.valueOf(player.getAmount(goodNames[i])), false);
-            lastPrices[i] = goodPrices[i];
+            addLastPrice(goodNames[i], toCompare);
         }
 
 
@@ -261,62 +281,30 @@ public class graphicalInterface {
         }
         StdDraw.show();
     }
-    public static void createGraph(int[] buyPairs, int[] sellPairs, double startX, double startY, double maxX, double maxY, double maxValue) {
+    public static void createGraph(Double[] values, double startX, double startY, double maxX, double maxY) {
         StdDraw.line(WIDTH * startX, HEIGHT * startY, WIDTH * (startX + 0.2), HEIGHT * startY);
         StdDraw.line(WIDTH * startX, HEIGHT * startY, WIDTH * startX, HEIGHT * (startY + 0.2));
         StdDraw.text(WIDTH * 0.73, HEIGHT * 0.6, "Price");
-        StdDraw.text(WIDTH * 0.85, HEIGHT * 0.46, "Amount");
-        StdDraw.setPenColor(Color.GREEN);
-        for (int i = 0; i < buyPairs.length; i++) {
-            int a = buyPairs[i];
-            if (a == 0) {
-                continue;
-            }
-            double x = startX + ((double) a / maxValue) * maxX;
-            double y = startY + ((double) i / buyPairs.length * precision) * maxY;
-            StdDraw.circle(x * WIDTH, y * HEIGHT, 0.02);
+        StdDraw.text(WIDTH * 0.85, HEIGHT * 0.46, "Weeks");
+        double maxValue = 0.0;
+        for (double x: values) {
+            maxValue = Math.max(maxValue, x);
         }
-        StdDraw.setPenColor(Color.RED);
-        for (int i = 0; i < sellPairs.length; i++) {
-            int a = sellPairs[i];
-            if (a == 0) {
-                continue;
-            }
-            double x = startX + ((double) a / maxValue) * maxX;
-            double y = startY + ((double) i / sellPairs.length * precision) * maxY;
-            StdDraw.circle(x * WIDTH, y * HEIGHT, 0.02);
+        for (int i = 0; i < values.length; i++) {
+            double currValue = values[i];
+            double x = startX + maxX * ((double) i / values.length);
+            double y = startY + (currValue / maxValue) * maxY;
+            StdDraw.circle(x * WIDTH, y * HEIGHT, 0.1);
         }
-        StdDraw.setPenColor(Color.WHITE);
-        StdDraw.text(WIDTH * (startX + maxX), HEIGHT * (startY - 0.02), String.valueOf(maxValue));
-        StdDraw.text(WIDTH * (startX - 0.01), HEIGHT * (startY + maxY), String.valueOf((sellPairs.length - precision) * precision));
+        
+        StdDraw.text(WIDTH * (startX - 0.01), HEIGHT * (startY + maxY), String.valueOf(maxValue));
     }
     public static void drawGraph(player player) {
-        String name = goodSelected;
+        String goodName = goodSelected;
         StdDraw.setFont(MED);
-        planet planet = player.getPlanet();
+        Double [] toGraph = getLastPriceArray(goodName);
 
-        int maxValue = 0;
-        for (order x: planet.getBuyOrders(name)) {
-            if (x.getLimitPrice() > maxValue) {
-                maxValue = (int) Math.round(x.getLimitPrice());
-            }
-        }
-        for (order x: planet.getSellOrders(name)) {
-            if (x.getLimitPrice() > maxValue) {
-                maxValue = (int) Math.round(x.getLimitPrice());
-            }
-        }
-        //Used to make (price, amount) graph
-        int[] buyPairs = new int[precision * (maxValue + 1)]; //Represents mapping price -> amount
-        int[] sellPairs = new int[precision * (maxValue + 1)];
-
-        for (order x: planet.getBuyOrders(name)) {
-            buyPairs[(int) Utils.round(x.getLimitPrice(), 1 / precision)] += 1;
-        }
-        for (order x: planet.getSellOrders(name)) {
-            sellPairs[(int) Utils.round(x.getLimitPrice(), 1 / precision)] += 1;
-        }
-        createGraph(buyPairs, sellPairs, 0.75, 0.5, 0.2, 0.2, maxValue);
+        createGraph(toGraph, 0.75, 0.5, 0.2, 0.2);
         StdDraw.show();
     }
 

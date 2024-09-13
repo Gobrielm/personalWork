@@ -21,17 +21,19 @@ public class personalPriceManager {
         lastBuyPrices.put(name, price);
     }
     public double getExpectSellPrice(String goodName, planet currPlanet) {
-        if (lastSellPrices.containsKey(goodName)) {
-            return lastSellPrices.get(goodName);
-        } else {
-            return currPlanet.getBasePrice(goodName);
+        double basePrice = currPlanet.getBasePrice(goodName);
+        double expectPrice = lastSellPrices.getOrDefault(goodName, basePrice);
+        if (Math.abs(expectPrice - basePrice) > 0.03) {
+            expectPrice = (basePrice + expectPrice) / 2;
         }
+        return expectPrice;
     }
     public double getExpectBuyPrice(String goodName, planet currPlanet) {
-        if (lastBuyPrices.containsKey(goodName)) {
-            return lastBuyPrices.get(goodName);
-        } else {
-            return currPlanet.getBasePrice(goodName);
+        double basePrice = currPlanet.getBasePrice(goodName);
+        double expectPrice = lastBuyPrices.getOrDefault(goodName, basePrice);
+        if (Math.abs(expectPrice - basePrice) > 0.03) {
+            expectPrice = (basePrice + expectPrice) / 2;
         }
+        return expectPrice;
     }
 }

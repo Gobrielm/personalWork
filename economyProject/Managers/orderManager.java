@@ -103,7 +103,7 @@ public class orderManager {
             while (!pickFromBuy.isEmpty() && !pickFromSell.isEmpty()) {
                 check++;
                 if (check > 1000) {
-                    System.out.println("Exceeded max order 0limit, something went wrong");
+                    System.out.println("Exceeded max order limit, something went wrong");
                     System.exit(1);
                 }
                 order buyOrder = null;

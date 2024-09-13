@@ -37,7 +37,9 @@ public class economy {
     }
     public void mouseActions(player currPlayer, double x, double y) {
         if (x > 0.333 && x < 0.47333) {
-            int order = (int) ((y * 24.5) - 1);
+            double num = good.getGoodList().length + 1;
+            y -= (1 / ( num + 1) / 2);
+            int order = (int) (y * (num));
             if (order >= 0 && order < good.getGoodList().length) {
                 String goodName = good.getGoodList()[order];
                 graphicalInterface.changeGoodSelected(currPlayer, goodName);
