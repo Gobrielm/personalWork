@@ -1,28 +1,50 @@
 package core.Managers;
 
+import core.Utils;
 import core.economy;
 import core.good;
 import core.order;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 public class orderManager {
     private HashMap<String, ArrayList<order>> buyOrders;
     private HashMap<String, ArrayList<order>> sellOrders;
     private HashMap<String, Double> prices;
+    private Map<String, ArrayList<Double>> lastPrices;
 
     public orderManager() {
         buyOrders = new HashMap<>();
         sellOrders = new HashMap<>();
         prices = new HashMap<>();
+        lastPrices = new HashMap<>();
         for (String goodName: good.getGoodList()) {
             buyOrders.put(goodName, new ArrayList<>());
             sellOrders.put(goodName, new ArrayList<>());
             prices.put(goodName, good.getBasePrice(goodName));
+            lastPrices.put(goodName, new ArrayList<>());
+            for (int x = 0; x < 20; x++) {
+                lastPrices.get(goodName).add(good.getBasePrice(goodName));
+            }
         }
     }
-
+    public void addLastPrice(String goodName) {
+        lastPrices.get(goodName).add(Utils.round(prices.get(goodName), 1));
+        lastPrices.get(goodName).removeFirst();
+    }
+    public boolean getPriceBigger(String goodName) {
+        ArrayList<Double> temp = lastPrices.get(goodName);
+        return prices.get(goodName) > temp.get(temp.size() - 2);
+    }
+    public boolean getPriceSmaller(String goodName) {
+        ArrayList<Double> temp = lastPrices.get(goodName);
+        return prices.get(goodName) < temp.get(temp.size() - 2);
+    }
+    public Double[] getLastPriceArray(String goodName) {
+        return lastPrices.get(goodName).toArray(new Double[0]);
+    }
     public void addBuyOrder(order newOrder) {
         buyOrders.get(newOrder.getGood()).add(newOrder);
     }

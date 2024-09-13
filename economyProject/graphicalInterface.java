@@ -18,7 +18,6 @@ public class graphicalInterface {
     static final Font BIG = new Font("Monaco", Font.BOLD, 30);
     static final char[] buttonInputs = new char[]{'1', '2', '3', '4', '5', '6', '7', '8', '9', '0'};
     static final int precision = 2; // How many slots every dollar
-    static Map<String, ArrayList<Double>> lastPrices;
     static int typing = 0;
     static String textboxAmount = "";
     static String textboxPrice = "";
@@ -45,25 +44,6 @@ public class graphicalInterface {
         graphicalInterface.goodSelected = goodName;
         updateScreen(player);
         return true;
-    }
-    public static void initialize() {
-        lastPrices = new HashMap<>();
-        for (String goodName: good.getGoodList()) {
-            lastPrices.put(goodName, new ArrayList<>());
-            for (int x = 0; x < 20; x++) {
-                lastPrices.get(goodName).add(good.getBasePrice(goodName));
-            }
-        }
-    }
-    private static void addLastPrice(String goodName, double value) {
-        lastPrices.get(goodName).add(value);
-        lastPrices.get(goodName).removeFirst();
-    }
-    private static double getLastPrice(String goodName) {
-        return lastPrices.get(goodName).getLast();
-    }
-    private static Double[] getLastPriceArray(String goodName) {
-        return lastPrices.get(goodName).toArray(new Double[0]);
     }
     public static boolean changeButton(int button) {
         if (button <= 0) {
@@ -242,12 +222,11 @@ public class graphicalInterface {
             }
             drawLongSmallButton(0.38333, (double) 1 / num * (i + 1), goodNames[i], green);
             Color color = Color.WHITE;
-            double toCompare = Utils.round(goodPrices[i], 1);
-            color = getLastPrice(goodNames[i]) > toCompare ? Color.RED: color;
-            color = getLastPrice(goodNames[i]) < toCompare ? Color.GREEN: color;
-            drawSmallButton(0.44333, (double) 1 / num * (i + 1), String.valueOf(toCompare), color);
+            double val = Utils.round(goodPrices[i], 1);
+            color = planet.getPriceBigger(goodNames[i]) ? Color.RED: color;
+            color = planet.getPriceSmaller(goodNames[i]) ? Color.GREEN: color;
+            drawSmallButton(0.44333, (double) 1 / num * (i + 1), String.valueOf(val), color);
             drawSmallButton(0.46333, (double) (i + 1) / num, String.valueOf(player.getAmount(goodNames[i])), false);
-            addLastPrice(goodNames[i], toCompare);
         }
 
 
@@ -296,13 +275,14 @@ public class graphicalInterface {
             double y = startY + (currValue / maxValue) * maxY;
             StdDraw.circle(x * WIDTH, y * HEIGHT, 0.1);
         }
-        
+
         StdDraw.text(WIDTH * (startX - 0.01), HEIGHT * (startY + maxY), String.valueOf(maxValue));
     }
     public static void drawGraph(player player) {
         String goodName = goodSelected;
         StdDraw.setFont(MED);
-        Double [] toGraph = getLastPriceArray(goodName);
+        planet planet = player.getPlanet();
+        Double [] toGraph = planet.getLastPriceArray(goodName);
 
         createGraph(toGraph, 0.75, 0.5, 0.2, 0.2);
         StdDraw.show();

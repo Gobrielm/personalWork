@@ -22,13 +22,22 @@ public class planet {
                     companies.add(new company("Filler", r, this));
                 }
             }
-
-
         }
 
         manager = new orderManager();
     }
-
+    public void addLastPrice(String goodName) {
+        manager.addLastPrice(goodName);
+    }
+    public boolean getPriceBigger(String goodName) {
+        return manager.getPriceBigger(goodName);
+    }
+    public boolean getPriceSmaller(String goodName) {
+        return manager.getPriceSmaller(goodName);
+    }
+    public Double[] getLastPriceArray(String goodName) {
+        return manager.getLastPriceArray(goodName);
+    }
     public company[] getCompanies() {
         return companies.toArray(new company[0]);
     }
@@ -72,7 +81,9 @@ public class planet {
         for (company x: companies) {
             x.tick();
         }
-
+        for (String goodName: good.getGoodList()) {
+            addLastPrice(goodName);
+        }
     }
 
     private void testCompanies() {
