@@ -37,9 +37,9 @@ public class good {
         basePrices.put("Brass", 25.0);
 
         basePrices.put("XenonTetroxide", 30.0);
-        basePrices.put("PerxenicAcid", 30.0);
+        basePrices.put("PerxenicAcid", 40.0);
 
-        basePrices.put("Weapons", 100.0);
+        basePrices.put("Weapons", 150.0);
 
         for (String x: basePrices.keySet()) {
             recipes.put(x, new ArrayList<>());

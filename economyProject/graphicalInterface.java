@@ -265,24 +265,39 @@ public class graphicalInterface {
         StdDraw.line(WIDTH * startX, HEIGHT * startY, WIDTH * startX, HEIGHT * (startY + 0.2));
         StdDraw.text(WIDTH * 0.73, HEIGHT * 0.6, "Price");
         StdDraw.text(WIDTH * 0.85, HEIGHT * 0.46, "Weeks");
-        double maxValue = 0.0;
-        for (double x: values) {
+        double maxValue = values[0];
+        double minValue = values[0];
+
+        for (double x : values) {
             maxValue = Math.max(maxValue, x);
-        }
-        for (int i = 0; i < values.length; i++) {
-            double currValue = values[i];
-            double x = startX + maxX * ((double) i / values.length);
-            double y = startY + (currValue / maxValue) * maxY;
-            StdDraw.circle(x * WIDTH, y * HEIGHT, 0.1);
+            minValue = Math.min(minValue, x);
         }
 
+        for (int i = 0; i < values.length; i++) {
+            double currValue = values[i];
+            double normalizedValue = (currValue - minValue) / (maxValue - minValue);
+            double x = (startX + maxX * ((double) i / values.length)) * WIDTH;
+            double y = (startY + normalizedValue * maxY) * HEIGHT;
+
+            if (i != 0) {
+                double prevValue = values[i - 1];
+                double normalizedPrevValue = (prevValue - minValue) / (maxValue - minValue);
+
+                double x0 = (startX + maxX * ((double) (i - 1) / values.length)) * WIDTH;
+                double y0 = (startY + normalizedPrevValue * maxY) * HEIGHT;
+                StdDraw.line(x0, y0, x, y);
+            }
+        }
+
+
         StdDraw.text(WIDTH * (startX - 0.01), HEIGHT * (startY + maxY), String.valueOf(maxValue));
+        StdDraw.text(WIDTH * (startX - 0.01), HEIGHT * (startY), String.valueOf(minValue));
     }
     public static void drawGraph(player player) {
         String goodName = goodSelected;
         StdDraw.setFont(MED);
         planet planet = player.getPlanet();
-        Double [] toGraph = planet.getLastPriceArray(goodName);
+        Double [] toGraph = planet.getLastPriceArray(goodName, 50);
 
         createGraph(toGraph, 0.75, 0.5, 0.2, 0.2);
         StdDraw.show();

@@ -38,6 +38,9 @@ public class planet {
     public Double[] getLastPriceArray(String goodName) {
         return manager.getLastPriceArray(goodName);
     }
+    public Double[] getLastPriceArray(String goodName, int weeks) {
+        return manager.getLastPriceArray(goodName, weeks);
+    }
     public company[] getCompanies() {
         return companies.toArray(new company[0]);
     }

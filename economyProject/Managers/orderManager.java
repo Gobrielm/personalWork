@@ -25,25 +25,41 @@ public class orderManager {
             sellOrders.put(goodName, new ArrayList<>());
             prices.put(goodName, good.getBasePrice(goodName));
             lastPrices.put(goodName, new ArrayList<>());
-            for (int x = 0; x < 20; x++) {
+            for (int x = 0; x < 2; x++) {
                 lastPrices.get(goodName).add(good.getBasePrice(goodName));
             }
         }
     }
     public void addLastPrice(String goodName) {
-        lastPrices.get(goodName).add(Utils.round(prices.get(goodName), 1));
-        lastPrices.get(goodName).removeFirst();
+        ArrayList<Double> goodNameArray = lastPrices.get(goodName);
+        goodNameArray.add(Utils.round(prices.get(goodName), 1));
+        if (goodNameArray.size() > 50) {
+            lastPrices.get(goodName).removeFirst();
+        }
     }
     public boolean getPriceBigger(String goodName) {
-        ArrayList<Double> temp = lastPrices.get(goodName);
-        return prices.get(goodName) > temp.get(temp.size() - 2);
+        ArrayList<Double> goodNameArray = lastPrices.get(goodName);
+        return Utils.round(prices.get(goodName), 1) < Utils.round(goodNameArray.get(goodNameArray.size() - 2), 1);
     }
     public boolean getPriceSmaller(String goodName) {
-        ArrayList<Double> temp = lastPrices.get(goodName);
-        return prices.get(goodName) < temp.get(temp.size() - 2);
+        ArrayList<Double> goodNameArray = lastPrices.get(goodName);
+        return Utils.round(prices.get(goodName), 1) > Utils.round(goodNameArray.get(goodNameArray.size() - 2), 1);
     }
     public Double[] getLastPriceArray(String goodName) {
         return lastPrices.get(goodName).toArray(new Double[0]);
+    }
+    public Double[] getLastPriceArray(String goodName, int weeks) {
+
+        ArrayList<Double> goodNameArray = lastPrices.get(goodName);
+        int size = goodNameArray.size() - 1;
+        weeks = Math.min(weeks, size);
+        Double[] toReturn = new Double[weeks];
+        int index = weeks - 1;
+        for (int i = size; i > size - weeks; i--) {
+            toReturn[index] = goodNameArray.get(i);
+            index--;
+        }
+        return toReturn;
     }
     public void addBuyOrder(order newOrder) {
         buyOrders.get(newOrder.getGood()).add(newOrder);
