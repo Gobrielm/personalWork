@@ -1,5 +1,6 @@
 package core;
 
+import core.constants.goodAcronyms;
 import edu.princeton.cs.algs4.StdDraw;
 
 import java.util.ArrayList;
@@ -14,6 +15,7 @@ public class economy {
         good.createGoodList();
         good.createRecipes();
         good.createNames();
+        goodAcronyms.initialize();
     }
     public economy(long seed, int playerCount) {
         rand = new Random(seed);

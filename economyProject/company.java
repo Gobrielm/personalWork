@@ -3,6 +3,7 @@ package core;
 import core.Managers.confidenceManager;
 import core.Managers.personalPriceManager;
 import core.Managers.financeManager;
+import core.constants.goodAcronyms;
 
 import java.util.*;
 
@@ -25,7 +26,7 @@ public class company implements business, Comparable<company> {
         } else {
             this.recipe = new recipe(recipe.getInputName(), recipe.getInputAmount(), recipe.getOutputName(), recipe.getOutputAmount(), recipe.getExpenses(), recipe.getIncome());
         }
-        cash = 10000;
+        cash = 1000;
         maxAge = 3;
         if (recipe.getInputName() == null || Arrays.equals(recipe.getInputName(), new String[]{})) {
             this.order = 1;
@@ -58,6 +59,9 @@ public class company implements business, Comparable<company> {
     @Override
     public planet getPlanet() {
         return planet;
+    }
+    public boolean getBankrupt() {
+        return cash < -50;
     }
     //order1 is the same as the company
     @Override
@@ -234,22 +238,22 @@ public class company implements business, Comparable<company> {
 
     @Override
     public String toString() {
-//        String toReturn = name.substring(0, 3) + ".: $" + Math.round(cash) + "- ";
-        String toReturn = "Income" + ": $" + financeManager.getIncome() + "- ";
+        String toReturn = name.substring(0, 3) + ".: $" + Math.round(cash) + "- ";
+        toReturn += "Income" + ": $" + financeManager.getIncome() + "- ";
         if (order == 2) {
             for (String good: recipe.getInputName()) {
-                toReturn += good + " CB: " + getBuyConfidence(good) + " ";
+                toReturn += goodAcronyms.getAcronym(good) + " CB: " + getBuyConfidence(good) + " ";
             }
             for (String good: recipe.getOutputName()) {
-                toReturn += good + " CS: " + getSellConfidence(good) + " ";
+                toReturn += goodAcronyms.getAcronym(good) + " CS: " + getSellConfidence(good) + " ";
             }
         } else if (order == 1) {
             for (String good: recipe.getOutputName()) {
-                toReturn += good + " CS: " + getSellConfidence(good) + " ";
+                toReturn += goodAcronyms.getAcronym(good) + " CS: " + getSellConfidence(good) + " ";
             }
         } else {
             for (String good: recipe.getInputName()) {
-                toReturn += good + " CB: " + getBuyConfidence(good) + " ";
+                toReturn += goodAcronyms.getAcronym(good) + " CB: " + getBuyConfidence(good) + " ";
             }
         }
         return toReturn;

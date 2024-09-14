@@ -1,6 +1,7 @@
 package core;
 
 import core.Managers.orderManager;
+import org.checkerframework.checker.units.qual.A;
 
 import java.util.ArrayList;
 
@@ -11,6 +12,7 @@ public class planet {
     private orderManager manager;
     public planet() {
         companies = new ArrayList<>();
+        bankruptCompanies = new ArrayList<>();
         size = economy.rand.nextInt(30, 60);
         for (int i = 0; i < size / 10; i++) {
             for (int k = 0; k < 5; k++) {
@@ -81,8 +83,14 @@ public class planet {
 
     public void planetTick() {
         completeOrders();
-        for (company x: companies) {
+        for (int i = 0; i < companies.size(); i++) {
+            company x = companies.get(i);
             x.tick();
+            if (x.getBankrupt()) {
+                i--;
+                bankruptCompanies.add(x);
+                companies.remove(x);
+            }
         }
         for (String goodName: good.getGoodList()) {
             addLastPrice(goodName);
