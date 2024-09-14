@@ -1,8 +1,8 @@
 package core;
 
-import core.Managers.confidenceManager;
-import core.Managers.personalPriceManager;
-import core.Managers.financeManager;
+import core.managers.confidenceManager;
+import core.managers.personalPriceManager;
+import core.managers.financeManager;
 import core.constants.goodAcronyms;
 
 import java.util.*;

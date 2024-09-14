@@ -1,6 +1,5 @@
-package core.Managers;
+package core.managers;
 
-import core.good;
 import core.planet;
 
 import java.util.HashMap;

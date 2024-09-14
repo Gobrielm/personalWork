@@ -1,4 +1,4 @@
-package core.Managers;
+package core.managers;
 
 import core.good;
 
