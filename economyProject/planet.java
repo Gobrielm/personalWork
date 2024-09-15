@@ -1,6 +1,7 @@
 package core;
 
 import core.managers.orderManager;
+import core.managers.stockManager;
 
 import java.util.ArrayList;
 
@@ -8,7 +9,8 @@ public class planet {
     private int size;
     private ArrayList<company> companies;
     private ArrayList<company> bankruptCompanies;
-    private orderManager manager;
+    private orderManager orderManager;
+    private stockManager stockManager;
     public planet() {
         companies = new ArrayList<>();
         bankruptCompanies = new ArrayList<>();
@@ -25,59 +27,60 @@ public class planet {
             }
         }
 
-        manager = new orderManager();
+        orderManager = new orderManager();
+        stockManager = new stockManager();
     }
     public void addLastPrice(String goodName) {
-        manager.addLastPrice(goodName);
+        orderManager.addLastPrice(goodName);
     }
     public boolean getPriceBigger(String goodName) {
-        return manager.getPriceBigger(goodName);
+        return orderManager.getPriceBigger(goodName);
     }
     public boolean getPriceSmaller(String goodName) {
-        return manager.getPriceSmaller(goodName);
+        return orderManager.getPriceSmaller(goodName);
     }
     public Double[] getLastPriceArray(String goodName) {
-        return manager.getLastPriceArray(goodName);
+        return orderManager.getLastPriceArray(goodName);
     }
     public Double[] getLastPriceArray(String goodName, int weeks) {
-        return manager.getLastPriceArray(goodName, weeks);
+        return orderManager.getLastPriceArray(goodName, weeks);
     }
     public company[] getCompanies() {
         return companies.toArray(new company[0]);
     }
     public Double[] getPriceList() {
-        return manager.getBasePrices();
+        return orderManager.getBasePrices();
     }
     public void addOrder(order order) {
         if (order.getAmount() > 0) {
             if (order.isBuyOrder()) {
-                manager.addBuyOrder(order);
+                orderManager.addBuyOrder(order);
             } else {
-                manager.addSellOrder(order);
+                orderManager.addSellOrder(order);
             }
         }
 
     }
     public order[] getBuyOrders(String goodName) {
-        return manager.getBuyOrders(goodName);
+        return orderManager.getBuyOrders(goodName);
     }
     public order[] getSellOrders(String goodName) {
-        return manager.getSellOrders(goodName);
+        return orderManager.getSellOrders(goodName);
     }
     public void addCompany(company toAdd) {
         companies.add(toAdd);
     }
 
     public void completeOrders() {
-        manager.completeOrders();
+        orderManager.completeOrders();
     }
 
     public double getBasePrice(String goodName) {
-        return manager.getBasePrice(goodName);
+        return orderManager.getBasePrice(goodName);
     }
 
     public void changeBasePrice(String goodName, double price, int amount) {
-        manager.changeBasePrice(goodName, price, amount);
+        orderManager.changeBasePrice(goodName, price, amount);
     }
 
     public void planetTick() {

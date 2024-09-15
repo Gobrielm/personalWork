@@ -21,4 +21,6 @@ public interface business {
     public void returnSell(order order);
 
     public int getMaxAge();
+
+    public void changeCash(double amount);
 }

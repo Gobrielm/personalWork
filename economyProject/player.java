@@ -22,6 +22,7 @@ public class player implements business{
         //Todo determine a way for the player to change current Orders or have ai manage them
         //Todo for now ai will manage them
     }
+    @Override
     public void changeCash(double amount) {
         cash += amount;
     }
@@ -94,4 +95,5 @@ public class player implements business{
     public int getMaxAge() {
         return 20;
     }
+
 }

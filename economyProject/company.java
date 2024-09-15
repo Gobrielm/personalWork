@@ -45,6 +45,12 @@ public class company implements business, Comparable<company> {
     public int getMaxAge() {
         return maxAge;
     }
+
+    @Override
+    public void changeCash(double amount) {
+        cash += amount;
+    }
+
     @Override
     public String getName() {
         return name;
@@ -220,6 +226,10 @@ public class company implements business, Comparable<company> {
                 recipe.changeOutputAmount(i, -temp.getAmount());
             }
         }
+    }
+
+    private void doSellStock() {
+        
     }
 
     public void tick() {

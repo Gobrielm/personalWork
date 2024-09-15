@@ -31,4 +31,14 @@ public class share {
     public void changePrice(double price) {
         this.amount = price;
     }
+    public company getPieceOf() {
+        return pieceOf;
+    }
+    public double getPrice() {
+        return price;
+    }
+
+    public void changeOwner(business newOwner) {
+        owner = newOwner;
+    }
 }

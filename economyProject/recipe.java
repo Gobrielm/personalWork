@@ -73,7 +73,16 @@ public class recipe {
         }
         return toReturn;
     }
-
+    public String[] getBothName() {
+        String[] toReturn = new String[input.length + output.length];
+        for (int i = 0; i < input.length; i++) {
+            toReturn[i] = input[i].getName();
+        }
+        for (int i = input.length; i < output.length + input.length; i++) {
+            toReturn[i] = output[i].getName();
+        }
+        return toReturn;
+    }
     public double getExpenses() {
         return expenses;
     }
