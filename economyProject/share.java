@@ -27,7 +27,9 @@ public class share {
     public business getOwner() {
         return owner;
     }
-
+    public double getAmount() {
+        return amount;
+    }
     public void changePrice(double price) {
         this.amount = price;
     }
@@ -40,5 +42,10 @@ public class share {
 
     public void changeOwner(business newOwner) {
         owner = newOwner;
+    }
+
+    @Override
+    public String toString() {
+        return owner.getName() + "----" + pieceOf.getName() + "--%" + amount;
     }
 }

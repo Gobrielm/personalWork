@@ -14,22 +14,22 @@ public class planet {
     public planet() {
         companies = new ArrayList<>();
         bankruptCompanies = new ArrayList<>();
+        orderManager = new orderManager();
+        stockManager = new stockManager();
         size = economy.rand.nextInt(30, 60);
         for (int i = 0; i < size / 10; i++) {
             for (int k = 0; k < 5; k++) {
                 String randGood = good.randGoodName();
                 recipe buyer = good.getBuyer(randGood);
                 recipe[] primary = good.primaryRecipeWithGood(randGood);
-                companies.add(new company("Filler", buyer, this));
+                addCompany(new company("Filler", buyer, this));
                 for (recipe r: primary) {
-                    companies.add(new company("Filler", r, this));
+                    addCompany(new company("Filler", r, this));
                 }
             }
         }
-
-        orderManager = new orderManager();
-        stockManager = new stockManager();
     }
+    //NOTE:Order Manager
     public void addLastPrice(String goodName) {
         orderManager.addLastPrice(goodName);
     }
@@ -67,10 +67,6 @@ public class planet {
     public order[] getSellOrders(String goodName) {
         return orderManager.getSellOrders(goodName);
     }
-    public void addCompany(company toAdd) {
-        companies.add(toAdd);
-    }
-
     public void completeOrders() {
         orderManager.completeOrders();
     }
@@ -82,7 +78,26 @@ public class planet {
     public void changeBasePrice(String goodName, double price, int amount) {
         orderManager.changeBasePrice(goodName, price, amount);
     }
+    //NOTE:Stock Manager
+    public void addCompanyToPrivateMarket(company toAdd) {
+        stockManager.addPrivateCompany(new share(toAdd));
+    }
+    public share[] getOwnedShares(business owner) {
+        return stockManager.getOwnedShares(owner);
+    }
+    public double buyShare(String goodName, double priceMax) {
 
+    }
+
+    public void sellShare(share toSell) {
+
+    }
+
+    //NOTE:Companies
+    public void addCompany(company toAdd) {
+        companies.add(toAdd);
+        addCompanyToPrivateMarket(toAdd);
+    }
     public void planetTick() {
         completeOrders();
         for (int i = 0; i < companies.size(); i++) {

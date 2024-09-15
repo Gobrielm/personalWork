@@ -110,7 +110,7 @@ public class company implements business, Comparable<company> {
     private double getExpectBuyPrice(String name) {
         return priceManager.getExpectBuyPrice(name, planet);
     }
-    public double maxBuyPrice(String name) {
+    public double getMaxBuyPrice(String name) {
         double baseTotalBuy = 0;
         double baseTotalSell = 0;
         double income = recipe.getIncome();
@@ -136,7 +136,7 @@ public class company implements business, Comparable<company> {
     private double getExpectSellPrice(String name) {
         return priceManager.getExpectSellPrice(name, planet);
     }
-    public double minSellPrice(String name) {
+    public double getMinSellPrice(String name) {
         double baseTotalBuy = 0;
         double baseTotalSell = 0;
         double expenses = recipe.getExpenses();
@@ -194,7 +194,7 @@ public class company implements business, Comparable<company> {
         good[] input = recipe.getInputGoodArray();
         for (int i = 0; i < input.length; i++) {
             good temp = input[i];
-            double limit = maxBuyPrice(temp.getName());
+            double limit = getMaxBuyPrice(temp.getName());
             if (recipe.getInputAmount()[i] * limit <= cash) {
                 double price = getExpectBuyPrice(temp.getName());
                 if (getBuyConfidence(temp.getName()) == 10) {
@@ -219,7 +219,7 @@ public class company implements business, Comparable<company> {
                 } else if (getSellConfidence(temp.getName()) < 3) {
                     price = planet.getBasePrice(temp.getName()) * 0.99;
                 }
-                double limit = minSellPrice(temp.getName());
+                double limit = getMinSellPrice(temp.getName());
                 price = Math.max(price, limit);
                 order newOrder = new order(this, temp, price, limit, false);
                 planet.addOrder(newOrder);
@@ -228,12 +228,31 @@ public class company implements business, Comparable<company> {
         }
     }
 
-    private void doSellStock() {
-        
+    private void sellStock() {
+        for (share x: planet.getOwnedShares(this)) {
+            System.out.println(x);
+        }
+    }
+
+    private void buyStock() {
+        //Todo implement more intelligent way of checking to buy instead of flat numbers
+        if (cash > 1000 && financeManager.getIncome() > 0) {
+            String[] goodNamesOfCompaniesToBuy = recipe.getBothName();
+            double amountToSpend = cash - 1000;
+            int index = 0;
+            for (String x: goodNamesOfCompaniesToBuy) {
+                amountToSpend -= planet.buyShare(x, amountToSpend);
+                if (index > 3) {
+                    break;
+                }
+                index++;
+            }
+        }
     }
 
     public void tick() {
         payExpenses();
+        sellStock();
         confidenceObject.degradeConfidence();
         recipe.createRecipe();
         if (order == 1) {

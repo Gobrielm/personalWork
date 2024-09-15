@@ -152,7 +152,7 @@ public class orderManager {
                     if (buyOrder.checkValid()) {
                         break;
                     } else {
-                        pickFromBuy.remove(num);
+                        buyOrders.get(goodName).remove(num);
                     }
                 }
 
@@ -162,7 +162,7 @@ public class orderManager {
                     if (sellOrder.checkValid()) {
                         break;
                     } else {
-                        pickFromSell.remove(num);
+                        sellOrders.get(goodName).remove(num);
                     }
                 }
                 if (sellOrder != null && buyOrder.checkValid() && sellOrder.checkValid()) {

@@ -9,3 +9,4 @@ graphical Interface - implement building factories
 financeManager - store company trying to sell their shares on some ranked list where companies buying make their offers
 company - min/max buy prices prevent a lot of interactions
 stockManager - finish implementing sell/buying shares
+stockManager - shares do not merge if owner/shareOf match
