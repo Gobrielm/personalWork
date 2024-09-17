@@ -154,14 +154,17 @@ public class company implements business, Comparable<company> {
         } else if (getSellConfidence(name) > 5) {
             minProfit = 1;
         }
-        if (financeManager.getIncome() < minProfit) {
+        if (getIncome() < minProfit) {
             //SUPER BROKEN IN THEORY BUT KINDA WORKS
-            double diff = minProfit - financeManager.getIncome();
+            double diff = minProfit - getIncome();
             minProfit *= diff / minProfit;
         }
 
         double percentage = (expenses + minProfit + baseTotalBuy) / (baseTotalSell);
         return planet.getBasePrice(name) * (percentage);
+    }
+    public double getIncome() {
+        return financeManager.getIncome();
     }
     public void buyGood(int amount, String good, double price) {
         recipe.changeInputAmount(good, amount);
@@ -230,22 +233,36 @@ public class company implements business, Comparable<company> {
 
     private void sellStock() {
         for (share x: planet.getOwnedShares(this)) {
-            System.out.println(x);
+            //Selling stock of the company
+            if (x.getPrice() == 0.0 && getIncome() > 2 && x.getAmount() > 20.0) {
+                planet.sellShare(this, this, 10.0, getIncome() * 40);
+            //Previously Bought
+            } else {
+                
+            }
         }
     }
 
     private void buyStock() {
         //Todo implement more intelligent way of checking to buy instead of flat numbers
-        if (cash > 1000 && financeManager.getIncome() > 0) {
+        if (cash > 1000 && getIncome() > 0) {
             String[] goodNamesOfCompaniesToBuy = recipe.getBothName();
             double amountToSpend = cash - 1000;
-            int index = 0;
             for (String x: goodNamesOfCompaniesToBuy) {
-                amountToSpend -= planet.buyShare(x, amountToSpend);
-                if (index > 3) {
-                    break;
+                share toPonder = planet.buyShare(x, amountToSpend);
+                company companyToPonder = toPonder.getPieceOf();
+                boolean buy = false;
+                double price = toPonder.getPrice();
+                if (companyToPonder.getBankrupt() && companyToPonder.getExpectSellPrice(x) > planet.getBasePrice(x)) {
+                    buy = true;
+                } else if (companyToPonder.getIncome() > 1 && companyToPonder.getIncome() * 40 > price) {
+                    buy = true;
                 }
-                index++;
+
+                if (buy) {
+                    amountToSpend -= toPonder.getPrice();
+                    planet.buyShare(toPonder, this);
+                }
             }
         }
     }
@@ -268,7 +285,7 @@ public class company implements business, Comparable<company> {
     @Override
     public String toString() {
         String toReturn = name.substring(0, 3) + ".: $" + Math.round(cash) + "- ";
-        toReturn += "Income" + ": $" + financeManager.getIncome() + "- ";
+        toReturn += "Income" + ": $" + getIncome() + "- ";
         if (order == 2) {
             for (String good: recipe.getInputName()) {
                 toReturn += goodAcronyms.getAcronym(good) + " CB: " + getBuyConfidence(good) + " ";
@@ -290,7 +307,7 @@ public class company implements business, Comparable<company> {
 
     @Override
     public int compareTo(company o) {
-        long toReturn = Utils.roundNoZero(financeManager.getIncome() - o.financeManager.getIncome());
+        long toReturn = Utils.roundNoZero(getIncome() - o.getIncome());
         toReturn = toReturn == 0 ? (Utils.roundNoZero(cash - o.cash)): toReturn;
         toReturn = toReturn == 0 ? (name.compareTo(o.name)): toReturn;
         return (int) toReturn;

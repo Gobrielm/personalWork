@@ -78,4 +78,10 @@ public class stockManager {
         return privateOwnership.get(owner).toArray(new share[0]);
     }
 
+    public share getRandomShare(String goodName) {
+        ArrayList<share> listOfShares = publicMarket.get(goodName);
+        int randNum = economy.rand.nextInt(0, listOfShares.size());
+        return listOfShares.get(randNum);
+    }
+
 }

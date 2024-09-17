@@ -85,12 +85,19 @@ public class planet {
     public share[] getOwnedShares(business owner) {
         return stockManager.getOwnedShares(owner);
     }
-    public double buyShare(String goodName, double priceMax) {
-
+    public share buyShare(String goodName, double priceMax) {
+        share toReturn = stockManager.getRandomShare(goodName);
+        while(toReturn.getPrice() < priceMax) {
+            toReturn = stockManager.getRandomShare(goodName);
+        }
+        return toReturn;
+    }
+    public void buyShare(share share, business newOwner) {
+        stockManager.buyShare(share, newOwner);
     }
 
-    public void sellShare(share toSell) {
-
+    public void sellShare(company pieceOf, business owner, double amount, double price) {
+        stockManager.sellShare(pieceOf, owner, amount, price);
     }
 
     //NOTE:Companies
