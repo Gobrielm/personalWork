@@ -154,28 +154,28 @@ public class company implements business, Comparable<company> {
         } else if (getSellConfidence(name) > 5) {
             minProfit = 1;
         }
-        if (getIncome() < minProfit) {
+        if (getProfit() < minProfit) {
             //SUPER BROKEN IN THEORY BUT KINDA WORKS
-            double diff = minProfit - getIncome();
+            double diff = minProfit - getProfit();
             minProfit *= diff / minProfit;
         }
 
         double percentage = (expenses + minProfit + baseTotalBuy) / (baseTotalSell);
         return planet.getBasePrice(name) * (percentage);
     }
-    public double getIncome() {
-        return financeManager.getIncome();
+    public double getProfit() {
+        return financeManager.getProfit();
     }
     public void buyGood(int amount, String good, double price) {
         recipe.changeInputAmount(good, amount);
         priceManager.addLastBoughtPrice(good, price);
         changeConfidenceB(2, good);
         cash -= (price * amount);
-        financeManager.incomeEditLast(-price * amount);
+        financeManager.profitEditLast(-price * amount);
     }
     public void sellGood(int amount, String good, double price) {
         cash += amount * price;
-        financeManager.incomeEditLast(amount * price);
+        financeManager.profitEditLast(amount * price);
         priceManager.addLastSoldPrice(good, price);
         changeConfidenceS(2, good);
     }
@@ -187,10 +187,10 @@ public class company implements business, Comparable<company> {
         changeConfidenceS(-1, order.getGood());
     }
     private void payExpenses() {
-        financeManager.incomeEditLast(-recipe.getExpenses() + recipe.getIncome());
+        financeManager.profitEditLast(-recipe.getExpenses() + recipe.getIncome());
         cash -= recipe.getExpenses();
         cash += recipe.getIncome();
-        financeManager.incomeRemoveFirst();
+        financeManager.profitRemoveFirst();
     }
 
     private void createBuyOrders() {
@@ -231,21 +231,21 @@ public class company implements business, Comparable<company> {
         }
     }
 
-    private void sellStock() {
-        for (share x: planet.getOwnedShares(this)) {
-            //Selling stock of the company
-            if (x.getPrice() == 0.0 && getIncome() > 2 && x.getAmount() > 20.0) {
-                planet.sellShare(this, this, 10.0, getIncome() * 40);
-            //Previously Bought
-            } else {
-                
-            }
-        }
-    }
+//    private void sellStock() {
+//        for (share x: planet.getOwnedShares(this)) {
+//            //Selling stock of the company
+//            if (x.getPrice() == 0.0 && getIncome() > 2 && x.getAmount() > 20.0) {
+//                planet.sellShare(this, this, 10.0, getIncome() * 40);
+//            //Previously Bought
+//            } else {
+//
+//            }
+//        }
+//    }
 
     private void buyStock() {
         //Todo implement more intelligent way of checking to buy instead of flat numbers
-        if (cash > 1000 && getIncome() > 0) {
+        if (cash > 1000 && getProfit() > 0) {
             String[] goodNamesOfCompaniesToBuy = recipe.getBothName();
             double amountToSpend = cash - 1000;
             for (String x: goodNamesOfCompaniesToBuy) {
@@ -255,7 +255,7 @@ public class company implements business, Comparable<company> {
                 double price = toPonder.getPrice();
                 if (companyToPonder.getBankrupt() && companyToPonder.getExpectSellPrice(x) > planet.getBasePrice(x)) {
                     buy = true;
-                } else if (companyToPonder.getIncome() > 1 && companyToPonder.getIncome() * 40 > price) {
+                } else if (companyToPonder.getProfit() > 1 && companyToPonder.getProfit() * 40 > price) {
                     buy = true;
                 }
 
@@ -269,7 +269,7 @@ public class company implements business, Comparable<company> {
 
     public void tick() {
         payExpenses();
-        sellStock();
+//        sellStock();
         confidenceObject.degradeConfidence();
         recipe.createRecipe();
         if (order == 1) {
@@ -285,7 +285,7 @@ public class company implements business, Comparable<company> {
     @Override
     public String toString() {
         String toReturn = name.substring(0, 3) + ".: $" + Math.round(cash) + "- ";
-        toReturn += "Income" + ": $" + getIncome() + "- ";
+        toReturn += "Income" + ": $" + getProfit() + "- ";
         if (order == 2) {
             for (String good: recipe.getInputName()) {
                 toReturn += goodAcronyms.getAcronym(good) + " CB: " + getBuyConfidence(good) + " ";
@@ -307,7 +307,7 @@ public class company implements business, Comparable<company> {
 
     @Override
     public int compareTo(company o) {
-        long toReturn = Utils.roundNoZero(getIncome() - o.getIncome());
+        long toReturn = Utils.roundNoZero(getProfit() - o.getProfit());
         toReturn = toReturn == 0 ? (Utils.roundNoZero(cash - o.cash)): toReturn;
         toReturn = toReturn == 0 ? (name.compareTo(o.name)): toReturn;
         return (int) toReturn;

@@ -10,3 +10,5 @@ financeManager - store company trying to sell their shares on some ranked list w
 company - min/max buy prices prevent a lot of interactions
 stockManager - finish implementing sell/buying shares
 stockManager - shares do not merge if owner/shareOf match
+company - if storage is full and/or have a lot, sell on a loss
+planet - add companies being created

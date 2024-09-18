@@ -21,15 +21,15 @@ public class financeManager {
         }
     }
 
-    public void incomeEditLast(double num) {
+    public void profitEditLast(double num) {
         double last = incomeList.removeLast() + num;
         incomeList.add(last);
     }
-    public void incomeRemoveFirst() {
+    public void profitRemoveFirst() {
         incomeList.removeFirst();
         incomeList.addLast(0.0);
     }
-    public double getIncome() {
+    public double getProfit() {
         double total = 0.0;
         for (double x: incomeList) {
             total += x;
