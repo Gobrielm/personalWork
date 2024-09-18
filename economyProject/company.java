@@ -8,6 +8,8 @@ import core.constants.goodAcronyms;
 import java.util.*;
 
 public class company implements business, Comparable<company> {
+    private static double minExpenses;
+
     private String name;
     private double cash;
     private recipe recipe;
@@ -21,11 +23,7 @@ public class company implements business, Comparable<company> {
     private int personality;
     public company(String name, recipe recipe, planet planet) {
         this.name = name;
-        if (recipe.getExpenses() > 0) {
-            this.recipe = new recipe(recipe.getInputName(), recipe.getInputAmount(), recipe.getOutputName(), recipe.getOutputAmount(), economy.rand.nextDouble(0, recipe.getExpenses()), recipe.getIncome());
-        } else {
-            this.recipe = new recipe(recipe.getInputName(), recipe.getInputAmount(), recipe.getOutputName(), recipe.getOutputAmount(), recipe.getExpenses(), recipe.getIncome());
-        }
+        this.recipe = new recipe(recipe.getInputName(), recipe.getInputAmount(), recipe.getOutputName(), recipe.getOutputAmount(), recipe.getExpenses(), recipe.getIncome());
         cash = 1000;
         maxAge = 3;
         if (recipe.getInputName() == null || Arrays.equals(recipe.getInputName(), new String[]{})) {
@@ -45,12 +43,10 @@ public class company implements business, Comparable<company> {
     public int getMaxAge() {
         return maxAge;
     }
-
     @Override
     public void changeCash(double amount) {
         cash += amount;
     }
-
     @Override
     public String getName() {
         return name;
@@ -231,17 +227,17 @@ public class company implements business, Comparable<company> {
         }
     }
 
-//    private void sellStock() {
-//        for (share x: planet.getOwnedShares(this)) {
-//            //Selling stock of the company
-//            if (x.getPrice() == 0.0 && getIncome() > 2 && x.getAmount() > 20.0) {
-//                planet.sellShare(this, this, 10.0, getIncome() * 40);
-//            //Previously Bought
-//            } else {
-//
-//            }
-//        }
-//    }
+    private void sellStock() {
+        for (share x: planet.getOwnedShares(this)) {
+            //Selling stock of the company
+            if (x.getPrice() == 0.0 && getProfit() > 2 && x.getAmount() > 20.0) {
+                planet.sellShare(this, this, 10.0, getProfit() * 40);
+            //Previously Bought
+            } else {
+
+            }
+        }
+    }
 
     private void buyStock() {
         //Todo implement more intelligent way of checking to buy instead of flat numbers

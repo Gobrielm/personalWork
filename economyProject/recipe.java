@@ -9,6 +9,8 @@ public class recipe {
     private double income;
     private int[] inputStorage;
     private int[] outputStorage;
+    private int level;
+    private double baseExpenses;
 
     public recipe(good[] input, good[] output, double expenses, int income) {
         this.input = input;
@@ -16,7 +18,9 @@ public class recipe {
         inputStorage = new int[input.length];
         outputStorage = new int[output.length];
         this.income = income;
-        this.expenses = expenses;
+        this.expenses = getRandExpenses(baseExpenses);
+        this.baseExpenses = expenses;
+        this.level = 1;
     }
     public recipe(String[] input, int[] inputAmount, String[] output, int[] outputAmount, double expenses, double income) {
         this.input = new good[input.length];
@@ -30,7 +34,45 @@ public class recipe {
         inputStorage = new int[input.length];
         outputStorage = new int[output.length];
         this.income = income;
-        this.expenses = expenses;
+        this.expenses = getRandExpenses(baseExpenses);
+        this.baseExpenses = expenses;
+        this.level = 1;
+    }
+    public void upgradeRecipe() {
+        for (good x: input) {
+            int baseValue = x.getAmount() / level;
+            x.changeAmount(baseValue);
+        }
+        for (good x: output) {
+            int baseValue = x.getAmount() / level;
+            x.changeAmount(baseValue);
+        }
+        level++;
+        expenses += getRandExpenses(baseExpenses);
+    }
+    public void degradeRecipe() {
+        if (level == 1) {
+            return;
+        }
+        for (good x: input) {
+            int baseValue = x.getAmount() / level;
+            x.changeAmount(-baseValue);
+        }
+        for (good x: output) {
+            int baseValue = x.getAmount() / level;
+            x.changeAmount(-baseValue);
+        }
+        level--;
+        expenses -= getRandExpenses(baseExpenses);
+    }
+    public void optimizeRecipe() {
+        double smallestExpenses = baseExpenses * level * 0.5;
+        if (expenses > smallestExpenses) {
+            expenses *= 0.99;
+        }
+    }
+    public double getRandExpenses(double baseExpenses) {
+        return economy.rand.nextDouble(baseExpenses * 0.5, baseExpenses * 1.5);
     }
     public good[] getInputGoodArray() {
         return input;
