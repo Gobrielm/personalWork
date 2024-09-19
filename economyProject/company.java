@@ -1,6 +1,7 @@
 package core;
 
 import core.managers.confidenceManager;
+import core.managers.companyManager;
 import core.managers.personalPriceManager;
 import core.managers.financeManager;
 import core.constants.goodAcronyms;
@@ -8,62 +9,40 @@ import core.constants.goodAcronyms;
 import java.util.*;
 
 public class company implements business, Comparable<company> {
-    private static double minExpenses;
-
-    private String name;
-    private double cash;
-    private recipe recipe;
-    private int order;
-    private planet planet;
-    private int maxAge;
     private financeManager financeManager;
     private personalPriceManager priceManager;
     private confidenceManager confidenceObject;
+    private companyManager companyManager;
     //Higher number is more aggressive
-    private int personality;
+
     public company(String name, recipe recipe, planet planet) {
-        this.name = name;
-        this.recipe = new recipe(recipe.getInputName(), recipe.getInputAmount(), recipe.getOutputName(), recipe.getOutputAmount(), recipe.getExpenses(), recipe.getIncome());
-        cash = 1000;
-        maxAge = 3;
-        if (recipe.getInputName() == null || Arrays.equals(recipe.getInputName(), new String[]{})) {
-            this.order = 1;
-        } else if (recipe.getOutputName() == null || Arrays.equals(recipe.getOutputName(), new String[]{})) {
-            this.order = 3;
-        } else {
-            this.order = 2;
-        }
+        companyManager = new companyManager(name, recipe, planet);
         confidenceObject = new confidenceManager();
         financeManager = new financeManager(this);
         priceManager = new personalPriceManager();
-        this.personality = economy.rand.nextInt(1, 4);
-        this.planet = planet;
     }
     @Override
     public int getMaxAge() {
-        return maxAge;
+        return companyManager.getMaxAge();
     }
     @Override
     public void changeCash(double amount) {
-        cash += amount;
-    }
-    @Override
-    public String getName() {
-        return name;
-    }
-    public recipe getRecipe() {
-        return recipe;
+        companyManager.changeCash(amount);
     }
     @Override
     public double getCash() {
-        return cash;
+        return companyManager.getCash();
+    }
+    @Override
+    public String getName() {
+        return companyManager.getName();
+    }
+    public recipe getRecipe() {
+        return companyManager.getRecipe();
     }
     @Override
     public planet getPlanet() {
-        return planet;
-    }
-    public boolean getBankrupt() {
-        return cash < -50;
+        return companyManager.getPlanet();
     }
     //order1 is the same as the company
     @Override
@@ -76,18 +55,24 @@ public class company implements business, Comparable<company> {
         } else if (!order1.isBuyOrder() && priceDiff < 0) {
             return true;
         }
-        return change < 0.01 * personality;
+        return change < 0.01 * getPersonality();
+    }
+    public boolean getBankrupt() {
+        return companyManager.getBankrupt();
+    }
+    public int getPersonality() {
+        return companyManager.getPersonality();
     }
     public void adjustDeal(order order1) {
         if (order1.isBuyOrder()) {
             changeConfidenceB(-1, order1.getGood());
             if (getBuyConfidence(order1.getGood()) < 7) {
-                order1.setPrice(order1.getPrice() * (1 + 0.01 * personality));
+                order1.setPrice(order1.getPrice() * (1 + 0.01 * getPersonality()));
             }
         } else {
             changeConfidenceS(-1, order1.getGood());
             if (getSellConfidence(order1.getGood()) < 7) {
-                order1.setPrice(order1.getPrice() * (1 - 0.01 * personality));
+                order1.setPrice(order1.getPrice() * (1 - 0.01 * getPersonality()));
             }
         }
     }
@@ -104,18 +89,21 @@ public class company implements business, Comparable<company> {
         return confidenceObject.getSellConfidence(goodName);
     }
     private double getExpectBuyPrice(String name) {
-        return priceManager.getExpectBuyPrice(name, planet);
+        return priceManager.getExpectBuyPrice(name, getPlanet());
     }
     public double getMaxBuyPrice(String name) {
         double baseTotalBuy = 0;
         double baseTotalSell = 0;
-        double income = recipe.getIncome();
-        double expenses = recipe.getExpenses();
-        for (good x: recipe.getInputGoodArray()) {
-            baseTotalBuy += x.getAmount() * planet.getBasePrice(x.getName());
+        recipe thisRecipe = getRecipe();
+        planet thisPlanet = getPlanet();
+        double income = thisRecipe.getIncome();
+        double expenses = thisRecipe.getExpenses();
+
+        for (good x: thisRecipe.getInputGoodArray()) {
+            baseTotalBuy += x.getAmount() * thisPlanet.getBasePrice(x.getName());
         }
-        for (good x: recipe.getOutputGoodArray()) {
-            baseTotalSell += x.getAmount() * planet.getBasePrice(x.getName());
+        for (good x: thisRecipe.getOutputGoodArray()) {
+            baseTotalSell += x.getAmount() * thisPlanet.getBasePrice(x.getName());
         }
         double minProfit = 0.5;
         if (getBuyConfidence(name) > 9) {
@@ -127,20 +115,22 @@ public class company implements business, Comparable<company> {
         }
 
         double percentage = (baseTotalSell - expenses - minProfit + income) / baseTotalBuy;
-        return planet.getBasePrice(name) * (percentage);
+        return thisPlanet.getBasePrice(name) * (percentage);
     }
     private double getExpectSellPrice(String name) {
-        return priceManager.getExpectSellPrice(name, planet);
+        return priceManager.getExpectSellPrice(name, companyManager.getPlanet());
     }
     public double getMinSellPrice(String name) {
         double baseTotalBuy = 0;
         double baseTotalSell = 0;
-        double expenses = recipe.getExpenses();
-        for (good x: recipe.getInputGoodArray()) {
-            baseTotalBuy += x.getAmount() * planet.getBasePrice(x.getName());
+        recipe thisRecipe = companyManager.getRecipe();
+        planet thisPlanet = companyManager.getPlanet();
+        double expenses = thisRecipe.getExpenses();
+        for (good x: thisRecipe.getInputGoodArray()) {
+            baseTotalBuy += x.getAmount() * thisPlanet.getBasePrice(x.getName());
         }
-        for (good x: recipe.getOutputGoodArray()) {
-            baseTotalSell += x.getAmount() * planet.getBasePrice(x.getName());
+        for (good x: thisRecipe.getOutputGoodArray()) {
+            baseTotalSell += x.getAmount() * thisPlanet.getBasePrice(x.getName());
         }
         double minProfit = 0.5;
         if (getSellConfidence(name) > 9) {
@@ -157,20 +147,21 @@ public class company implements business, Comparable<company> {
         }
 
         double percentage = (expenses + minProfit + baseTotalBuy) / (baseTotalSell);
-        return planet.getBasePrice(name) * (percentage);
+        return thisPlanet.getBasePrice(name) * (percentage);
     }
     public double getProfit() {
         return financeManager.getProfit();
     }
     public void buyGood(int amount, String good, double price) {
-        recipe.changeInputAmount(good, amount);
+        recipe thisRecipe = companyManager.getRecipe();
+        thisRecipe.changeInputAmount(good, amount);
         priceManager.addLastBoughtPrice(good, price);
         changeConfidenceB(2, good);
-        cash -= (price * amount);
+        companyManager.changeCash(-price * amount);
         financeManager.profitEditLast(-price * amount);
     }
     public void sellGood(int amount, String good, double price) {
-        cash += amount * price;
+        companyManager.changeCash(price * amount);
         financeManager.profitEditLast(amount * price);
         priceManager.addLastSoldPrice(good, price);
         changeConfidenceS(2, good);
@@ -179,59 +170,67 @@ public class company implements business, Comparable<company> {
         changeConfidenceB(-1, order.getGood());
     }
     public void returnSell(order order) {
-        recipe.changeOutputAmount(order.getGood(), order.getAmount());
+        recipe thisRecipe = companyManager.getRecipe();
+        thisRecipe.changeOutputAmount(order.getGood(), order.getAmount());
         changeConfidenceS(-1, order.getGood());
     }
     private void payExpenses() {
-        financeManager.profitEditLast(-recipe.getExpenses() + recipe.getIncome());
-        cash -= recipe.getExpenses();
-        cash += recipe.getIncome();
+        recipe thisRecipe = companyManager.getRecipe();
+        financeManager.profitEditLast(-thisRecipe.getExpenses() + thisRecipe.getIncome());
+        companyManager.changeCash(-thisRecipe.getExpenses());
+        companyManager.changeCash(thisRecipe.getIncome());
         financeManager.profitRemoveFirst();
     }
 
     private void createBuyOrders() {
-        good[] input = recipe.getInputGoodArray();
+        recipe thisRecipe = companyManager.getRecipe();
+        planet thisPlanet = companyManager.getPlanet();
+        double thisCash = companyManager.getCash();
+        good[] input = thisRecipe.getInputGoodArray();
         for (int i = 0; i < input.length; i++) {
             good temp = input[i];
             double limit = getMaxBuyPrice(temp.getName());
-            if (recipe.getInputAmount()[i] * limit <= cash) {
+            if (thisRecipe.getInputAmount()[i] * limit <= thisCash) {
                 double price = getExpectBuyPrice(temp.getName());
                 if (getBuyConfidence(temp.getName()) == 10) {
                     price *= 0.99;
                 } else if (getBuyConfidence(temp.getName()) < 3) {
-                    price = planet.getBasePrice(temp.getName()) * 1.01;
+                    price = thisPlanet.getBasePrice(temp.getName()) * 1.01;
                 }
                 price = Math.min(price, limit);
                 order newOrder = new order(this, temp, price, limit, true);
-                planet.addOrder(newOrder);
+                thisPlanet.addOrder(newOrder);
             }
         }
     }
     private void createSellOrders() {
-        good[] output = recipe.getOutputGoodArray();
+        recipe thisRecipe = companyManager.getRecipe();
+        planet thisPlanet = companyManager.getPlanet();
+        good[] output = thisRecipe.getOutputGoodArray();
         for (int i = 0; i < output.length; i++) {
             good temp = output[i];
-            if (recipe.getOutputName(i) >= temp.getAmount()) {
+            if (thisRecipe.getOutputName(i) >= temp.getAmount()) {
                 double price = getExpectSellPrice(temp.getName());
                 if (getSellConfidence(temp.getName()) == 10) {
                     price *= 1.02;
                 } else if (getSellConfidence(temp.getName()) < 3) {
-                    price = planet.getBasePrice(temp.getName()) * 0.99;
+                    price = thisPlanet.getBasePrice(temp.getName()) * 0.99;
                 }
                 double limit = getMinSellPrice(temp.getName());
                 price = Math.max(price, limit);
                 order newOrder = new order(this, temp, price, limit, false);
-                planet.addOrder(newOrder);
-                recipe.changeOutputAmount(i, -temp.getAmount());
+                thisPlanet.addOrder(newOrder);
+                thisRecipe.changeOutputAmount(i, -temp.getAmount());
             }
         }
     }
 
     private void sellStock() {
-        for (share x: planet.getOwnedShares(this)) {
+        planet thisPlanet = companyManager.getPlanet();
+        for (share x: thisPlanet.getOwnedShares(this)) {
             //Selling stock of the company
             if (x.getPrice() == 0.0 && getProfit() > 2 && x.getAmount() > 20.0) {
-                planet.sellShare(this, this, 10.0, getProfit() * 40);
+                thisPlanet.sellShare(this, this, 10.0, getProfit() * 40);
             //Previously Bought
             } else {
 
@@ -241,15 +240,19 @@ public class company implements business, Comparable<company> {
 
     private void buyStock() {
         //Todo implement more intelligent way of checking to buy instead of flat numbers
-        if (cash > 1000 && getProfit() > 0) {
-            String[] goodNamesOfCompaniesToBuy = recipe.getBothName();
-            double amountToSpend = cash - 1000;
+        recipe thisRecipe = companyManager.getRecipe();
+        planet thisPlanet = companyManager.getPlanet();
+        double thisCash = companyManager.getCash();
+
+        if (thisCash > 1000 && getProfit() > 0) {
+            String[] goodNamesOfCompaniesToBuy = thisRecipe.getBothName();
+            double amountToSpend = thisCash - 1000;
             for (String x: goodNamesOfCompaniesToBuy) {
-                share toPonder = planet.buyShare(x, amountToSpend);
+                share toPonder = thisPlanet.buyShare(x, amountToSpend);
                 company companyToPonder = toPonder.getPieceOf();
                 boolean buy = false;
                 double price = toPonder.getPrice();
-                if (companyToPonder.getBankrupt() && companyToPonder.getExpectSellPrice(x) > planet.getBasePrice(x)) {
+                if (companyToPonder.getBankrupt() && companyToPonder.getExpectSellPrice(x) > thisPlanet.getBasePrice(x)) {
                     buy = true;
                 } else if (companyToPonder.getProfit() > 1 && companyToPonder.getProfit() * 40 > price) {
                     buy = true;
@@ -257,7 +260,7 @@ public class company implements business, Comparable<company> {
 
                 if (buy) {
                     amountToSpend -= toPonder.getPrice();
-                    planet.buyShare(toPonder, this);
+                    thisPlanet.buyShare(toPonder, this);
                 }
             }
         }
@@ -266,11 +269,13 @@ public class company implements business, Comparable<company> {
     public void tick() {
         payExpenses();
 //        sellStock();
+        recipe thisRecipe = companyManager.getRecipe();
+        int thisOrder = companyManager.getOrder();
         confidenceObject.degradeConfidence();
-        recipe.createRecipe();
-        if (order == 1) {
+        thisRecipe.createRecipe();
+        if (thisOrder == 1) {
             createSellOrders();
-        } else if (order == 2) {
+        } else if (thisOrder == 2) {
             createBuyOrders();
             createSellOrders();
         } else {
@@ -280,21 +285,26 @@ public class company implements business, Comparable<company> {
 
     @Override
     public String toString() {
-        String toReturn = name.substring(0, 3) + ".: $" + Math.round(cash) + "- ";
+        recipe thisRecipe = companyManager.getRecipe();
+        int thisOrder = companyManager.getOrder();
+        double thisCash = companyManager.getCash();
+        String thisName = companyManager.getName();
+
+        String toReturn = thisName.substring(0, 3) + ".: $" + Math.round(thisCash) + "- ";
         toReturn += "Income" + ": $" + getProfit() + "- ";
-        if (order == 2) {
-            for (String good: recipe.getInputName()) {
+        if (thisOrder == 2) {
+            for (String good: thisRecipe.getInputName()) {
                 toReturn += goodAcronyms.getAcronym(good) + " CB: " + getBuyConfidence(good) + " ";
             }
-            for (String good: recipe.getOutputName()) {
+            for (String good: thisRecipe.getOutputName()) {
                 toReturn += goodAcronyms.getAcronym(good) + " CS: " + getSellConfidence(good) + " ";
             }
-        } else if (order == 1) {
-            for (String good: recipe.getOutputName()) {
+        } else if (thisOrder == 1) {
+            for (String good: thisRecipe.getOutputName()) {
                 toReturn += goodAcronyms.getAcronym(good) + " CS: " + getSellConfidence(good) + " ";
             }
         } else {
-            for (String good: recipe.getInputName()) {
+            for (String good: thisRecipe.getInputName()) {
                 toReturn += goodAcronyms.getAcronym(good) + " CB: " + getBuyConfidence(good) + " ";
             }
         }
@@ -304,8 +314,8 @@ public class company implements business, Comparable<company> {
     @Override
     public int compareTo(company o) {
         long toReturn = Utils.roundNoZero(getProfit() - o.getProfit());
-        toReturn = toReturn == 0 ? (Utils.roundNoZero(cash - o.cash)): toReturn;
-        toReturn = toReturn == 0 ? (name.compareTo(o.name)): toReturn;
+        toReturn = toReturn == 0 ? (Utils.roundNoZero(getCash() - o.getCash())): toReturn;
+        toReturn = toReturn == 0 ? (getName().compareTo(o.getName())): toReturn;
         return (int) toReturn;
     }
 }

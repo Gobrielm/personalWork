@@ -39,9 +39,6 @@ public class planet {
     public boolean getPriceSmaller(String goodName) {
         return orderManager.getPriceSmaller(goodName);
     }
-    public Double[] getLastPriceArray(String goodName) {
-        return orderManager.getLastPriceArray(goodName);
-    }
     public Double[] getLastPriceArray(String goodName, int weeks) {
         return orderManager.getLastPriceArray(goodName, weeks);
     }
@@ -59,7 +56,6 @@ public class planet {
                 orderManager.addSellOrder(order);
             }
         }
-
     }
     public order[] getBuyOrders(String goodName) {
         return orderManager.getBuyOrders(goodName);
@@ -70,11 +66,9 @@ public class planet {
     public void completeOrders() {
         orderManager.completeOrders();
     }
-
     public double getBasePrice(String goodName) {
         return orderManager.getBasePrice(goodName);
     }
-
     public void changeBasePrice(String goodName, double price, int amount) {
         orderManager.changeBasePrice(goodName, price, amount);
     }
