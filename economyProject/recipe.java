@@ -72,6 +72,9 @@ public class recipe {
         }
     }
     public double getRandExpenses(double baseExpenses) {
+        if (baseExpenses == 0) {
+            return 0;
+        }
         return economy.rand.nextDouble(baseExpenses * 0.5, baseExpenses * 1.5);
     }
     public good[] getInputGoodArray() {

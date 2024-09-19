@@ -12,10 +12,7 @@ public class economy {
     public static int dayCount = 0;
     public static Random rand;
     public static void initialize() {
-        good.createGoodList();
-        good.createRecipes();
-        good.createNames();
-        goodAcronyms.initialize();
+        good.initialize();
     }
     public economy(long seed, int playerCount) {
         rand = new Random(seed);
