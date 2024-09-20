@@ -192,7 +192,7 @@ public class company implements business, Comparable<company> {
             double limit = getMaxBuyPrice(temp.getName());
             if (thisRecipe.getInputAmount()[i] * limit <= thisCash) {
                 double price = getExpectBuyPrice(temp.getName());
-                if (getBuyConfidence(temp.getName()) == 10) {
+                if (getBuyConfidence(temp.getName()) >= 9) {
                     price *= 0.99;
                 } else if (getBuyConfidence(temp.getName()) < 3) {
                     price = thisPlanet.getBasePrice(temp.getName()) * 1.01;
@@ -211,7 +211,7 @@ public class company implements business, Comparable<company> {
             good temp = output[i];
             if (thisRecipe.getOutputName(i) >= temp.getAmount()) {
                 double price = getExpectSellPrice(temp.getName());
-                if (getSellConfidence(temp.getName()) == 10) {
+                if (getSellConfidence(temp.getName()) >= 9) {
                     price *= 1.02;
                 } else if (getSellConfidence(temp.getName()) < 3) {
                     price = thisPlanet.getBasePrice(temp.getName()) * 0.99;

@@ -44,7 +44,8 @@ public class premadeRecipes {
         return toAdd;
     }
     private static void secondaryRecipeMakerAndAddToEndNode(String[] input, int[] inputAmount, String[] output, int[] outputAmount, int expenses, double income) {
-        endNodes.add(secondaryRecipeMaker(input, inputAmount, output, outputAmount, expenses, income));
+        double randVariation = economy.rand.nextDouble(0.95, 1.05);
+        endNodes.add(secondaryRecipeMaker(input, inputAmount, output, outputAmount, expenses, income * randVariation));
     }
     private static void secondaryRecipeMaker(String goodName, int amount, String output, int amount1, int expenses) {
         recipe toAdd = new recipe(new good[]{new good(goodName, amount)}, new good[]{new good(output, amount1)}, expenses, 0);
