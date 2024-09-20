@@ -68,8 +68,7 @@ public class good {
         return buyer.getInputName()[0];
     }
     public static String pickRandName() {
-        int randNum = economy.rand.nextInt(0, companyNames.getSize());
-        return companyNames.getIndex(randNum);
+        companyNames.getRandName();
     }
     public static recipe[] primaryRecipeWithGood(String goodName) {
         ArrayList<recipe> toReturn = new ArrayList<>();

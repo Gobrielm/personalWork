@@ -1,5 +1,7 @@
 package core.constants;
 
+import core.economy;
+
 import java.util.ArrayList;
 
 public class companyNames {
@@ -74,7 +76,10 @@ public class companyNames {
         return companyName.size();
     }
 
-    public String getIndex(int index) {
-        return companyName.get(index);
+    public String getRandName() {
+        int randNum = economy.rand.nextInt(0, getSize());
+        String toReturn = companyName.get(randNum);
+        companyName.remove(toReturn);
+        return toReturn;
     }
 }

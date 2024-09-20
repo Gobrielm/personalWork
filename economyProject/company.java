@@ -140,11 +140,6 @@ public class company implements business, Comparable<company> {
         } else if (getSellConfidence(name) > 5) {
             minProfit = 1;
         }
-        if (getProfit() < minProfit) {
-            //SUPER BROKEN IN THEORY BUT KINDA WORKS
-            double diff = minProfit - getProfit();
-            minProfit *= diff / minProfit;
-        }
 
         double percentage = (expenses + minProfit + baseTotalBuy) / (baseTotalSell);
         return thisPlanet.getBasePrice(name) * (percentage);

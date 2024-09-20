@@ -2,6 +2,7 @@ package core;
 
 import core.managers.orderManager;
 import core.managers.stockManager;
+import core.managers.supplyManager;
 
 import java.util.ArrayList;
 
@@ -11,11 +12,13 @@ public class planet {
     private ArrayList<company> bankruptCompanies;
     private orderManager orderManager;
     private stockManager stockManager;
+    private supplyManager supplyManager;
     public planet() {
         companies = new ArrayList<>();
         bankruptCompanies = new ArrayList<>();
         orderManager = new orderManager();
         stockManager = new stockManager();
+        supplyManager = new supplyManager();
         size = economy.rand.nextInt(30, 60);
         for (int i = 0; i < size / 10; i++) {
             for (int k = 0; k < 5; k++) {
@@ -97,6 +100,7 @@ public class planet {
     //NOTE:Companies
     public void addCompany(company toAdd) {
         companies.add(toAdd);
+        supplyManager.updateValues(toAdd);
         addCompanyToPrivateMarket(toAdd);
     }
     public void planetTick() {
