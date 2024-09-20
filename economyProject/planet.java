@@ -19,9 +19,9 @@ public class planet {
         size = economy.rand.nextInt(30, 60);
         for (int i = 0; i < size / 10; i++) {
             for (int k = 0; k < 5; k++) {
-                String randGood = good.randGoodName();
-                recipe buyer = good.getBuyer(randGood);
-                recipe[] primary = good.primaryRecipeWithGood(randGood);
+                recipe buyer = good.randEndNodeRecipe();
+                String endNodeGood = good.endNodeRecipeToGoodName(buyer);
+                recipe[] primary = good.primaryRecipeWithGood(endNodeGood);
                 addCompany(new company("Filler", buyer, this));
                 for (recipe r: primary) {
                     addCompany(new company("Filler", r, this));

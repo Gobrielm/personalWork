@@ -1,21 +1,28 @@
 package core.constants;
 
+import core.economy;
 import core.good;
 import core.recipe;
+import org.checkerframework.checker.units.qual.A;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class premadeRecipes {
     private static HashMap<String, ArrayList<recipe>> recipes;
+    private static ArrayList<recipe> endNodes;
     public premadeRecipes() {
         recipes = new HashMap<>();
+        endNodes = new ArrayList<>();
     }
     public void initialize() {
         createRecipes();
     }
     public HashMap<String, ArrayList<recipe>> getRecipes() {
         return recipes;
+    }
+    public static recipe randEndNodeGoodName() {
+        return endNodes.get(economy.rand.nextInt(0, endNodes.size()));
     }
     public static void primaryRecipeMaker(String goodName, int amount, int expenses) {
         recipes.get(goodName).add(new recipe(new good[]{}, new good[]{new good(goodName, amount)}, expenses, 0));
@@ -26,7 +33,7 @@ public class premadeRecipes {
         recipes.get(goodName2).add(toAdd);
         recipes.get(output).add(toAdd);
     }
-    public static void secondaryRecipeMaker(String[] input, int[] inputAmount, String[] output, int[] outputAmount, int expenses, double income) {
+    private static recipe secondaryRecipeMaker(String[] input, int[] inputAmount, String[] output, int[] outputAmount, int expenses, double income) {
         recipe toAdd = new recipe(input, inputAmount, output, outputAmount, expenses, income);
         for (String x: input) {
             recipes.get(x).add(toAdd);
@@ -34,8 +41,12 @@ public class premadeRecipes {
         for (String x: output) {
             recipes.get(x).add(toAdd);
         }
+        return toAdd;
     }
-    public static void secondaryRecipeMaker(String goodName, int amount, String output, int amount1, int expenses) {
+    private static void secondaryRecipeMakerAndAddToEndNode(String[] input, int[] inputAmount, String[] output, int[] outputAmount, int expenses, double income) {
+        endNodes.add(secondaryRecipeMaker(input, inputAmount, output, outputAmount, expenses, income));
+    }
+    private static void secondaryRecipeMaker(String goodName, int amount, String output, int amount1, int expenses) {
         recipe toAdd = new recipe(new good[]{new good(goodName, amount)}, new good[]{new good(output, amount1)}, expenses, 0);
         recipes.get(goodName).add(toAdd);
         recipes.get(output).add(toAdd);
@@ -65,9 +76,14 @@ public class premadeRecipes {
         secondaryRecipeMaker("Bismuth", "Manganese", 1, 1, "Bismanol", 1, 5);
         secondaryRecipeMaker("Copper", 2, "Wires", 1, 4);
         secondaryRecipeMaker(new String[]{"Argonium", "PerxenicAcid", "Bismanol"}, new int[]{1, 2, 1}, new String[]{"Weapons"}, new int[]{1}, 3, 0);
-        //Add a buyer for every type of good
-        for (String key: good.getGoodList()) {
-            secondaryRecipeMaker(new String[]{key}, new int[]{1}, new String[]{}, new int[]{}, 0, good.getBasePrice(key));
-        }
+        //Add a buyer for every consumable good
+        secondaryRecipeMakerAndAddToEndNode(new String[]{"Gold"}, new int[]{1}, new String[]{}, new int[]{}, 0, good.getBasePrice("Gold"));
+        secondaryRecipeMakerAndAddToEndNode(new String[]{"Weapons"}, new int[]{1}, new String[]{}, new int[]{}, 0, good.getBasePrice("Weapons"));
+        secondaryRecipeMakerAndAddToEndNode(new String[]{"Butane"}, new int[]{1}, new String[]{}, new int[]{}, 0, good.getBasePrice("Butane"));
+        secondaryRecipeMakerAndAddToEndNode(new String[]{"IonFuel"}, new int[]{1}, new String[]{}, new int[]{}, 0, good.getBasePrice("IonFuel"));
+        secondaryRecipeMakerAndAddToEndNode(new String[]{"XenonTetroxide"}, new int[]{1}, new String[]{}, new int[]{}, 0, good.getBasePrice("XenonTetroxide"));
+        secondaryRecipeMakerAndAddToEndNode(new String[]{"CopperHydride"}, new int[]{1}, new String[]{}, new int[]{}, 0, good.getBasePrice("CopperHydride"));
+        secondaryRecipeMakerAndAddToEndNode(new String[]{"Wires"}, new int[]{1}, new String[]{}, new int[]{}, 0, good.getBasePrice("Wires"));
+        secondaryRecipeMakerAndAddToEndNode(new String[]{"Brass"}, new int[]{1}, new String[]{}, new int[]{}, 0, good.getBasePrice("Brass"));
     }
 }

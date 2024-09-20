@@ -61,7 +61,12 @@ public class good {
         int randNum = economy.rand.nextInt(0, basePrices.size());
         return basePrices.keySet().toArray(new String[0])[randNum];
     }
-
+    public static recipe randEndNodeRecipe() {
+        return core.constants.premadeRecipes.randEndNodeGoodName();
+    }
+    public static String endNodeRecipeToGoodName(recipe buyer) {
+        return buyer.getInputName()[0];
+    }
     public static String pickRandName() {
         int randNum = economy.rand.nextInt(0, companyNames.getSize());
         return companyNames.getIndex(randNum);
