@@ -3,9 +3,6 @@ package core;
 import edu.princeton.cs.algs4.StdDraw;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 import static core.good.getRecipesWithGood;
 
@@ -154,7 +151,7 @@ public class graphicalInterface {
     }
     private static void drawLongSmallButton(double x, double y, String text, boolean green) {
         double width = 0.05;
-        double height = (double) 1 / (2 * (good.getGoodList().length + 1));
+        double height = (double) 1 / (2 * (good.getGoodArray().length + 1));
         if (green) {
             StdDraw.setPenColor(StdDraw.GREEN);
         }
@@ -172,7 +169,7 @@ public class graphicalInterface {
     }
     private static void drawSmallButton(double x, double y, String text, Color color) {
         double width = 0.01;
-        double height = (double) 1 / (2 * (good.getGoodList().length + 1));
+        double height = (double) 1 / (2 * (good.getGoodArray().length + 1));
         StdDraw.setPenColor(color);
         StdDraw.text(WIDTH * x, HEIGHT * y, text);
         StdDraw.setPenColor(StdDraw.WHITE);
@@ -212,7 +209,7 @@ public class graphicalInterface {
             }
         }
         StdDraw.setFont(SMALL);
-        String[] goodNames = good.getGoodList();
+        String[] goodNames = good.getGoodArray();
         Double[] goodPrices = planet.getPriceList();
         int num = (goodNames.length + 1);
         for (int i = 0; i < goodNames.length; i++) {
@@ -336,26 +333,10 @@ public class graphicalInterface {
     }
 
     public static void drawSupplyDemand(player player) {
-        String name = goodSelected;
+        String goodName = goodSelected;
         planet planet = player.getPlanet();
-        int demand = 0;
-        int supply = 0;
-        for (company x: planet.getCompanies()) {
-            String[] Recipe = x.getRecipe().getInputName();
-            for (int i = 0; i < Recipe.length; i++) {
-                String k = Recipe[i];
-                if (k.equals(name)) {
-                    demand += x.getRecipe().getInputAmount()[i];
-                }
-            }
-            Recipe = x.getRecipe().getOutputName();
-            for (int i = 0; i < Recipe.length; i++) {
-                String k = Recipe[i];
-                if (k.equals(name)) {
-                    supply += x.getRecipe().getOutputAmount()[i];
-                }
-            }
-        }
+        int demand = planet.getDemand(goodName);
+        int supply = planet.getSupply(goodName);
         StdDraw.setFont(MED);
         StdDraw.text(WIDTH * 0.75, HEIGHT * 0.45, "Demand: " + demand);
         StdDraw.text(WIDTH * 0.75, HEIGHT * 0.55, "Supply: " + supply);

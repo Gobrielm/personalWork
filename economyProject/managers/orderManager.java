@@ -20,7 +20,7 @@ public class orderManager {
         sellOrders = new HashMap<>();
         prices = new HashMap<>();
         lastPrices = new HashMap<>();
-        for (String goodName: good.getGoodList()) {
+        for (String goodName: good.getGoodArray()) {
             buyOrders.put(goodName, new ArrayList<>());
             sellOrders.put(goodName, new ArrayList<>());
             prices.put(goodName, good.getBasePrice(goodName));
@@ -94,7 +94,7 @@ public class orderManager {
     }
 
     private void cleanOrders() {
-        for (String goodName: good.getGoodList()) {
+        for (String goodName: good.getGoodArray()) {
             cleanBuyOrders(goodName);
             cleanSellOrders(goodName);
         }

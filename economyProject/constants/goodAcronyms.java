@@ -8,7 +8,7 @@ public class goodAcronyms {
     private static HashMap<String, String> acronyms;
     public static void initialize() {
         acronyms = new HashMap<>();
-        for (String x: good.getGoodList()) {
+        for (String x: good.getGoodArray()) {
             String shortKey = shortenString(x);
             acronyms.put(x, shortKey);
         }

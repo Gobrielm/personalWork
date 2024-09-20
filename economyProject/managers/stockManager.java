@@ -15,7 +15,7 @@ public class stockManager {
         publicMarket = new HashMap<>();
         privateMarket = new HashMap<>();
         privateOwnership = new HashMap<>();
-        for (String goodName: good.getGoodList()) {
+        for (String goodName: good.getGoodArray()) {
             publicMarket.put(goodName, new ArrayList<>());
         }
     }

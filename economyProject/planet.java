@@ -75,6 +75,11 @@ public class planet {
     public void changeBasePrice(String goodName, double price, int amount) {
         orderManager.changeBasePrice(goodName, price, amount);
     }
+    private void updateLastPrices() {
+        for (String goodName: good.getGoodArray()) {
+            addLastPrice(goodName);
+        }
+    }
     //NOTE:Stock Manager
     public void addCompanyToPrivateMarket(company toAdd) {
         stockManager.addPrivateCompany(new share(toAdd));
@@ -100,24 +105,49 @@ public class planet {
     //NOTE:Companies
     public void addCompany(company toAdd) {
         companies.add(toAdd);
-        supplyManager.updateValues(toAdd);
+        supplyManager.updateValues(toAdd, true);
         addCompanyToPrivateMarket(toAdd);
     }
-    public void planetTick() {
-        completeOrders();
+    private void moveCompanyToBankrupt(company toMove) {
+        bankruptCompanies.add(toMove);
+        supplyManager.updateValues(toMove, false);
+        companies.remove(toMove);
+    }
+    private void companyTick() {
         for (int i = 0; i < companies.size(); i++) {
             company x = companies.get(i);
             x.tick();
             if (x.getBankrupt()) {
                 i--;
-                bankruptCompanies.add(x);
-                companies.remove(x);
+                moveCompanyToBankrupt(x);
             }
         }
-        for (String goodName: good.getGoodList()) {
-            addLastPrice(goodName);
+    }
+    private void createNewCompany() {
+        String goodNameToSupply;
+        if (economy.rand.nextInt(0, 20) == 0) {
+            goodNameToSupply = supplyManager.getGoodNameNoSupplyYesDemand();
+        } else if (economy.rand.nextInt(0, 30) == 0) {
+            goodNameToSupply = supplyManager.getGoodNameYesSupplyNoDemand();
+        } else if (economy.rand.nextInt(0, 50) == 0) {
+            goodNameToSupply = supplyManager.getGoodNameNoSupplyNoDemand();
         }
     }
+    //NOTE:SupplyManager
+    public int getSupply(String goodName) {
+        return supplyManager.getSupply(goodName);
+    }
+    public int getDemand(String goodName) {
+        return supplyManager.getDemand(goodName);
+    }
+    //NOTE: Planet Stuff
+    public void planetTick() {
+        completeOrders();
+        companyTick();
+        updateLastPrices();
+    }
+
+
 
     private void testCompanies() {
         companies.add(new company("MineA", new recipe(new good[]{}, new good[]{new good("Copper", 1)}, 3, 0), this));

@@ -12,7 +12,7 @@ public class player implements business{
     public player(String name) {
         this.id = numPlayers;
         storage = new HashMap<>();
-        for (String goodName: good.getGoodList()) {
+        for (String goodName: good.getGoodArray()) {
             storage.put(goodName, 0);
         }
         this.name = name;

@@ -11,7 +11,7 @@ public class confidenceManager {
     public confidenceManager() {
         buyConfidence = new HashMap<>();
         sellConfidence = new HashMap<>();
-        for (String good: good.getGoodList()) {
+        for (String good: good.getGoodArray()) {
             buyConfidence.put(good, 5);
             sellConfidence.put(good, 5);
         }
@@ -41,7 +41,7 @@ public class confidenceManager {
         }
     }
     public void degradeConfidence() {
-        for (String good: good.getGoodList()) {
+        for (String good: good.getGoodArray()) {
             if (getBuyConfidence(good) > 7) {
                 changeBuyConfidence(-1, good);
             } else if (getBuyConfidence(good) < 3) {

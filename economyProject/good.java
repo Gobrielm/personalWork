@@ -68,7 +68,7 @@ public class good {
         return buyer.getInputName()[0];
     }
     public static String pickRandName() {
-        companyNames.getRandName();
+        return companyNames.getRandName();
     }
     public static recipe[] primaryRecipeWithGood(String goodName) {
         ArrayList<recipe> toReturn = new ArrayList<>();
@@ -134,7 +134,7 @@ public class good {
     public String getName() {
         return name;
     }
-    public static String[] getGoodList() {
+    public static String[] getGoodArray() {
         return basePrices.keySet().toArray(new String[0]);
     }
     public static Double[] getPriceList() {

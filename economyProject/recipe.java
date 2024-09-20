@@ -108,9 +108,6 @@ public class recipe {
         }
         return toReturn;
     }
-    public int getInputName(int index) {
-        return inputStorage[index];
-    }
     public int[] getInputAmount() {
         int[] toReturn = new int[input.length];
         for (int i = 0; i < input.length; i++) {
