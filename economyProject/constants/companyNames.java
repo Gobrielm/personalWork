@@ -5,11 +5,12 @@ import core.economy;
 import java.util.ArrayList;
 
 public class companyNames {
-    private ArrayList<String> companyName;
+    private static ArrayList<String> companyName;
     public companyNames() {
         companyName = new ArrayList<>();
+        createNames();
     }
-    public void createNames() {
+    private static void createNames() {
         companyName.add("Starlight Innovations");
         companyName.add("Quantum Dynamics");
         companyName.add("Aurora Tech Solutions");

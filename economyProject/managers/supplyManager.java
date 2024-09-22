@@ -8,7 +8,6 @@ import java.util.HashMap;
 
 public class supplyManager {
     HashMap<String, info> supplyDemandInfo;
-
     public supplyManager() {
         supplyDemandInfo = new HashMap<>();
         for (String goodName: good.getGoodArray()) {
@@ -41,16 +40,40 @@ public class supplyManager {
     public int getSupply(String goodName) {
         return supplyDemandInfo.get(goodName).getSupply();
     }
-    public String getGoodNameNoSupplyYesDemand() {
-        return getGoodNameSupplyDemand(1);
+    public int getDiff(String goodName) {
+        return getDemand(goodName) - getSupply(goodName);
     }
-    public String getGoodNameNoSupplyNoDemand() {
-        return getGoodNameSupplyDemand(2);
+    public String getGoodNameForNewCompany() {
+        if (isEconomyComplete()) {
+            return getGoodNameYesSupplyYesDemand();
+        }
+        return getGoodNameForNewCompanyIncompleteEconomy();
     }
-    public String getGoodNameYesSupplyNoDemand() {
-        return getGoodNameSupplyDemand(3);
+    private boolean isEconomyComplete() {
+        return noDemandZero() && noSupplyZero();
     }
-    private String getGoodNameSupplyDemand(int whichOne) {
+    private String getGoodNameForNewCompanyIncompleteEconomy() {
+        String toReturn;
+        int i = 1;
+        do {
+            toReturn = getGoodNameSupplyDemandZero(i);
+            i++;
+        } while (toReturn.isEmpty());
+        return toReturn;
+    }
+    private String getGoodNameNoSupplyYesDemand() {
+        return getGoodNameSupplyDemandZero(1);
+    }
+    private String getGoodNameYesSupplyNoDemand() {
+        return getGoodNameSupplyDemandZero(2);
+    }
+    private String getGoodNameNoSupplyNoDemand() {
+        return getGoodNameSupplyDemandZero(3);
+    }
+    private String getGoodNameYesSupplyYesDemand() {
+        return getGoodNameMaxSupplyDemandDiff();
+    }
+    private String getGoodNameSupplyDemandZero(int whichOne) {
         String toReturn = "";
         String[] goodNameArray = good.getGoodArray();
         for (int i = 0; i < goodNameArray.length; i++) {
@@ -64,13 +87,45 @@ public class supplyManager {
         }
         return toReturn;
     }
+    private String getGoodNameMaxSupplyDemandDiff() {
+        String toReturn = "";
+        double maxDiff = 0.0;
+        for (String goodName: good.getGoodArray()) {
+            double currDiff = getDiff(goodName);
+            if (currDiff > maxDiff) {
+                maxDiff = currDiff;
+                toReturn = goodName;
+            }
+        }
+        return toReturn;
+    }
+    public boolean noDemandZero() {
+        boolean toReturn = true;
+        for (String goodName: good.getGoodArray()) {
+            if (supplyDemandInfo.get(goodName).getDemand() == 0) {
+                toReturn = false;
+                break;
+            }
+        }
+        return toReturn;
+    }
+    public boolean noSupplyZero() {
+        boolean toReturn = true;
+        for (String goodName: good.getGoodArray()) {
+            if (supplyDemandInfo.get(goodName).getSupply() == 0) {
+                toReturn = false;
+                break;
+            }
+        }
+        return toReturn;
+    }
     private boolean supplyDemandCheck(int whichOne, int demand, int supply) {
         if (whichOne == 1) {
             return demand > 0 && supply == 0;
         } else if (whichOne == 2) {
-            return demand == 0 && supply == 0;
-        } else {
             return demand == 0 && supply > 0;
+        } else {
+            return demand == 0 && supply == 0;
         }
     }
 

@@ -83,6 +83,11 @@ public class good {
         }
         return toReturn.toArray(new recipe[0]);
     }
+    public static recipe getRandRecipeWithGoodNameAsSupply(String goodName) {
+        recipe[] primaryRecipesWithGoodName = primaryRecipeWithGood(goodName);
+        int randNum = economy.rand.nextInt(0, primaryRecipesWithGoodName.length);
+        return primaryRecipesWithGoodName[randNum];
+    }
     public static recipe getBuyer(String goodName) {
         for (recipe x: getRecipes().get(goodName)) {
             if (x.getOutputName().length == 0) {

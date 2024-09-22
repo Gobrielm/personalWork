@@ -6,20 +6,20 @@ import core.managers.personalPriceManager;
 import core.managers.financeManager;
 import core.constants.goodAcronyms;
 
-import java.util.*;
-
 public class company implements business, Comparable<company> {
     private financeManager financeManager;
     private personalPriceManager priceManager;
     private confidenceManager confidenceObject;
     private companyManager companyManager;
     //Higher number is more aggressive
-
     public company(String name, recipe recipe, planet planet) {
         companyManager = new companyManager(name, recipe, planet);
         confidenceObject = new confidenceManager();
         financeManager = new financeManager(this);
         priceManager = new personalPriceManager();
+    }
+    public static company createNewCompany(recipe recipe, planet planet) {
+        return new company(good.pickRandName(), recipe, planet);
     }
     @Override
     public int getMaxAge() {

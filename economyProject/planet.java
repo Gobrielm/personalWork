@@ -53,12 +53,11 @@ public class planet {
     }
     public void addOrder(order order) {
         if (order.getAmount() > 0) {
-            if (order.isBuyOrder()) {
-                orderManager.addBuyOrder(order);
-            } else {
-                orderManager.addSellOrder(order);
-            }
+            addOrderNotZero(order);
         }
+    }
+    public void addOrderNotZero(order order) {
+        orderManager.addOrder(order);
     }
     public order[] getBuyOrders(String goodName) {
         return orderManager.getBuyOrders(goodName);
@@ -108,30 +107,29 @@ public class planet {
         supplyManager.updateValues(toAdd, true);
         addCompanyToPrivateMarket(toAdd);
     }
-    private void moveCompanyToBankrupt(company toMove) {
-        bankruptCompanies.add(toMove);
-        supplyManager.updateValues(toMove, false);
-        companies.remove(toMove);
+    private int moveCompanyToBankrupt(company toMove) {
+        if (toMove.getBankrupt()) {
+            bankruptCompanies.add(toMove);
+            supplyManager.updateValues(toMove, false);
+            companies.remove(toMove);
+            return -1;
+        }
+        return 0;
     }
     private void companyTick() {
         for (int i = 0; i < companies.size(); i++) {
-            company x = companies.get(i);
-            x.tick();
-            if (x.getBankrupt()) {
-                i--;
-                moveCompanyToBankrupt(x);
-            }
+            company currCompany = companies.get(i);
+            currCompany.tick();
+            i += moveCompanyToBankrupt(currCompany);
         }
     }
     private void createNewCompany() {
-        String goodNameToSupply;
-        if (economy.rand.nextInt(0, 20) == 0) {
-            goodNameToSupply = supplyManager.getGoodNameNoSupplyYesDemand();
-        } else if (economy.rand.nextInt(0, 30) == 0) {
-            goodNameToSupply = supplyManager.getGoodNameYesSupplyNoDemand();
-        } else if (economy.rand.nextInt(0, 50) == 0) {
-            goodNameToSupply = supplyManager.getGoodNameNoSupplyNoDemand();
-        }
+//        if (economy.rand.nextInt(0, 10) == 0) {
+            String goodNameToSupply = supplyManager.getGoodNameForNewCompany();
+            recipe toFollow = good.getRandRecipeWithGoodNameAsSupply(goodNameToSupply);
+            company newCompany = company.createNewCompany(toFollow, this);
+            addCompany(newCompany);
+//        }
     }
     //NOTE:SupplyManager
     public int getSupply(String goodName) {
@@ -145,9 +143,8 @@ public class planet {
         completeOrders();
         companyTick();
         updateLastPrices();
+        createNewCompany();
     }
-
-
 
     private void testCompanies() {
         companies.add(new company("MineA", new recipe(new good[]{}, new good[]{new good("Copper", 1)}, 3, 0), this));

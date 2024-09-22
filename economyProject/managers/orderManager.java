@@ -61,6 +61,13 @@ public class orderManager {
         }
         return toReturn;
     }
+    public void addOrder(order newOrder) {
+        if (newOrder.isBuyOrder()) {
+            addBuyOrder(newOrder);
+        } else {
+            addSellOrder(newOrder);
+        }
+    }
     public void addBuyOrder(order newOrder) {
         buyOrders.get(newOrder.getGood()).add(newOrder);
     }
