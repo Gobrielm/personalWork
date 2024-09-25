@@ -85,6 +85,7 @@ public class premadeRecipes {
         secondaryRecipeMakerAndAddToEndNode(new String[]{"XenonTetroxide"}, new int[]{1}, new String[]{}, new int[]{}, 0, good.getBasePrice("XenonTetroxide"));
         secondaryRecipeMakerAndAddToEndNode(new String[]{"CopperHydride"}, new int[]{1}, new String[]{}, new int[]{}, 0, good.getBasePrice("CopperHydride"));
         secondaryRecipeMakerAndAddToEndNode(new String[]{"Wires"}, new int[]{1}, new String[]{}, new int[]{}, 0, good.getBasePrice("Wires"));
+        secondaryRecipeMakerAndAddToEndNode(new String[]{"Batteries"}, new int[]{1}, new String[]{}, new int[]{}, 0, good.getBasePrice("Batteries"));
         secondaryRecipeMakerAndAddToEndNode(new String[]{"Brass"}, new int[]{1}, new String[]{}, new int[]{}, 0, good.getBasePrice("Brass"));
     }
 }

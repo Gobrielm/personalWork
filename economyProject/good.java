@@ -5,6 +5,7 @@ import core.constants.goodAcronyms;
 import core.constants.premadeRecipes;
 
 import java.util.*;
+import java.util.function.Predicate;
 
 public class good {
     private String name;
@@ -57,10 +58,6 @@ public class good {
     private static HashMap<String, ArrayList<recipe>> getRecipes() {
         return premadeRecipes.getRecipes();
     }
-    public static String randGoodName() {
-        int randNum = economy.rand.nextInt(0, basePrices.size());
-        return basePrices.keySet().toArray(new String[0])[randNum];
-    }
     public static recipe randEndNodeRecipe() {
         return core.constants.premadeRecipes.randEndNodeGoodName();
     }
@@ -70,6 +67,24 @@ public class good {
     public static String pickRandName() {
         return companyNames.getRandName();
     }
+
+    private static recipe[] getRecipesThatCreate(String goodName) {
+        return getRecipes(goodName, recipe -> doesRecipeMakeGoodName(recipe, goodName));
+    }
+    private static recipe[] getRecipesThatUse(String goodName) {
+        return getRecipes(goodName, recipe -> doesRecipeUseGoodName(recipe, goodName));
+    }
+    private static recipe[] getRecipes(String goodName, Predicate<recipe> condition) {
+        recipe[] allRecipesThatHaveGoodName = getRecipesWithGood(goodName);
+        ArrayList<recipe> toReturn = new ArrayList<>();
+        for (recipe toCheck : allRecipesThatHaveGoodName) {
+            if (condition.test(toCheck)) {
+                toReturn.add(toCheck);
+            }
+        }
+        return toReturn.toArray(new recipe[0]);
+    }
+
     public static recipe[] primaryRecipeWithGood(String goodName) {
         ArrayList<recipe> toReturn = new ArrayList<>();
         for (recipe x: getRecipes().get(goodName)) {
@@ -84,12 +99,10 @@ public class good {
         return toReturn.toArray(new recipe[0]);
     }
     public static recipe getRandRecipeThatCreatesGoodName(String goodName) {
-        recipe[] primaryRecipesWithGoodName = primaryRecipeWithGood(goodName);
-        int randNum = economy.rand.nextInt(0, primaryRecipesWithGoodName.length);
-        return primaryRecipesWithGoodName[randNum];
+        return randRecipe(goodName, getRecipesThatCreate(goodName));
     }
     public static recipe getRandRecipeThatUsesGoodName(String goodName) {
-        recipe[] secondaryRecipesWithGoodName = secondaryRecipeWithGood(goodName);
+        return randRecipe(goodName, getRecipesThatUse(goodName));
     }
     private static boolean doesRecipeMakeGoodName(recipe given, String goodName) {
         return doesRecipeHaveGoodName(given.getOutputName(), goodName);
@@ -108,29 +121,16 @@ public class good {
         return toReturn;
     }
 
-    public static recipe randRecipe(String goodName, boolean primary) {
-        boolean matches = false;
-        recipe toReturn = null;
-        while (!matches) {
-            toReturn = getRecipes().get(goodName).get(economy.rand.nextInt(0, getRecipes().get(goodName).size()));
-            String[] goods = null;
-            if (primary) {
-                goods = toReturn.getInputName();
-            } else {
-                goods = toReturn.getOutputName();
-            }
-            for (String x: goods) {
-                if (x.equals(goodName)) {
-                    matches = true;
-                    break;
-                }
-            }
-        }
-        return toReturn;
+    private static recipe randRecipe(String goodName, recipe[] recipesThatContainGoodName) {
+        int totalRecipes = recipesThatContainGoodName.length;
+        int randomIndexForRecipes = totalRecipes == 1 ? 0: economy.rand.nextInt(0, totalRecipes);
+        return recipesThatContainGoodName[randomIndexForRecipes];
     }
+
     public static recipe[] getRecipesWithGood(String goodName) {
         return getRecipes().get(goodName).toArray(new recipe[0]);
     }
+
     public good(String newName, int amount) {
         name = newName;
         this.amount = amount;

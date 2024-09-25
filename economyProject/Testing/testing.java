@@ -24,26 +24,7 @@ public class testing {
         assertThat(Utils.round(2.51561, 4)).isEqualTo(2.5156);
         assertThat(Utils.round(0, 5)).isEqualTo(0);
     }
-    @Test
-    public void randRecipeTest() {
-        for (int i = 0; i < 100; i++) {
-            recipe temp = good.randRecipe("Copper", true);
-            boolean contains = false;
-            for (String x: temp.getInputName()) {
-                contains = x.equals("Copper");
-                if (contains) {
-                    break;
-                }
-            }
-            for (String x: temp.getOutputName()) {
-                contains = !x.equals("Copper");
-                if (!contains) {
-                    break;
-                }
-            }
-            assertThat(contains).isTrue();
-        }
-    }
+
 
     @Test
     public void primaryRecipeWithGoodTest() {

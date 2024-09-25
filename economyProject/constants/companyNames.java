@@ -78,6 +78,9 @@ public class companyNames {
     }
 
     public String getRandName() {
+        if (getSize() == 0) {
+            return "Filler";
+        }
         int randNum = economy.rand.nextInt(0, getSize());
         String toReturn = companyName.get(randNum);
         companyName.remove(toReturn);
