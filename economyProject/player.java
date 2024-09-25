@@ -1,5 +1,6 @@
 package core;
 
+import core.playerPackage.playerCompany;
 import core.playerPackage.playerCompanyStorage;
 
 import java.util.HashMap;
@@ -103,5 +104,11 @@ public class player implements business{
     //Note: playerCompanies
     public void addNewCompany(recipe recipe) {
         ownedCompanies.addNewCompany(recipe);
+    }
+    public void tick() {
+        ownedCompanies.tick();
+    }
+    public playerCompany[] getCompaniesByGoodName(String goodName) {
+        return ownedCompanies.getCompaniesByGoodName(goodName);
     }
 }

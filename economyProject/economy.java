@@ -50,9 +50,9 @@ public class economy {
     }
     public void playerTurn() {
         int index = 0;
-        boolean done = false;
         while (index < playerList.size()) {
             player currPlayer = playerList.get(index);
+            currPlayer.tick();
             graphicalInterface.drawPlanetMenu(currPlayer);
             while (true) {
                 if (StdDraw.hasNextKeyTyped()) {
@@ -69,7 +69,6 @@ public class economy {
                 }
                 StdDraw.pause(10);
             }
-            done = false;
             index++;
             graphicalInterface.resetStrings();
         }

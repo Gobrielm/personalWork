@@ -18,4 +18,9 @@ public class playerCompany {
     public void tick() {
         payExpenses();
     }
+
+    @Override
+    public String toString() {
+        return owner.getName() + ": " + recipe.toString();
+    }
 }

@@ -1,5 +1,6 @@
 package core;
 
+import core.playerPackage.playerCompany;
 import edu.princeton.cs.algs4.StdDraw;
 
 import java.awt.*;
@@ -205,7 +206,7 @@ public class graphicalInterface {
             drawMedButton(0.249, 0.433, "Stock" + "(" + 6 + ")");
         } else {
             drawMedButton(0.0833, 0.5, "Graph" + "(" + 1 + ")");
-            drawMedButton(0.0833, 0.5, "Show Factories" + "(" + 2 + ")");
+            drawMedButton(0.166, 0.5, "ShowFactories" + "(" + 2 + ")");
         }
 
     }
@@ -304,7 +305,13 @@ public class graphicalInterface {
         StdDraw.show();
     }
     private static void drawFactories(player player) {
-
+        player.addNewCompany(good.randEndNodeRecipe());
+        playerCompany[] ownedFactories = player.getCompaniesByGoodName(goodSelected);
+        int size = ownedFactories.length;
+        for (int i = 0; i < size; i++) {
+            playerCompany companyToPrint = ownedFactories[i];
+            StdDraw.text(0.8325 * WIDTH, (double) (i + 1) / size * HEIGHT, companyToPrint.toString());
+        }
     }
     private static void drawOrderScreen(player player) {
         String name = goodSelected;
