@@ -49,7 +49,6 @@ public class orderManager {
         return lastPrices.get(goodName).toArray(new Double[0]);
     }
     public Double[] getLastPriceArray(String goodName, int weeks) {
-
         ArrayList<Double> goodNameArray = lastPrices.get(goodName);
         int size = goodNameArray.size() - 1;
         weeks = Math.min(weeks, size);

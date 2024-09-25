@@ -50,7 +50,12 @@ public class supplyManager {
         return getGoodNameForNewCompanyIncompleteEconomy();
     }
     private boolean isEconomyComplete() {
-        return noDemandZero() && noSupplyZero();
+        for (String goodName: good.getGoodArray()) {
+            if (supplyDemandInfo.get(goodName).getDemand() == 0 || supplyDemandInfo.get(goodName).getSupply() == 0) {
+                return false;
+            }
+        }
+        return true;
     }
     private recipe getGoodNameYesSupplyYesDemand() {
         String toSupply = getGoodNameMaxSupplyDemandDiff();
@@ -79,26 +84,6 @@ public class supplyManager {
             if (currDiff > maxDiff) {
                 maxDiff = currDiff;
                 toReturn = goodName;
-            }
-        }
-        return toReturn;
-    }
-    public boolean noDemandZero() {
-        boolean toReturn = true;
-        for (String goodName: good.getGoodArray()) {
-            if (supplyDemandInfo.get(goodName).getDemand() == 0) {
-                toReturn = false;
-                break;
-            }
-        }
-        return toReturn;
-    }
-    public boolean noSupplyZero() {
-        boolean toReturn = true;
-        for (String goodName: good.getGoodArray()) {
-            if (supplyDemandInfo.get(goodName).getSupply() == 0) {
-                toReturn = false;
-                break;
             }
         }
         return toReturn;

@@ -124,11 +124,11 @@ public class planet {
         }
     }
     private void createNewCompany() {
-//        if (economy.rand.nextInt(0, 10) == 0) {
+        if (economy.rand.nextInt(0, 10) == 0) {
             recipe toFollow = supplyManager.getGoodNameForNewCompany();
             company newCompany = company.createNewCompany(toFollow, this);
             addCompany(newCompany);
-//        }
+        }
     }
     //NOTE:SupplyManager
     public int getSupply(String goodName) {

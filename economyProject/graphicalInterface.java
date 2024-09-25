@@ -43,10 +43,7 @@ public class graphicalInterface {
         return true;
     }
     public static boolean changeButton(int button) {
-        if (button <= 0) {
-            return false;
-        }
-        if (graphicalInterface.button == button) {
+        if (button <= 0 || graphicalInterface.button == button) {
             return false;
         }
         graphicalInterface.button = button;
