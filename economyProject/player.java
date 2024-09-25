@@ -1,5 +1,7 @@
 package core;
 
+import core.playerPackage.playerCompanyStorage;
+
 import java.util.HashMap;
 
 public class player implements business{
@@ -9,9 +11,11 @@ public class player implements business{
     private double cash;
     private int planet;
     private HashMap<String, Integer> storage;
+    private playerCompanyStorage ownedCompanies;
     public player(String name) {
         this.id = numPlayers;
         storage = new HashMap<>();
+        ownedCompanies = new playerCompanyStorage(this);
         for (String goodName: good.getGoodArray()) {
             storage.put(goodName, 0);
         }
@@ -96,4 +100,8 @@ public class player implements business{
         return 20;
     }
 
+    //Note: playerCompanies
+    public void addNewCompany(recipe recipe) {
+        ownedCompanies.addNewCompany(recipe);
+    }
 }

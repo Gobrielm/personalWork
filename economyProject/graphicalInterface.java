@@ -110,7 +110,6 @@ public class graphicalInterface {
             } else if (button == 4) {
                 drawSupplyDemand(player);
             } else if (button == 5) {
-                drawPrice(player);
             } else if (button == 6) {
 //           drawStockScreen(player);
             } else if (button == 7 || button == 8) {
@@ -122,7 +121,7 @@ public class graphicalInterface {
             if (button == 1) {
                 drawGraph(player);
             } else if (button == 2) {
-
+                drawFactories(player);
             } else if (button == 3) {
 
             } else if (button == 4) {
@@ -174,7 +173,6 @@ public class graphicalInterface {
     }
     public static void drawPlanetMenu(player player) {
         StdDraw.clear(Color.BLACK);
-        planet planet = player.getPlanet();
         StdDraw.line(WIDTH * 0.333, 0, WIDTH * 0.333, HEIGHT);
         StdDraw.line(WIDTH * 0.666, 0, WIDTH * 0.666, HEIGHT);
         StdDraw.setFont(BIG);
@@ -189,7 +187,7 @@ public class graphicalInterface {
 
         drawPlanetSelector();
 
-        drawAllGoodNames(planet);
+        drawAllGoodNames(player);
 
         drawBuySellBuildButtons();
 
@@ -203,10 +201,11 @@ public class graphicalInterface {
             drawMedButton(0.166, 0.5, "Goods" + "(" + 2 + ")");
             drawMedButton(0.249, 0.5, "Companies" + "(" + 3 + ")");
             drawMedButton(0.0833, 0.433,  "Demand" + "(" + 4 + ")");
-            drawMedButton(0.166, 0.433, "Price" + "(" + 5 + ")");
+            drawMedButton(0.166, 0.433, "Filler" + "(" + 5 + ")");
             drawMedButton(0.249, 0.433, "Stock" + "(" + 6 + ")");
         } else {
             drawMedButton(0.0833, 0.5, "Graph" + "(" + 1 + ")");
+            drawMedButton(0.0833, 0.5, "Show Factories" + "(" + 2 + ")");
         }
 
     }
@@ -227,8 +226,9 @@ public class graphicalInterface {
             }
         }
     }
-    private static void drawAllGoodNames(planet thisPlanet) {
+    private static void drawAllGoodNames(player player) {
         StdDraw.setFont(SMALL);
+        planet thisPlanet = player.getPlanet();
         String[] goodNames = good.getGoodArray();
         Double[] goodPrices = thisPlanet.getPriceList();
         int num = (goodNames.length + 1);
@@ -243,6 +243,7 @@ public class graphicalInterface {
             color = thisPlanet.getPriceBigger(goodNames[i]) ? Color.RED: color;
             color = thisPlanet.getPriceSmaller(goodNames[i]) ? Color.GREEN: color;
             drawSmallButton(0.44333, (double) 1 / num * (i + 1), String.valueOf(val), color);
+            drawSmallButton(0.46333, (double) 1 / num * (i + 1), String.valueOf(player.getAmount(goodNames[i])), false);
         }
         StdDraw.setFont(MED);
     }
@@ -257,23 +258,7 @@ public class graphicalInterface {
         StdDraw.rectangle( WIDTH * 0.95,  HEIGHT * 0.95, WIDTH * 0.04, HEIGHT * 0.04);
         StdDraw.text( WIDTH / 100 * 95,  HEIGHT / 100 * 95, "Next Turn!" + "(" + 0 + ")");
     }
-    public static void drawGoods(player player) {
-        String name = goodSelected;
-        planet planet = player.getPlanet();
-        order[] buyOrders = planet.getBuyOrders(name);
-        order[] sellOrders = planet.getSellOrders(name);
-        int total = buyOrders.length + sellOrders.length;
-        int curr = 0;
-        for (int i = 0; i < buyOrders.length; i++) {
-            StdDraw.text(WIDTH * 0.75,  HEIGHT / (total + 1) * (i + 1), "Buy Order: " + buyOrders[i].toString());
-            curr++;
-        }
-        for (int i = curr; i < total; i++) {
-            StdDraw.text(WIDTH * 0.75,  HEIGHT / (total + 1) * (i + 1), "Sell Order: " + sellOrders[i - curr].toString());
-        }
-        StdDraw.show();
-    }
-    public static void createGraph(Double[] values, double startX, double startY, double maxX, double maxY) {
+    private static void createGraph(Double[] values, double startX, double startY, double maxX, double maxY) {
         if (values.length == 0) {
             return;
         }
@@ -309,7 +294,7 @@ public class graphicalInterface {
         StdDraw.text(WIDTH * (startX - 0.01), HEIGHT * (startY + maxY), String.valueOf(maxValue));
         StdDraw.text(WIDTH * (startX - 0.01), HEIGHT * (startY), String.valueOf(minValue));
     }
-    public static void drawGraph(player player) {
+    private static void drawGraph(player player) {
         String goodName = goodSelected;
         StdDraw.setFont(MED);
         planet planet = player.getPlanet();
@@ -318,17 +303,79 @@ public class graphicalInterface {
         createGraph(toGraph, 0.75, 0.5, 0.2, 0.2);
         StdDraw.show();
     }
+    private static void drawFactories(player player) {
 
-    public static void drawPrice(player player) {
+    }
+    private static void drawOrderScreen(player player) {
         String name = goodSelected;
-        planet planet = player.getPlanet();
-        StdDraw.setFont(MED);
-        StdDraw.text(WIDTH * 0.75, HEIGHT * 0.5, String.valueOf(planet.getBasePrice(name)));
+        if (name.isEmpty()) {
+            return;
+        }
+        StdDraw.text(0.833 * WIDTH, 0.59 * HEIGHT, "Amount" + "(" + "y" + ")");
+        StdDraw.rectangle(0.833 * WIDTH, 0.55 * HEIGHT, 0.133 * WIDTH, 0.025 * HEIGHT);
+        StdDraw.text(0.833 * WIDTH, 0.49 * HEIGHT, "Limit Price" + "(" + "z" + ")");
+        StdDraw.rectangle(0.833 * WIDTH, 0.45 * HEIGHT, 0.133 * WIDTH, 0.025 * HEIGHT);
 
+        StdDraw.rectangle(0.833 * WIDTH, 0.35 * HEIGHT, 0.03 * WIDTH, 0.025 * HEIGHT);
+        StdDraw.text(0.833 * WIDTH, 0.35 * HEIGHT, "Confirm" + "(" + "9" + ")");
+
+        updateTextbox();
+        StdDraw.show();
+    }
+    public static void updateTextbox() {
+        StdDraw.text(0.833 * WIDTH, 0.55 * HEIGHT, textboxAmount);
+        StdDraw.text(0.833 * WIDTH, 0.45 * HEIGHT, textboxPrice);
+    }
+
+    private static void createOrder(player player) {
+        if (textboxAmount.isEmpty() || textboxPrice.isEmpty()) {
+            return;
+        }
+        boolean isBuyOrder = (button == 6);
+        planet planet = player.getPlanet();
+        String goodName = goodSelected;
+        int amount = Integer.parseInt(textboxAmount);
+        double price = Double.parseDouble(textboxPrice);
+        order newOrder = new order(player, new good(goodName, amount), planet.getBasePrice(goodName), price, isBuyOrder);
+        planet.addOrder(newOrder);
+        textboxAmount = "";
+        textboxPrice = "";
+    }
+
+    private static void drawBuildScreen(player player) {
+        StdDraw.rectangle(0.8325 * WIDTH, 0.6 * HEIGHT, 0.14 * WIDTH, 0.2 * HEIGHT);
+        StdDraw.rectangle(0.833 * WIDTH, 0.35 * HEIGHT, 0.03 * WIDTH, 0.025 * HEIGHT);
+        StdDraw.text(0.833 * WIDTH, 0.35 * HEIGHT, "Confirm");
+
+        recipe[] toDisplay = getRecipesWithGood(goodSelected);
+        int n = toDisplay.length;
+        for (int i = 0; i < n; i++) {
+            double y = 0.75 - (0.35 * (i) / (n));
+            StdDraw.text(0.8325 * WIDTH, y * HEIGHT, toDisplay[i].toString());
+        }
         StdDraw.show();
     }
 
-    public static void drawCompanies(player player) {
+
+    //Note: ALL for Testing
+    private static void drawGoods(player player) {
+        String name = goodSelected;
+        planet planet = player.getPlanet();
+        order[] buyOrders = planet.getBuyOrders(name);
+        order[] sellOrders = planet.getSellOrders(name);
+        int total = buyOrders.length + sellOrders.length;
+        int curr = 0;
+        for (int i = 0; i < buyOrders.length; i++) {
+            StdDraw.text(WIDTH * 0.75,  HEIGHT / (total + 1) * (i + 1), "Buy Order: " + buyOrders[i].toString());
+            curr++;
+        }
+        for (int i = curr; i < total; i++) {
+            StdDraw.text(WIDTH * 0.75,  HEIGHT / (total + 1) * (i + 1), "Sell Order: " + sellOrders[i - curr].toString());
+        }
+        StdDraw.show();
+    }
+
+    private static void drawCompanies(player player) {
         String name = goodSelected;
         planet planet = player.getPlanet();
         company[] companies = planet.getCompanies();
@@ -351,7 +398,7 @@ public class graphicalInterface {
         StdDraw.show();
     }
 
-    public static void drawSupplyDemand(player player) {
+    private static void drawSupplyDemand(player player) {
         String goodName = goodSelected;
         planet planet = player.getPlanet();
         int demand = planet.getDemand(goodName);
@@ -359,56 +406,6 @@ public class graphicalInterface {
         StdDraw.setFont(MED);
         StdDraw.text(WIDTH * 0.75, HEIGHT * 0.45, "Demand: " + demand);
         StdDraw.text(WIDTH * 0.75, HEIGHT * 0.55, "Supply: " + supply);
-        StdDraw.show();
-    }
-
-    public static void drawOrderScreen(player player) {
-        String name = goodSelected;
-        if (name.isEmpty()) {
-            return;
-        }
-        StdDraw.text(0.833 * WIDTH, 0.59 * HEIGHT, "Amount" + "(" + "y" + ")");
-        StdDraw.rectangle(0.833 * WIDTH, 0.55 * HEIGHT, 0.133 * WIDTH, 0.025 * HEIGHT);
-        StdDraw.text(0.833 * WIDTH, 0.49 * HEIGHT, "Limit Price" + "(" + "z" + ")");
-        StdDraw.rectangle(0.833 * WIDTH, 0.45 * HEIGHT, 0.133 * WIDTH, 0.025 * HEIGHT);
-
-        StdDraw.rectangle(0.833 * WIDTH, 0.35 * HEIGHT, 0.03 * WIDTH, 0.025 * HEIGHT);
-        StdDraw.text(0.833 * WIDTH, 0.35 * HEIGHT, "Confirm" + "(" + "9" + ")");
-
-        updateTextbox();
-        StdDraw.show();
-    }
-    public static void updateTextbox() {
-        StdDraw.text(0.833 * WIDTH, 0.55 * HEIGHT, textboxAmount);
-        StdDraw.text(0.833 * WIDTH, 0.45 * HEIGHT, textboxPrice);
-    }
-
-    public static void createOrder(player player) {
-        if (textboxAmount.isEmpty() || textboxPrice.isEmpty()) {
-            return;
-        }
-        boolean isBuyOrder = (button == 6);
-        planet planet = player.getPlanet();
-        String goodName = goodSelected;
-        int amount = Integer.parseInt(textboxAmount);
-        double price = Double.parseDouble(textboxPrice);
-        order newOrder = new order(player, new good(goodName, amount), planet.getBasePrice(goodName), price, isBuyOrder);
-        planet.addOrder(newOrder);
-        textboxAmount = "";
-        textboxPrice = "";
-    }
-
-    public static void drawBuildScreen(player player) {
-        StdDraw.rectangle(0.8325 * WIDTH, 0.6 * HEIGHT, 0.14 * WIDTH, 0.2 * HEIGHT);
-        StdDraw.rectangle(0.833 * WIDTH, 0.35 * HEIGHT, 0.03 * WIDTH, 0.025 * HEIGHT);
-        StdDraw.text(0.833 * WIDTH, 0.35 * HEIGHT, "Confirm");
-
-        recipe[] toDisplay = getRecipesWithGood(goodSelected);
-        int n = toDisplay.length;
-        for (int i = 0; i < n; i++) {
-            double y = 0.75 - (0.35 * (i) / (n));
-            StdDraw.text(0.8325 * WIDTH, y * HEIGHT, toDisplay[i].toString());
-        }
         StdDraw.show();
     }
 }
