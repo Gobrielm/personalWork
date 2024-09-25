@@ -83,24 +83,23 @@ public class good {
         }
         return toReturn.toArray(new recipe[0]);
     }
-    public static recipe getRandRecipeWithGoodNameAsSupply(String goodName) {
+    public static recipe getRandRecipeThatCreatesGoodName(String goodName) {
         recipe[] primaryRecipesWithGoodName = primaryRecipeWithGood(goodName);
         int randNum = economy.rand.nextInt(0, primaryRecipesWithGoodName.length);
         return primaryRecipesWithGoodName[randNum];
     }
-    public static recipe getBuyer(String goodName) {
-        for (recipe x: getRecipes().get(goodName)) {
-            if (x.getOutputName().length == 0) {
-                return x;
-            }
-        }
-        System.out.println("Broken");
-        System.exit(1);
-        return null;
+    public static recipe getRandRecipeThatUsesGoodName(String goodName) {
+        recipe[] secondaryRecipesWithGoodName = secondaryRecipeWithGood(goodName);
     }
     private static boolean doesRecipeMakeGoodName(recipe given, String goodName) {
+        return doesRecipeHaveGoodName(given.getOutputName(), goodName);
+    }
+    private static boolean doesRecipeUseGoodName(recipe given, String goodName) {
+        return doesRecipeHaveGoodName(given.getInputName(), goodName);
+    }
+    private static boolean doesRecipeHaveGoodName(String[] goodsToCheck, String goodName) {
         boolean toReturn = false;
-        for (String x: given.getOutputName()) {
+        for (String x: goodsToCheck) {
             if (x.equals(goodName)) {
                 toReturn = true;
                 break;

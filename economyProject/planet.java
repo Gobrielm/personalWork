@@ -125,8 +125,7 @@ public class planet {
     }
     private void createNewCompany() {
 //        if (economy.rand.nextInt(0, 10) == 0) {
-            String goodNameToSupply = supplyManager.getGoodNameForNewCompany();
-            recipe toFollow = good.getRandRecipeWithGoodNameAsSupply(goodNameToSupply);
+            recipe toFollow = supplyManager.getGoodNameForNewCompany();
             company newCompany = company.createNewCompany(toFollow, this);
             addCompany(newCompany);
 //        }

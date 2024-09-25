@@ -43,7 +43,7 @@ public class supplyManager {
     public int getDiff(String goodName) {
         return getDemand(goodName) - getSupply(goodName);
     }
-    public String getGoodNameForNewCompany() {
+    public recipe getGoodNameForNewCompany() {
         if (isEconomyComplete()) {
             return getGoodNameYesSupplyYesDemand();
         }
@@ -52,36 +52,20 @@ public class supplyManager {
     private boolean isEconomyComplete() {
         return noDemandZero() && noSupplyZero();
     }
-    private String getGoodNameForNewCompanyIncompleteEconomy() {
-        String toReturn;
-        int i = 1;
-        do {
-            toReturn = getGoodNameSupplyDemandZero(i);
-            i++;
-        } while (toReturn.isEmpty());
-        return toReturn;
+    private recipe getGoodNameYesSupplyYesDemand() {
+        String toSupply = getGoodNameMaxSupplyDemandDiff();
+        return good.getRandRecipeThatCreatesGoodName(toSupply);
+
     }
-    private String getGoodNameNoSupplyYesDemand() {
-        return getGoodNameSupplyDemandZero(1);
-    }
-    private String getGoodNameYesSupplyNoDemand() {
-        return getGoodNameSupplyDemandZero(2);
-    }
-    private String getGoodNameNoSupplyNoDemand() {
-        return getGoodNameSupplyDemandZero(3);
-    }
-    private String getGoodNameYesSupplyYesDemand() {
-        return getGoodNameMaxSupplyDemandDiff();
-    }
-    private String getGoodNameSupplyDemandZero(int whichOne) {
-        String toReturn = "";
+    private recipe getGoodNameForNewCompanyIncompleteEconomy() {
+        recipe toReturn = null;
         String[] goodNameArray = good.getGoodArray();
         for (int i = 0; i < goodNameArray.length; i++) {
             String goodName = goodNameArray[i];
             int demand = getDemand(goodName);
             int supply = getSupply(goodName);
-            if (supplyDemandCheck(whichOne, demand, supply)) {
-                toReturn = goodName;
+            toReturn = supplyDemandCheck(demand, supply, goodName);
+            if (toReturn != null) {
                 break;
             }
         }
@@ -119,14 +103,15 @@ public class supplyManager {
         }
         return toReturn;
     }
-    private boolean supplyDemandCheck(int whichOne, int demand, int supply) {
-        if (whichOne == 1) {
-            return demand > 0 && supply == 0;
-        } else if (whichOne == 2) {
-            return demand == 0 && supply > 0;
-        } else {
-            return demand == 0 && supply == 0;
+    private recipe supplyDemandCheck(int demand, int supply, String goodName) {
+        if (demand > 0 && supply == 0) {
+            return good.getRandRecipeThatCreatesGoodName(goodName);
+        } else if (demand == 0 && supply > 0) {
+            return good.getRandRecipeThatUsesGoodName(goodName);
+        } else if (demand == 0 && supply == 0) {
+            return good.getRandRecipeThatCreatesGoodName(goodName);
         }
+        return null;
     }
 
     public class info {
