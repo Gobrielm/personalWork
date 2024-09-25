@@ -3,7 +3,6 @@ package core.constants;
 import core.economy;
 import core.good;
 import core.recipe;
-import org.checkerframework.checker.units.qual.A;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,9 +10,11 @@ import java.util.HashMap;
 public class premadeRecipes {
     private static HashMap<String, ArrayList<recipe>> recipes;
     private static ArrayList<recipe> endNodes;
+    private static ArrayList<recipe> beginNodes;
     public premadeRecipes() {
         recipes = new HashMap<>();
         endNodes = new ArrayList<>();
+        beginNodes = new ArrayList<>();
     }
     public void initialize() {
         createRecipes();
@@ -24,8 +25,14 @@ public class premadeRecipes {
     public static recipe randEndNodeGoodName() {
         return endNodes.get(economy.rand.nextInt(0, endNodes.size()));
     }
+    public static recipe randBeginNodeRecipe() {
+        recipe toReturn = beginNodes.get(economy.rand.nextInt(0, beginNodes.size()));
+        return toReturn;
+    }
     public static void primaryRecipeMaker(String goodName, int amount, int expenses) {
-        recipes.get(goodName).add(new recipe(new good[]{}, new good[]{new good(goodName, amount)}, expenses, 0));
+        recipe newRecipe = new recipe(new good[]{}, new good[]{new good(goodName, amount)}, expenses, 0);
+        recipes.get(goodName).add(newRecipe);
+        beginNodes.add(newRecipe);
     }
     public static void secondaryRecipeMaker(String goodName1, String goodName2, int amount1, int amount2, String output, int amount3, int expenses) {
         recipe toAdd = new recipe(new good[]{new good(goodName1, amount1), new good(goodName2, amount2)}, new good[]{new good(output, amount3)}, expenses, 0);

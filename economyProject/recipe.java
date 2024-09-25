@@ -18,8 +18,8 @@ public class recipe {
         inputStorage = new int[input.length];
         outputStorage = new int[output.length];
         this.income = income;
-        this.expenses = getRandExpenses(baseExpenses);
         this.baseExpenses = expenses;
+        this.expenses = getRandExpenses(baseExpenses);
         this.level = 1;
     }
     public recipe(String[] input, int[] inputAmount, String[] output, int[] outputAmount, double expenses, double income) {
@@ -34,8 +34,8 @@ public class recipe {
         inputStorage = new int[input.length];
         outputStorage = new int[output.length];
         this.income = income;
-        this.expenses = getRandExpenses(baseExpenses);
         this.baseExpenses = expenses;
+        this.expenses = getRandExpenses(baseExpenses);
         this.level = 1;
     }
     public void upgradeRecipe() {
@@ -168,13 +168,19 @@ public class recipe {
             }
         }
         //From here the recipe is valid
-        for (int i = 0; i < input.length; i++) {
-            good temp = input[i];
-            inputStorage[i] -= temp.getAmount();
-        }
+        useGoods();
+        createGoods();
+    }
+    private void createGoods() {
         for (int i = 0; i < output.length; i++) {
             good temp = output[i];
             outputStorage[i] += temp.getAmount();
+        }
+    }
+    private void useGoods() {
+        for (int i = 0; i < input.length; i++) {
+            good temp = input[i];
+            inputStorage[i] -= temp.getAmount();
         }
     }
 

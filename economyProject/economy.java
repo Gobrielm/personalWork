@@ -23,7 +23,10 @@ public class economy {
         }
         playerList = new ArrayList<>();
         for (int i = 0; i < playerCount; i++) {
-            playerList.add(new player("Player" + i));
+            player newPlayer = new player("Player" + i);
+            //Each player starts with one random primary industry
+            newPlayer.addNewCompany(good.randBeginNodeRecipe());
+            playerList.add(newPlayer);
         }
     }
     public boolean tick() {
@@ -53,7 +56,7 @@ public class economy {
         while (index < playerList.size()) {
             player currPlayer = playerList.get(index);
             currPlayer.tick();
-            graphicalInterface.drawPlanetMenu(currPlayer);
+            graphicalInterface.updateScreen(currPlayer);
             while (true) {
                 if (StdDraw.hasNextKeyTyped()) {
                     char c = StdDraw.nextKeyTyped();

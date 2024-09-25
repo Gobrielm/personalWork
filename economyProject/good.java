@@ -61,6 +61,9 @@ public class good {
     public static recipe randEndNodeRecipe() {
         return core.constants.premadeRecipes.randEndNodeGoodName();
     }
+    public static recipe randBeginNodeRecipe() {
+        return core.constants.premadeRecipes.randBeginNodeRecipe();
+    }
     public static String endNodeRecipeToGoodName(recipe buyer) {
         return buyer.getInputName()[0];
     }
@@ -99,10 +102,10 @@ public class good {
         return toReturn.toArray(new recipe[0]);
     }
     public static recipe getRandRecipeThatCreatesGoodName(String goodName) {
-        return randRecipe(goodName, getRecipesThatCreate(goodName));
+        return randRecipe(getRecipesThatCreate(goodName));
     }
     public static recipe getRandRecipeThatUsesGoodName(String goodName) {
-        return randRecipe(goodName, getRecipesThatUse(goodName));
+        return randRecipe(getRecipesThatUse(goodName));
     }
     private static boolean doesRecipeMakeGoodName(recipe given, String goodName) {
         return doesRecipeHaveGoodName(given.getOutputName(), goodName);
@@ -121,7 +124,7 @@ public class good {
         return toReturn;
     }
 
-    private static recipe randRecipe(String goodName, recipe[] recipesThatContainGoodName) {
+    private static recipe randRecipe(recipe[] recipesThatContainGoodName) {
         int totalRecipes = recipesThatContainGoodName.length;
         int randomIndexForRecipes = totalRecipes == 1 ? 0: economy.rand.nextInt(0, totalRecipes);
         return recipesThatContainGoodName[randomIndexForRecipes];

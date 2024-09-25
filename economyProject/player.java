@@ -46,7 +46,7 @@ public class player implements business{
     public double getCash() {
         return cash;
     }
-    private void changeStorage(String goodName, int amount) {
+    public void changeStorage(String goodName, int amount) {
         storage.put(goodName, storage.get(goodName) + amount);
     }
     public int getAmount(String goodName) {

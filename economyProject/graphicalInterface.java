@@ -96,9 +96,10 @@ public class graphicalInterface {
             }
         }
     }
-    private static void updateScreen(player player) {
+    public static void updateScreen(player player) {
         drawPlanetMenu(player);
         showButton(player);
+        StdDraw.show();
     }
     private static void showButton(player player) {
         if (testing) {
@@ -172,7 +173,7 @@ public class graphicalInterface {
         StdDraw.setPenColor(StdDraw.WHITE);
         StdDraw.rectangle(WIDTH * x, HEIGHT * y, WIDTH * width, HEIGHT * height);
     }
-    public static void drawPlanetMenu(player player) {
+    private static void drawPlanetMenu(player player) {
         StdDraw.clear(Color.BLACK);
         StdDraw.line(WIDTH * 0.333, 0, WIDTH * 0.333, HEIGHT);
         StdDraw.line(WIDTH * 0.666, 0, WIDTH * 0.666, HEIGHT);
@@ -193,8 +194,6 @@ public class graphicalInterface {
         drawBuySellBuildButtons();
 
         drawEndTurnButton();
-
-        StdDraw.show();
     }
     private static void drawBasicButtons() {
         if (testing) {
@@ -302,15 +301,13 @@ public class graphicalInterface {
         Double [] toGraph = planet.getLastPriceArray(goodName, 50);
 
         createGraph(toGraph, 0.75, 0.5, 0.2, 0.2);
-        StdDraw.show();
     }
     private static void drawFactories(player player) {
-        player.addNewCompany(good.randEndNodeRecipe());
         playerCompany[] ownedFactories = player.getCompaniesByGoodName(goodSelected);
         int size = ownedFactories.length;
         for (int i = 0; i < size; i++) {
             playerCompany companyToPrint = ownedFactories[i];
-            StdDraw.text(0.8325 * WIDTH, (double) (i + 1) / size * HEIGHT, companyToPrint.toString());
+            StdDraw.text(0.8325 * WIDTH, (double) (i + 1) / (size + 1) * HEIGHT, companyToPrint.toString());
         }
     }
     private static void drawOrderScreen(player player) {
@@ -327,7 +324,6 @@ public class graphicalInterface {
         StdDraw.text(0.833 * WIDTH, 0.35 * HEIGHT, "Confirm" + "(" + "9" + ")");
 
         updateTextbox();
-        StdDraw.show();
     }
     public static void updateTextbox() {
         StdDraw.text(0.833 * WIDTH, 0.55 * HEIGHT, textboxAmount);
@@ -360,7 +356,6 @@ public class graphicalInterface {
             double y = 0.75 - (0.35 * (i) / (n));
             StdDraw.text(0.8325 * WIDTH, y * HEIGHT, toDisplay[i].toString());
         }
-        StdDraw.show();
     }
 
 
@@ -379,7 +374,6 @@ public class graphicalInterface {
         for (int i = curr; i < total; i++) {
             StdDraw.text(WIDTH * 0.75,  HEIGHT / (total + 1) * (i + 1), "Sell Order: " + sellOrders[i - curr].toString());
         }
-        StdDraw.show();
     }
 
     private static void drawCompanies(player player) {
@@ -402,7 +396,6 @@ public class graphicalInterface {
 
         }
 
-        StdDraw.show();
     }
 
     private static void drawSupplyDemand(player player) {
@@ -413,6 +406,5 @@ public class graphicalInterface {
         StdDraw.setFont(MED);
         StdDraw.text(WIDTH * 0.75, HEIGHT * 0.45, "Demand: " + demand);
         StdDraw.text(WIDTH * 0.75, HEIGHT * 0.55, "Supply: " + supply);
-        StdDraw.show();
     }
 }
