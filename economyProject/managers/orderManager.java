@@ -50,6 +50,9 @@ public class orderManager {
     }
     public Double[] getLastPriceArray(String goodName, int weeks) {
         ArrayList<Double> goodNameArray = lastPrices.get(goodName);
+        if (goodNameArray == null) {
+            return new Double[0];
+        }
         int size = goodNameArray.size() - 1;
         weeks = Math.min(weeks, size);
         Double[] toReturn = new Double[weeks];

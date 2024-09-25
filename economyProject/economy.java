@@ -54,11 +54,11 @@ public class economy {
         while (index < playerList.size()) {
             player currPlayer = playerList.get(index);
             graphicalInterface.drawPlanetMenu(currPlayer);
-            while (!done) {
+            while (true) {
                 if (StdDraw.hasNextKeyTyped()) {
                     char c = StdDraw.nextKeyTyped();
                     if (graphicalInterface.keyBoardInput(currPlayer, c)) {
-                        done = true;
+                        break;
                     }
                 }
                 if (StdDraw.isMousePressed()) {
