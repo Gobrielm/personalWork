@@ -168,36 +168,39 @@ public class graphicalInterface {
                 double x = button.getX();
                 double y = button.getY();
                 String text = button.getName();
+                StdDraw.setFont(button.getFont());
+                StdDraw.setPenColor(button.getColor());
                 double width = button.getWidthX();
                 double height = button.getWidthY();
                 StdDraw.text(WIDTH * x, HEIGHT * y, text);
+                StdDraw.setPenColor(Color.WHITE);
                 StdDraw.rectangle(WIDTH * x, HEIGHT * y, WIDTH * width, HEIGHT * height);
                 created.add(button);
             }
         }
     }
-    private static void createMedButton(double x, double y, String name, int id) {
+    private static void createMedButton(double x, double y, String name) {
         double width = 0.0415;
         double height = 0.034;
-        addButtonToManger(x, y, width, height, name, id);
+        addButtonToManger(x, y, width, height, name, "Basic", MED);
     }
-    private static void createLongSmallButton(double x, double y, String name, int id) {
+    private static void createLongSmallButton(double x, double y, String name) {
         double width = 0.05;
         double height = (double) 1 / (2 * (good.getGoodArray().length + 1));
-        addButtonToManger(x, y, width, height, name, id);
+        addButtonToManger(x, y, width, height, name, "GoodName", MED);
     }
-    private static void createSmallButton(double x, double y, String name, int id) {
+    private static void createSmallButton(double x, double y, String name, String field) {
         double width = 0.01;
         double height = (double) 1 / (2 * (good.getGoodArray().length + 1));
-        addButtonToManger(x, y, width, height, name, id);
+        addButtonToManger(x, y, width, height, name, field, SMALL);
     }
     private static void changeSmallButton(double x, double y, String name) {
         double width = 0.01;
         double height = (double) 1 / (2 * (good.getGoodArray().length + 1));
         buttonManager.changeTextOnScreen(x, y, width, height, name);
     }
-    private static void addButtonToManger(double x, double y, double widthX, double widthY, String name, int id) {
-        button newButton = new button(x, y, widthX, widthY, name, id);
+    private static void addButtonToManger(double x, double y, double widthX, double widthY, String name, String field, Font font) {
+        button newButton = new button(x, y, widthX, widthY, name, field, font);
         buttonManager.addButton(newButton);
     }
     private static void drawPlanetMenu(player player) {
@@ -212,8 +215,6 @@ public class graphicalInterface {
 
         StdDraw.setFont(MED);
 
-        drawPlanetSelector();
-
         drawAllGoodNames(player);
 
         drawBuySellBuildButtons();
@@ -222,47 +223,30 @@ public class graphicalInterface {
     }
     public static void createButtons() {
         if (testing) {
-            createMedButton(0.0833, 0.5, "Graph" + "(" + 1 + ")", 1);
-            createMedButton(0.166, 0.5, "Goods" + "(" + 2 + ")", 2);
-            createMedButton(0.249, 0.5, "Companies" + "(" + 3 + ")", 3);
-            createMedButton(0.0833, 0.433,  "Demand" + "(" + 4 + ")", 4);
-            createMedButton(0.166, 0.433, "Filler" + "(" + 5 + ")", 5);
-            createMedButton(0.249, 0.433, "Stock" + "(" + 6 + ")",  6);
+            createMedButton(0.0833, 0.5, "Graph" + "(" + 1 + ")");
+            createMedButton(0.166, 0.5, "Goods" + "(" + 2 + ")");
+            createMedButton(0.249, 0.5, "Companies" + "(" + 3 + ")");
+            createMedButton(0.0833, 0.433,  "Demand" + "(" + 4 + ")");
+            createMedButton(0.166, 0.433, "Filler" + "(" + 5 + ")");
+            createMedButton(0.249, 0.433, "Stock" + "(" + 6 + ")");
         } else {
-            createMedButton(0.0833, 0.5, "Graph" + "(" + 1 + ")", 1);
-            createMedButton(0.166, 0.5, "ShowFactories" + "(" + 2 + ")",2);
+            createMedButton(0.0833, 0.5, "Graph" + "(" + 1 + ")");
+            createMedButton(0.166, 0.5, "ShowFactories" + "(" + 2 + ")");
         }
         planet thisPlanet = economy.getPlanetFromID(1);
         String[] goodNames = good.getGoodArray();
         Double[] goodPrices = thisPlanet.getPriceList();
         int num = (goodNames.length + 1);
         for (int i = 0; i < goodNames.length; i++) {
-            createLongSmallButton(0.38333, (double) 1 / num * (i + 1), goodNames[i], 1);
+            createLongSmallButton(0.38333, (double) 1 / num * (i + 1), goodNames[i]);
             double val = Utils.round(goodPrices[i], 1);
-            createSmallButton(0.44333, (double) 1 / num * (i + 1), String.valueOf(val), 1);
-            createSmallButton(0.46333, (double) 1 / num * (i + 1), "0", 2);
+            createSmallButton(0.44333, (double) 1 / num * (i + 1), String.valueOf(val), "goodPrice");
+            createSmallButton(0.46333, (double) 1 / num * (i + 1), "0", "goodAmount");
         }
         double amountX = 0.0;
         double amountY = 0.0;
         for (int i = 1; i < 10; i++) {
-            createSmallButton(0.146 + amountX, 0.25 + amountY, String.valueOf(i), 1);
-            amountX += 0.02;
-            if (amountX % 0.06 == 0) {
-                amountX = 0;
-                amountY -= 0.041667;
-            }
-        }
-    }
-    private static void drawPlanetSelector() {
-        StdDraw.text(WIDTH * 0.166, HEIGHT * 0.3, "Travel Planets");
-        double amountX = 0.0;
-        double amountY = 0.0;
-        for (int i = 1; i < 10; i++) {
-            boolean green = false;
-            if (planetSelected == i) {
-                green = true;
-            }
-            changeSmallButton(0.146 + amountX, 0.25 + amountY, String.valueOf(i));
+            createSmallButton(0.146 + amountX, 0.25 + amountY, String.valueOf(i), "planet");
             amountX += 0.02;
             if (amountX % 0.06 == 0) {
                 amountX = 0;
@@ -281,7 +265,6 @@ public class graphicalInterface {
             if (goodNames[i].equals(goodSelected)) {
                 green = true;
             }
-//            drawLongSmallButton(0.38333, (double) 1 / num * (i + 1), goodNames[i], green);
             Color color = Color.WHITE;
             double val = Utils.round(goodPrices[i], 1);
             color = thisPlanet.getPriceBigger(goodNames[i]) ? Color.RED: color;

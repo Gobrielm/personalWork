@@ -60,4 +60,18 @@ public class buttonManager {
     public static button getButtonClickedSlot(int slotX, int slotY) {
         return screen[slotX][slotY];
     }
+    public static void changeSelected(button clicked) {
+        if (clicked == null) {
+            return;
+        }
+        String field = clicked.getField();
+        for (button[] buttonArray: screen) {
+            for (button x: buttonArray) {
+                if (x != null && x.getField().equals(field)) {
+                    x.setColorWhite();
+                }
+            }
+        }
+        clicked.setColorGreen();
+    }
 }

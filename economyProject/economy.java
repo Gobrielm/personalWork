@@ -1,5 +1,6 @@
 package core;
 
+import core.graphics.button;
 import core.graphics.buttonManager;
 import edu.princeton.cs.algs4.StdDraw;
 
@@ -38,7 +39,8 @@ public class economy {
         return true;
     }
     public void mouseActions(player currPlayer, double x, double y) {
-        System.out.println(buttonManager.getButtonClicked(x, y));
+        button clicked = buttonManager.getButtonClicked(x, y);
+        buttonManager.changeSelected(clicked);
         if (x > 0.333 && x < 0.47333) {
             double num = good.getGoodArray().length + 1;
             y -= (1 / ( num + 1) / 2);
