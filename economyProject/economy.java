@@ -29,6 +29,7 @@ public class economy {
             newPlayer.addNewCompany(good.randBeginNodeRecipe());
             playerList.add(newPlayer);
         }
+        graphicalInterface.createButtons();
     }
     public boolean tick() {
         dayCount++;

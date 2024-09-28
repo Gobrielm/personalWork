@@ -12,7 +12,9 @@ public class buttonManager {
         int slots = (int) Math.pow(10, howManyDecimalsRepresented);
         screen = new button[slots][slots];
     }
-
+    public static button[][] getArray() {
+        return screen;
+    }
     public static void addButton(button button) {
         double widthX = button.getWidthX();
         double widthY = button.getWidthY();
@@ -35,9 +37,27 @@ public class buttonManager {
             screen[slotX][slotY] = button;
         }
     }
+    public static void changeTextOnScreen(double x, double y, double width, double height, String newText) {
+        int newX = convertDecimalScreenToSlot(x);
+        int newY = convertDecimalScreenToSlot(y);
+        int newWidthX = convertDecimalScreenToSlot(width);
+        int newWidthY = convertDecimalScreenToSlot(height);
+        for (int i = newX - newWidthX; i < newX + newWidthX; i++) {
+            for (int j = newY - newWidthY; j < newY + newWidthY; j++) {
+                button toGet = getButtonClickedSlot(i, j);
+                if (toGet == null) {
+                    return;
+                }
+                toGet.changeName(newText);
+            }
+        }
+    }
     public static button getButtonClicked(double mouseX, double mouseY) {
         int slotX = convertDecimalScreenToSlot(mouseX);
         int slotY = convertDecimalScreenToSlot(mouseY);
+        return screen[slotX][slotY];
+    }
+    public static button getButtonClickedSlot(int slotX, int slotY) {
         return screen[slotX][slotY];
     }
 }

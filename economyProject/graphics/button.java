@@ -5,11 +5,15 @@ public class button {
     private double centerY;
     private double widthX;
     private double widthY;
-    public button(double centerX, double centerY, double widthX, double widthY) {
+    private String name;
+    private int id;
+    public button(double centerX, double centerY, double widthX, double widthY, String name, int id) {
         this.centerX = centerX;
         this.centerY = centerY;
         this.widthX = widthX;
         this.widthY = widthY;
+        this.name = name;
+        this.id = id;
     }
 
     public double getX() {
@@ -23,5 +27,11 @@ public class button {
     }
     public double getWidthY() {
         return widthY;
+    }
+    public String getName() {
+        return name;
+    }
+    public void changeName(String newText) {
+        name = newText;
     }
 }

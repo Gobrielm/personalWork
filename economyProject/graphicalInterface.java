@@ -5,6 +5,7 @@ import core.playerPackage.playerCompany;
 import edu.princeton.cs.algs4.StdDraw;
 
 import java.awt.*;
+import java.util.HashSet;
 
 import static core.good.getRecipesWithGood;
 import core.graphics.buttonManager;
@@ -114,6 +115,7 @@ public class graphicalInterface {
     public static void updateScreen(player player) {
         drawPlanetMenu(player);
         showButton(player);
+        drawButtonsFromArray();
         StdDraw.show();
     }
     private static void showButton(player player) {
@@ -130,7 +132,7 @@ public class graphicalInterface {
             } else if (button == 6) {
 //           drawStockScreen(player);
             } else if (button == 7 || button == 8) {
-                drawOrderScreen(player);
+                drawOrderScreen();
             } else if (button == 9) {
                 drawBuildScreen(player);
             }
@@ -148,50 +150,54 @@ public class graphicalInterface {
             } else if (button == 6) {
 
             } else if (button == 7 || button == 8) {
-                drawOrderScreen(player);
+                drawOrderScreen();
             } else if (button == 9) {
                 drawBuildScreen(player);
             }
         }
 
     }
-
-    private static void drawMedButton(double x, double y, String text) {
+    private static void drawButtonsFromArray() {
+        button[][] screen = buttonManager.getArray();
+        HashSet<button> created = new HashSet<>();
+        for (button[] row: screen) {
+            for (button button: row) {
+                if (button == null || created.contains(button)) {
+                    continue;
+                }
+                double x = button.getX();
+                double y = button.getY();
+                String text = button.getName();
+                double width = button.getWidthX();
+                double height = button.getWidthY();
+                StdDraw.text(WIDTH * x, HEIGHT * y, text);
+                StdDraw.rectangle(WIDTH * x, HEIGHT * y, WIDTH * width, HEIGHT * height);
+                created.add(button);
+            }
+        }
+    }
+    private static void createMedButton(double x, double y, String name, int id) {
         double width = 0.0415;
         double height = 0.034;
-        StdDraw.text(WIDTH * x, HEIGHT * y, text);
-        StdDraw.rectangle(WIDTH * x, HEIGHT * y, WIDTH * width, HEIGHT * height);
-        addButtonToManger(x, y, width, height);
+        addButtonToManger(x, y, width, height, name, id);
     }
-    private static void drawLongSmallButton(double x, double y, String text, boolean green) {
+    private static void createLongSmallButton(double x, double y, String name, int id) {
         double width = 0.05;
         double height = (double) 1 / (2 * (good.getGoodArray().length + 1));
-        if (green) {
-            StdDraw.setPenColor(StdDraw.GREEN);
-        }
-        StdDraw.text(WIDTH * x, HEIGHT * y, text);
-        StdDraw.setPenColor(StdDraw.WHITE);
-        StdDraw.rectangle(WIDTH * x, HEIGHT * y, WIDTH * width, HEIGHT * height);
-        addButtonToManger(x, y, width, height);
+        addButtonToManger(x, y, width, height, name, id);
     }
-    private static void drawSmallButton(double x, double y, String text, boolean green) {
-        if (green) {
-            drawSmallButton(x, y, text, Color.GREEN);
-        } else {
-            drawSmallButton(x, y, text, Color.WHITE);
-        }
-    }
-    private static void drawSmallButton(double x, double y, String text, Color color) {
+    private static void createSmallButton(double x, double y, String name, int id) {
         double width = 0.01;
         double height = (double) 1 / (2 * (good.getGoodArray().length + 1));
-        StdDraw.setPenColor(color);
-        StdDraw.text(WIDTH * x, HEIGHT * y, text);
-        StdDraw.setPenColor(StdDraw.WHITE);
-        StdDraw.rectangle(WIDTH * x, HEIGHT * y, WIDTH * width, HEIGHT * height);
-        addButtonToManger(x, y, width, height);
+        addButtonToManger(x, y, width, height, name, id);
     }
-    private static void addButtonToManger(double x, double y, double widthX, double widthY) {
-        button newButton = new button(x, y, widthX, widthY);
+    private static void changeSmallButton(double x, double y, String name) {
+        double width = 0.01;
+        double height = (double) 1 / (2 * (good.getGoodArray().length + 1));
+        buttonManager.changeTextOnScreen(x, y, width, height, name);
+    }
+    private static void addButtonToManger(double x, double y, double widthX, double widthY, String name, int id) {
+        button newButton = new button(x, y, widthX, widthY, name, id);
         buttonManager.addButton(newButton);
     }
     private static void drawPlanetMenu(player player) {
@@ -206,8 +212,6 @@ public class graphicalInterface {
 
         StdDraw.setFont(MED);
 
-        drawBasicButtons();
-
         drawPlanetSelector();
 
         drawAllGoodNames(player);
@@ -216,19 +220,38 @@ public class graphicalInterface {
 
         drawEndTurnButton();
     }
-    private static void drawBasicButtons() {
+    public static void createButtons() {
         if (testing) {
-            drawMedButton(0.0833, 0.5, "Graph" + "(" + 1 + ")");
-            drawMedButton(0.166, 0.5, "Goods" + "(" + 2 + ")");
-            drawMedButton(0.249, 0.5, "Companies" + "(" + 3 + ")");
-            drawMedButton(0.0833, 0.433,  "Demand" + "(" + 4 + ")");
-            drawMedButton(0.166, 0.433, "Filler" + "(" + 5 + ")");
-            drawMedButton(0.249, 0.433, "Stock" + "(" + 6 + ")");
+            createMedButton(0.0833, 0.5, "Graph" + "(" + 1 + ")", 1);
+            createMedButton(0.166, 0.5, "Goods" + "(" + 2 + ")", 2);
+            createMedButton(0.249, 0.5, "Companies" + "(" + 3 + ")", 3);
+            createMedButton(0.0833, 0.433,  "Demand" + "(" + 4 + ")", 4);
+            createMedButton(0.166, 0.433, "Filler" + "(" + 5 + ")", 5);
+            createMedButton(0.249, 0.433, "Stock" + "(" + 6 + ")",  6);
         } else {
-            drawMedButton(0.0833, 0.5, "Graph" + "(" + 1 + ")");
-            drawMedButton(0.166, 0.5, "ShowFactories" + "(" + 2 + ")");
+            createMedButton(0.0833, 0.5, "Graph" + "(" + 1 + ")", 1);
+            createMedButton(0.166, 0.5, "ShowFactories" + "(" + 2 + ")",2);
         }
-
+        planet thisPlanet = economy.getPlanetFromID(1);
+        String[] goodNames = good.getGoodArray();
+        Double[] goodPrices = thisPlanet.getPriceList();
+        int num = (goodNames.length + 1);
+        for (int i = 0; i < goodNames.length; i++) {
+            createLongSmallButton(0.38333, (double) 1 / num * (i + 1), goodNames[i], 1);
+            double val = Utils.round(goodPrices[i], 1);
+            createSmallButton(0.44333, (double) 1 / num * (i + 1), String.valueOf(val), 1);
+            createSmallButton(0.46333, (double) 1 / num * (i + 1), "0", 2);
+        }
+        double amountX = 0.0;
+        double amountY = 0.0;
+        for (int i = 1; i < 10; i++) {
+            createSmallButton(0.146 + amountX, 0.25 + amountY, String.valueOf(i), 1);
+            amountX += 0.02;
+            if (amountX % 0.06 == 0) {
+                amountX = 0;
+                amountY -= 0.041667;
+            }
+        }
     }
     private static void drawPlanetSelector() {
         StdDraw.text(WIDTH * 0.166, HEIGHT * 0.3, "Travel Planets");
@@ -239,7 +262,7 @@ public class graphicalInterface {
             if (planetSelected == i) {
                 green = true;
             }
-            drawSmallButton(0.146 + amountX, 0.25 + amountY, String.valueOf(i), green);
+            changeSmallButton(0.146 + amountX, 0.25 + amountY, String.valueOf(i));
             amountX += 0.02;
             if (amountX % 0.06 == 0) {
                 amountX = 0;
@@ -258,21 +281,21 @@ public class graphicalInterface {
             if (goodNames[i].equals(goodSelected)) {
                 green = true;
             }
-            drawLongSmallButton(0.38333, (double) 1 / num * (i + 1), goodNames[i], green);
+//            drawLongSmallButton(0.38333, (double) 1 / num * (i + 1), goodNames[i], green);
             Color color = Color.WHITE;
             double val = Utils.round(goodPrices[i], 1);
             color = thisPlanet.getPriceBigger(goodNames[i]) ? Color.RED: color;
             color = thisPlanet.getPriceSmaller(goodNames[i]) ? Color.GREEN: color;
-            drawSmallButton(0.44333, (double) 1 / num * (i + 1), String.valueOf(val), color);
-            drawSmallButton(0.46333, (double) 1 / num * (i + 1), String.valueOf(player.getAmount(goodNames[i])), false);
+            changeSmallButton(0.44333, (double) 1 / num * (i + 1), String.valueOf(val));
+            changeSmallButton(0.46333, (double) 1 / num * (i + 1), String.valueOf(player.getAmount(goodNames[i])));
         }
         StdDraw.setFont(MED);
     }
     private static void drawBuySellBuildButtons() {
         if (!goodSelected.isEmpty()) {
-            drawMedButton(0.6, 0.567, "Make Buy Order" + "(b)");
-            drawMedButton(0.6, 0.5, "Make Sell Order" + "(s)");
-            drawMedButton(0.6, 0.433, "Build Factory" + "(f)");
+//            drawMedButton(0.6, 0.567, "Make Buy Order" + "(b)");
+//            drawMedButton(0.6, 0.5, "Make Sell Order" + "(s)");
+//            drawMedButton(0.6, 0.433, "Build Factory" + "(f)");
         }
     }
     private static void drawEndTurnButton() {
@@ -331,7 +354,7 @@ public class graphicalInterface {
             StdDraw.text(0.8325 * WIDTH, (double) (i + 1) / (size + 1) * HEIGHT, companyToPrint.toString());
         }
     }
-    private static void drawOrderScreen(player player) {
+    private static void drawOrderScreen() {
         String name = goodSelected;
         if (name.isEmpty()) {
             return;
