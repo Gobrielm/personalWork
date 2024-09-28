@@ -1,5 +1,6 @@
 package core;
 
+import core.graphics.buttonManager;
 import edu.princeton.cs.algs4.StdDraw;
 
 import java.util.ArrayList;
@@ -36,6 +37,7 @@ public class economy {
         return true;
     }
     public void mouseActions(player currPlayer, double x, double y) {
+        System.out.println(buttonManager.getButtonClicked(x, y));
         if (x > 0.333 && x < 0.47333) {
             double num = good.getGoodArray().length + 1;
             y -= (1 / ( num + 1) / 2);
@@ -49,6 +51,8 @@ public class economy {
             int row = (int) (Utils.round(0.25 - y, 0.041667) / 0.041667);
             int num = row * 3 + column;
             graphicalInterface.selectPlanet(currPlayer, num);
+        } else {
+            graphicalInterface.didClickOrderTextbox(currPlayer, x, y);
         }
     }
     public void playerTurn() {

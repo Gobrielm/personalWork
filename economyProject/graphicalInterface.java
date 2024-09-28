@@ -1,12 +1,13 @@
 package core;
 
+import core.graphics.button;
 import core.playerPackage.playerCompany;
 import edu.princeton.cs.algs4.StdDraw;
 
 import java.awt.*;
 
 import static core.good.getRecipesWithGood;
-
+import core.graphics.buttonManager;
 public class graphicalInterface {
     static final double WIDTH = 60;
     static final double HEIGHT = 30;
@@ -17,6 +18,7 @@ public class graphicalInterface {
     static final int precision = 2; // How many slots every dollar
     static final boolean testing = false;
     static int typing = 0;
+    static boolean isTyping = false;
     static String textboxAmount = "";
     static String textboxPrice = "";
     static String goodSelected = "";
@@ -33,6 +35,7 @@ public class graphicalInterface {
         StdDraw.clear(Color.BLACK);
         StdDraw.setPenColor(Color.WHITE);
         StdDraw.enableDoubleBuffering();
+        buttonManager.initialize();
         button = 1;
     }
     public static boolean changeGoodSelected(player player, String goodName) {
@@ -59,17 +62,29 @@ public class graphicalInterface {
         planetSelected = 0;
     }
     public static boolean keyBoardInput(player player, char input) {
-
-        if (input == 48) {
-            //End Turn
-            return true;
-        } else if (input >= 49 && input <= 57) {
-            //Is 0-9 int
-            input -= 48;
-            changeButton(input);
+        if (!isTyping) {
+            if (input == 48) {
+                //End Turn
+                return true;
+            } else if (input >= 49 && input <= 57) {
+                //Is 0-9 int
+                input -= 48;
+                changeButton(input);
+            } else if (input == 115) {
+                changeButton(7);
+            } else if (input == 98) {
+                changeButton(8);
+            } else if (input == 102) {
+                changeButton(9);
+            }
+        } else {
+            keyBoardInputTypingTrue(input);
         }
         updateScreen(player);
         return false;
+    }
+    private static void keyBoardInputTypingTrue(char input) {
+        appendCharToTextbox(input);
     }
     public static void selectPlanet(player player, int num) {
         planetSelected = num;
@@ -78,7 +93,7 @@ public class graphicalInterface {
     private static void appendCharToTextbox(char input) {
         //Checking if done
         if ((int) input == 27 || (int) input == 10) {
-            typing = 0;
+            exitTypingMode();
         }
         if (typing == 1) {
             if ((int) input == 8 && !textboxAmount.isEmpty()) {
@@ -133,9 +148,9 @@ public class graphicalInterface {
             } else if (button == 6) {
 
             } else if (button == 7 || button == 8) {
-
+                drawOrderScreen(player);
             } else if (button == 9) {
-
+                drawBuildScreen(player);
             }
         }
 
@@ -146,6 +161,7 @@ public class graphicalInterface {
         double height = 0.034;
         StdDraw.text(WIDTH * x, HEIGHT * y, text);
         StdDraw.rectangle(WIDTH * x, HEIGHT * y, WIDTH * width, HEIGHT * height);
+        addButtonToManger(x, y, width, height);
     }
     private static void drawLongSmallButton(double x, double y, String text, boolean green) {
         double width = 0.05;
@@ -156,6 +172,7 @@ public class graphicalInterface {
         StdDraw.text(WIDTH * x, HEIGHT * y, text);
         StdDraw.setPenColor(StdDraw.WHITE);
         StdDraw.rectangle(WIDTH * x, HEIGHT * y, WIDTH * width, HEIGHT * height);
+        addButtonToManger(x, y, width, height);
     }
     private static void drawSmallButton(double x, double y, String text, boolean green) {
         if (green) {
@@ -163,7 +180,6 @@ public class graphicalInterface {
         } else {
             drawSmallButton(x, y, text, Color.WHITE);
         }
-
     }
     private static void drawSmallButton(double x, double y, String text, Color color) {
         double width = 0.01;
@@ -172,6 +188,11 @@ public class graphicalInterface {
         StdDraw.text(WIDTH * x, HEIGHT * y, text);
         StdDraw.setPenColor(StdDraw.WHITE);
         StdDraw.rectangle(WIDTH * x, HEIGHT * y, WIDTH * width, HEIGHT * height);
+        addButtonToManger(x, y, width, height);
+    }
+    private static void addButtonToManger(double x, double y, double widthX, double widthY) {
+        button newButton = new button(x, y, widthX, widthY);
+        buttonManager.addButton(newButton);
     }
     private static void drawPlanetMenu(player player) {
         StdDraw.clear(Color.BLACK);
@@ -315,15 +336,39 @@ public class graphicalInterface {
         if (name.isEmpty()) {
             return;
         }
-        StdDraw.text(0.833 * WIDTH, 0.59 * HEIGHT, "Amount" + "(" + "y" + ")");
+        StdDraw.text(0.833 * WIDTH, 0.59 * HEIGHT, "Amount");
         StdDraw.rectangle(0.833 * WIDTH, 0.55 * HEIGHT, 0.133 * WIDTH, 0.025 * HEIGHT);
-        StdDraw.text(0.833 * WIDTH, 0.49 * HEIGHT, "Limit Price" + "(" + "z" + ")");
+        StdDraw.text(0.833 * WIDTH, 0.49 * HEIGHT, "Limit Price");
         StdDraw.rectangle(0.833 * WIDTH, 0.45 * HEIGHT, 0.133 * WIDTH, 0.025 * HEIGHT);
 
         StdDraw.rectangle(0.833 * WIDTH, 0.35 * HEIGHT, 0.03 * WIDTH, 0.025 * HEIGHT);
-        StdDraw.text(0.833 * WIDTH, 0.35 * HEIGHT, "Confirm" + "(" + "9" + ")");
+        StdDraw.text(0.833 * WIDTH, 0.35 * HEIGHT, "Confirm");
 
         updateTextbox();
+    }
+    public static void didClickOrderTextbox(player player, double x, double y) {
+        if (button == 7 || button == 8) {
+            if (clickInBox(0.833, 0.55, 0.133, 0.025, x, y)) {
+                typing = 1;
+                enterTypingMode();
+            } else if (clickInBox(0.833, 0.45, 0.133, 0.025, x, y)) {
+                typing = 2;
+                enterTypingMode();
+            } else if (clickInBox(0.833, 0.35, 0.03, 0.025, x, y)) {
+                exitTypingMode();
+                createOrder(player);
+            }
+        }
+        updateScreen(player);
+    }
+    private static boolean clickInBox(double centerX, double centerY, double widthX, double widthY, double x, double y) {
+        return x > centerX - widthX && x < centerX + widthX && y > centerY - widthY && y < centerY + widthY;
+    }
+    private static void enterTypingMode() {
+        isTyping = true;
+    }
+    private static void exitTypingMode() {
+        isTyping = false;
     }
     public static void updateTextbox() {
         StdDraw.text(0.833 * WIDTH, 0.55 * HEIGHT, textboxAmount);
@@ -339,6 +384,9 @@ public class graphicalInterface {
         String goodName = goodSelected;
         int amount = Integer.parseInt(textboxAmount);
         double price = Double.parseDouble(textboxPrice);
+        if (amount > player.getAmount(goodName)) {
+            return;
+        }
         order newOrder = new order(player, new good(goodName, amount), planet.getBasePrice(goodName), price, isBuyOrder);
         planet.addOrder(newOrder);
         textboxAmount = "";

@@ -5,6 +5,9 @@ public class Utils {
     public static double round(double num, int decimal) {
         return (double) Math.round(num * Math.pow(10, decimal)) / Math.pow(10, decimal);
     }
+    public static double floor(double num, int decimal) {
+        return Math.floor(num * Math.pow(10, decimal)) / Math.pow(10, decimal);
+    }
     public static double round(double num, double closest) {
         if (closest >= 1) {
             return Math.round(num);
