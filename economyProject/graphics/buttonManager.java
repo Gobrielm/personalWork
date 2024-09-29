@@ -63,17 +63,20 @@ public class buttonManager {
         return screen[slotX][slotY];
     }
     public static void changeSelected(button clicked) {
-        if (clicked == null || !clicked.getField().equals("GoodName") || !clicked.getField().equals("Basic")) {
+        if (clicked == null) {
             return;
         }
         String field = clicked.getField();
-        for (button[] buttonArray: screen) {
-            for (button x: buttonArray) {
-                if (x != null && x.getField().equals(field)) {
-                    x.setColorWhite();
+        if (field.equals("GoodName") || field.equals("Basic")) {
+            for (button[] buttonArray: screen) {
+                for (button x: buttonArray) {
+                    if (x != null && x.getField().equals(field)) {
+                        x.setColorWhite();
+                    }
                 }
             }
+            clicked.setColorGreen();
         }
-        clicked.setColorGreen();
+
     }
 }

@@ -54,13 +54,13 @@ public class graphicalInterface {
         if (newButton <= 0 || button == newButton) {
             return false;
         }
+        exitTypingMode();
         button = newButton;
         return true;
     }
     public static void resetStrings() {
         textboxAmount = "";
         textboxPrice = "";
-        goodSelected = "";
         typing = 0;
         selected = null;
         planetSelected = 0;
@@ -68,6 +68,7 @@ public class graphicalInterface {
     public static boolean mouseInput(player player, double mouseX, double mouseY) {
         button clicked = buttonManager.getButtonClicked(mouseX, mouseY);
         if (clicked == null) {
+            exitTypingMode();
             return false;
         }
         buttonManager.changeSelected(clicked);
@@ -80,9 +81,24 @@ public class graphicalInterface {
                 return true;
             }
             case "GoodName" -> changeGoodSelected(player, clicked.getName());
+
+            case "Order" -> {
+                int id = clicked.getId();
+                clickOnOrderScreen(player, id);
+            }
         }
         updateScreen(player);
         return false;
+    }
+
+    private static void clickOnOrderScreen(player player, int id) {
+        if (id == 3) {
+            createOrder(player);
+            exitTypingMode();
+            return;
+        }
+        enterTypingMode();
+        typing = id;
     }
     public static boolean keyBoardInput(player player, char input) {
         if (!isTyping) {
@@ -138,6 +154,7 @@ public class graphicalInterface {
         drawPlanetMenu(player);
         showButton(player);
         drawButtonsFromArray();
+        updateTextbox();
         StdDraw.show();
     }
     private static void showButton(player player) {
@@ -184,22 +201,50 @@ public class graphicalInterface {
         HashSet<button> created = new HashSet<>();
         for (button[] row: screen) {
             for (button currButton: row) {
-                if (currButton == null || created.contains(currButton)) {
+                if (created.contains(currButton)) {
                     continue;
                 }
-                double x = currButton.getX();
-                double y = currButton.getY();
-                String text = currButton.getName();
-                StdDraw.setFont(currButton.getFont());
-                StdDraw.setPenColor(currButton.getColor());
-                double width = currButton.getWidthX();
-                double height = currButton.getWidthY();
-                StdDraw.text(WIDTH * x, HEIGHT * y, text);
-                StdDraw.setPenColor(Color.WHITE);
-                StdDraw.rectangle(WIDTH * x, HEIGHT * y, WIDTH * width, HEIGHT * height);
-                created.add(currButton);
+                if (drawButton(currButton)) {
+                    created.add(currButton);
+                }
             }
         }
+    }
+    private static boolean drawButton(button currButton) {
+        if (currButton == null) {
+            return false;
+        } else if (currButton.getField().equals("Order")) {
+            return drawOrderButton(currButton);
+        }
+        double x = currButton.getX();
+        double y = currButton.getY();
+        double width = currButton.getWidthX();
+        double height = currButton.getWidthY();
+        String text = currButton.getName();
+        StdDraw.setFont(currButton.getFont());
+        StdDraw.setPenColor(currButton.getColor());
+        StdDraw.text(WIDTH * x, HEIGHT * y, text);
+        StdDraw.setPenColor(Color.WHITE);
+        StdDraw.rectangle(WIDTH * x, HEIGHT * y, WIDTH * width, HEIGHT * height);
+        return true;
+    }
+    private static boolean drawOrderButton(button currButton) {
+        if (button == 7 || button == 8) {
+            double x = currButton.getX();
+            double y = currButton.getY();
+            int id = currButton.getId();
+            double yOffset = (id == 3) ? 0.0: 0.04;
+            double width = currButton.getWidthX();
+            double height = currButton.getWidthY();
+            String text = currButton.getName();
+            StdDraw.setFont(currButton.getFont());
+            StdDraw.setPenColor(currButton.getColor());
+            StdDraw.text(WIDTH * x, HEIGHT * (y + yOffset), text);
+            StdDraw.setPenColor(Color.WHITE);
+            StdDraw.rectangle(WIDTH * x, HEIGHT * y, WIDTH * width, HEIGHT * height);
+            return true;
+        }
+        return false;
     }
     private static void createEndButton() {
         addButtonToManger(0.95, 0.95, 0.04, 0.04, "EndTurn" + "(" + 0 + ")", "End", MED, 0);
@@ -208,6 +253,10 @@ public class graphicalInterface {
         double width = 0.0415;
         double height = 0.034;
         addButtonToManger(x, y, width, height, name, "Basic", MED, id);
+    }
+    private static void createOrderButton(double x, double y, double width, double height, String name, int id) {
+
+        addButtonToManger(x, y, width, height, name, "Order", MED, id);
     }
     private static void createLongSmallButton(double x, double y, String name) {
         double width = 0.05;
@@ -258,6 +307,7 @@ public class graphicalInterface {
             createSmallButton(0.44333, (double) 1 / num * (i + 1), String.valueOf(val), "goodPrice");
             createSmallButton(0.46333, (double) 1 / num * (i + 1), "0", "goodAmount");
         }
+        createOrderScreenButtons();
         //TODO: Decide whether to keep diff planets
 //        double amountX = 0.0;
 //        double amountY = 0.0;
@@ -282,9 +332,14 @@ public class graphicalInterface {
             createBasicButton(0.0833, 0.5, "Graph" + "(" + 1 + ")", 1);
             createBasicButton(0.166, 0.5, "ShowFactories" + "(" + 2 + ")", 2);
         }
-        createBasicButton(0.6, 0.567, "Make Buy Order" + "(b)", 7);
-        createBasicButton(0.6, 0.5, "Make Sell Order" + "(s)", 8);
-        createBasicButton(0.6, 0.433, "Build Factory" + "(f)", 9);
+        createBasicButton(0.6, 0.567, "Make Buy Order" + "(7)", 7);
+        createBasicButton(0.6, 0.5, "Make Sell Order" + "(8)", 8);
+        createBasicButton(0.6, 0.433, "Build Factory" + "(9)", 9);
+    }
+    private static void createOrderScreenButtons() {
+        createOrderButton(0.833, 0.55, 0.133, 0.025, "Amount", 1);
+        createOrderButton(0.833, 0.45, 0.133, 0.025, "LimitPrice", 2);
+        createOrderButton(0.833, 0.35, 0.03, 0.025, "Confirm", 3);
     }
     private static void drawAllGoodNames(player player) {
         StdDraw.setFont(SMALL);
@@ -333,8 +388,6 @@ public class graphicalInterface {
                 StdDraw.line(x0, y0, x, y);
             }
         }
-
-
         StdDraw.text(WIDTH * (startX - 0.01), HEIGHT * (startY + maxY), String.valueOf(maxValue));
         StdDraw.text(WIDTH * (startX - 0.01), HEIGHT * (startY), String.valueOf(minValue));
     }
@@ -359,33 +412,8 @@ public class graphicalInterface {
         if (name.isEmpty()) {
             return;
         }
-        StdDraw.text(0.833 * WIDTH, 0.59 * HEIGHT, "Amount");
-        StdDraw.rectangle(0.833 * WIDTH, 0.55 * HEIGHT, 0.133 * WIDTH, 0.025 * HEIGHT);
-        StdDraw.text(0.833 * WIDTH, 0.49 * HEIGHT, "Limit Price");
-        StdDraw.rectangle(0.833 * WIDTH, 0.45 * HEIGHT, 0.133 * WIDTH, 0.025 * HEIGHT);
-
-        StdDraw.rectangle(0.833 * WIDTH, 0.35 * HEIGHT, 0.03 * WIDTH, 0.025 * HEIGHT);
-        StdDraw.text(0.833 * WIDTH, 0.35 * HEIGHT, "Confirm");
 
         updateTextbox();
-    }
-    public static void didClickOrderTextbox(player player, double x, double y) {
-        if (button == 7 || button == 8) {
-            if (clickInBox(0.833, 0.55, 0.133, 0.025, x, y)) {
-                typing = 1;
-                enterTypingMode();
-            } else if (clickInBox(0.833, 0.45, 0.133, 0.025, x, y)) {
-                typing = 2;
-                enterTypingMode();
-            } else if (clickInBox(0.833, 0.35, 0.03, 0.025, x, y)) {
-                exitTypingMode();
-                createOrder(player);
-            }
-        }
-        updateScreen(player);
-    }
-    private static boolean clickInBox(double centerX, double centerY, double widthX, double widthY, double x, double y) {
-        return x > centerX - widthX && x < centerX + widthX && y > centerY - widthY && y < centerY + widthY;
     }
     private static void enterTypingMode() {
         isTyping = true;
@@ -394,20 +422,22 @@ public class graphicalInterface {
         isTyping = false;
     }
     public static void updateTextbox() {
-        StdDraw.text(0.833 * WIDTH, 0.55 * HEIGHT, textboxAmount);
-        StdDraw.text(0.833 * WIDTH, 0.45 * HEIGHT, textboxPrice);
+        if (button == 7 || button == 8) {
+            StdDraw.text(0.833 * WIDTH, 0.55 * HEIGHT, textboxAmount);
+            StdDraw.text(0.833 * WIDTH, 0.45 * HEIGHT, textboxPrice);
+        }
     }
 
     private static void createOrder(player player) {
-        if (textboxAmount.isEmpty() || textboxPrice.isEmpty()) {
+        if (textboxAmount.isEmpty() || textboxPrice.isEmpty() || goodSelected.isEmpty()) {
             return;
         }
-        boolean isBuyOrder = (button == 6);
+        boolean isBuyOrder = (button == 7);
         planet planet = player.getPlanet();
         String goodName = goodSelected;
         int amount = Integer.parseInt(textboxAmount);
         double price = Double.parseDouble(textboxPrice);
-        if (amount > player.getAmount(goodName)) {
+        if (!isBuyOrder && amount > player.getAmount(goodName)) {
             return;
         }
         order newOrder = new order(player, new good(goodName, amount), planet.getBasePrice(goodName), price, isBuyOrder);
@@ -420,7 +450,9 @@ public class graphicalInterface {
         StdDraw.rectangle(0.8325 * WIDTH, 0.6 * HEIGHT, 0.14 * WIDTH, 0.2 * HEIGHT);
         StdDraw.rectangle(0.833 * WIDTH, 0.35 * HEIGHT, 0.03 * WIDTH, 0.025 * HEIGHT);
         StdDraw.text(0.833 * WIDTH, 0.35 * HEIGHT, "Confirm");
-
+        if (goodSelected == null || goodSelected.isEmpty()) {
+            return;
+        }
         recipe[] toDisplay = getRecipesWithGood(goodSelected);
         int n = toDisplay.length;
         for (int i = 0; i < n; i++) {
@@ -464,9 +496,7 @@ public class graphicalInterface {
                     StdDraw.text(WIDTH * 0.8, HEIGHT / (size + 1) * (i + 1), x.toString());
                 }
             }
-
         }
-
     }
 
     private static void drawSupplyDemand(player player) {
