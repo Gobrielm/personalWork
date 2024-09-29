@@ -8,12 +8,14 @@ public class button {
     private Color color;
     private Font font;
     private String field;
-    public button(rectangle box, String name, String field, Font font) {
+    private int id;
+    public button(rectangle box, String name, String field, Font font, int id) {
         this.box = box;
         this.name = name;
         color = Color.WHITE;
         this.font = font;
         this.field = field;
+        this.id = id;
     }
 
     public double getX() {
@@ -36,7 +38,9 @@ public class button {
     }
     public void changeName(String newText, Color newColor) {
         name = newText;
-        color = newColor;
+        if (newColor != null) {
+            color = newColor;
+        }
     }
     public Color getColor() {
         return color;
@@ -50,8 +54,10 @@ public class button {
     public Font getFont() {
         return font;
     }
-
     public String getField() {
         return field;
+    }
+    public int getId() {
+        return id;
     }
 }

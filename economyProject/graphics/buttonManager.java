@@ -2,6 +2,8 @@ package core.graphics;
 
 import core.Utils;
 
+import java.awt.*;
+
 public class buttonManager {
     private static button[][] screen;
     private final static int howManyDecimalsRepresented = 3;
@@ -35,6 +37,9 @@ public class buttonManager {
         }
     }
     public static void changeTextOnScreen(double x, double y, double width, double height, String newText) {
+        changeTextOnScreen(x, y, width, height, newText, null);
+    }
+    public static void changeTextOnScreen(double x, double y, double width, double height, String newText, Color color) {
         int newX = convertDecimalScreenToSlot(x);
         int newY = convertDecimalScreenToSlot(y);
         int newWidthX = convertDecimalScreenToSlot(width);
@@ -45,7 +50,7 @@ public class buttonManager {
                 if (toGet == null) {
                     return;
                 }
-                toGet.changeName(newText);
+                toGet.changeName(newText, color);
             }
         }
     }
