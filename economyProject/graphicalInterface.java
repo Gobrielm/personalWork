@@ -50,11 +50,11 @@ public class graphicalInterface {
         updateScreen(player);
         return true;
     }
-    public static boolean changeButton(int button) {
-        if (button <= 0 || graphicalInterface.button == button) {
+    public static boolean changeButton(int newButton) {
+        if (newButton <= 0 || button == newButton) {
             return false;
         }
-        graphicalInterface.button = button;
+        button = newButton;
         return true;
     }
     public static void resetStrings() {
@@ -71,13 +71,15 @@ public class graphicalInterface {
             return false;
         }
         buttonManager.changeSelected(clicked);
-        if (clicked.getField().equals("Basic")) {
-            int id = clicked.getId();
-            changeButton(id);
-        } else if (clicked.getField().equals("End")) {
-            return true;
-        } else if (clicked.getField().equals("GoodName")) {
-            changeGoodSelected(player, clicked.getName());
+        switch (clicked.getField()) {
+            case "Basic" -> {
+                int id = clicked.getId();
+                changeButton(id);
+            }
+            case "End" -> {
+                return true;
+            }
+            case "GoodName" -> changeGoodSelected(player, clicked.getName());
         }
         updateScreen(player);
         return false;
@@ -181,21 +183,21 @@ public class graphicalInterface {
         button[][] screen = buttonManager.getArray();
         HashSet<button> created = new HashSet<>();
         for (button[] row: screen) {
-            for (button button: row) {
-                if (button == null || created.contains(button)) {
+            for (button currButton: row) {
+                if (currButton == null || created.contains(currButton)) {
                     continue;
                 }
-                double x = button.getX();
-                double y = button.getY();
-                String text = button.getName();
-                StdDraw.setFont(button.getFont());
-                StdDraw.setPenColor(button.getColor());
-                double width = button.getWidthX();
-                double height = button.getWidthY();
+                double x = currButton.getX();
+                double y = currButton.getY();
+                String text = currButton.getName();
+                StdDraw.setFont(currButton.getFont());
+                StdDraw.setPenColor(currButton.getColor());
+                double width = currButton.getWidthX();
+                double height = currButton.getWidthY();
                 StdDraw.text(WIDTH * x, HEIGHT * y, text);
                 StdDraw.setPenColor(Color.WHITE);
                 StdDraw.rectangle(WIDTH * x, HEIGHT * y, WIDTH * width, HEIGHT * height);
-                created.add(button);
+                created.add(currButton);
             }
         }
     }

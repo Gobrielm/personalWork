@@ -63,7 +63,7 @@ public class buttonManager {
         return screen[slotX][slotY];
     }
     public static void changeSelected(button clicked) {
-        if (clicked == null || !clicked.getField().equals("GoodName")) {
+        if (clicked == null || !clicked.getField().equals("GoodName") || !clicked.getField().equals("Basic")) {
             return;
         }
         String field = clicked.getField();
