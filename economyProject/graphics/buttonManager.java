@@ -2,9 +2,6 @@ package core.graphics;
 
 import core.Utils;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-
 public class buttonManager {
     private static button[][] screen;
     private final static int howManyDecimalsRepresented = 3;
@@ -61,7 +58,7 @@ public class buttonManager {
         return screen[slotX][slotY];
     }
     public static void changeSelected(button clicked) {
-        if (clicked == null) {
+        if (clicked == null || !clicked.getField().equals("GoodName")) {
             return;
         }
         String field = clicked.getField();

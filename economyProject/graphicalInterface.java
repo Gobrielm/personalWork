@@ -1,6 +1,7 @@
 package core;
 
 import core.graphics.button;
+import core.graphics.rectangle;
 import core.playerPackage.playerCompany;
 import edu.princeton.cs.algs4.StdDraw;
 
@@ -200,7 +201,8 @@ public class graphicalInterface {
         buttonManager.changeTextOnScreen(x, y, width, height, name);
     }
     private static void addButtonToManger(double x, double y, double widthX, double widthY, String name, String field, Font font) {
-        button newButton = new button(x, y, widthX, widthY, name, field, font);
+        rectangle newRectangle = new rectangle(x, y, widthX, widthY);
+        button newButton = new button(newRectangle, name, field, font);
         buttonManager.addButton(newButton);
     }
     private static void drawPlanetMenu(player player) {

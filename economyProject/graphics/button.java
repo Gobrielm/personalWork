@@ -3,19 +3,13 @@ package core.graphics;
 import java.awt.*;
 
 public class button {
-    private double centerX;
-    private double centerY;
-    private double widthX;
-    private double widthY;
+    private rectangle box;
     private String name;
     private Color color;
     private Font font;
     private String field;
-    public button(double centerX, double centerY, double widthX, double widthY, String name, String field, Font font) {
-        this.centerX = centerX;
-        this.centerY = centerY;
-        this.widthX = widthX;
-        this.widthY = widthY;
+    public button(rectangle box, String name, String field, Font font) {
+        this.box = box;
         this.name = name;
         color = Color.WHITE;
         this.font = font;
@@ -23,16 +17,16 @@ public class button {
     }
 
     public double getX() {
-        return centerX;
+        return box.getX();
     }
     public double getY() {
-        return centerY;
+        return box.getY();
     }
     public double getWidthX() {
-        return widthX;
+        return box.getWidthX();
     }
     public double getWidthY() {
-        return widthY;
+        return box.getWidthY();
     }
     public String getName() {
         return name;
