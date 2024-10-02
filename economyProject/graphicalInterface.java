@@ -297,7 +297,7 @@ public class graphicalInterface {
         createBasicButtons();
         createEndButton();
 
-        planet thisPlanet = economy.getPlanetFromID(1);
+        planet thisPlanet = economy.getPlanetFromID(0);
         String[] goodNames = good.getGoodArray();
         Double[] goodPrices = thisPlanet.getPriceList();
         int num = (goodNames.length + 1);
@@ -308,17 +308,6 @@ public class graphicalInterface {
             createSmallButton(0.46333, (double) 1 / num * (i + 1), "0", "goodAmount");
         }
         createOrderScreenButtons();
-        //TODO: Decide whether to keep diff planets
-//        double amountX = 0.0;
-//        double amountY = 0.0;
-//        for (int i = 1; i < 10; i++) {
-//            createSmallButton(0.146 + amountX, 0.25 + amountY, String.valueOf(i), "planet");
-//            amountX += 0.02;
-//            if (amountX % 0.06 == 0) {
-//                amountX = 0;
-//                amountY -= 0.041667;
-//            }
-//        }
     }
     private static void createBasicButtons() {
         if (testing) {

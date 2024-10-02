@@ -1,7 +1,5 @@
 package core;
 
-import core.graphics.button;
-import core.graphics.buttonManager;
 import edu.princeton.cs.algs4.StdDraw;
 
 import java.util.ArrayList;
@@ -19,10 +17,8 @@ public class economy {
         rand = new Random(seed);
         initialize();
         galacticMarket = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            planet temp = new planet();
-            galacticMarket.add(temp);
-        }
+        planet temp = new planet();
+        galacticMarket.add(temp);
         playerList = new ArrayList<>();
         for (int i = 0; i < playerCount; i++) {
             player newPlayer = new player("Player" + i);
